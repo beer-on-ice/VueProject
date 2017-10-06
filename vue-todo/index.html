@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>todolist</title>
+	<script type="text/javascript" src="vue.js"></script>
+	<link rel="stylesheet" type="text/css" href="idnex.css">
+</head>
+<body>
+	<div class="page-top">
+		<div class="page-content">
+			<h2>Todo List</h2>
+		</div>
+	</div>
+	<div class="main">
+		<h3 class="big-title">在此添加任务：</h3>
+        /**
+         * keyup.enter: enter抬起时生效
+         * v-model： 绑定自身的value值
+         */
+		<input
+        placeholder="点击+号添加任务"
+        class="task-input" type="text"
+        @keyup.enter='addTodo'
+        v-model='todo'>
+		<input class="btn-input" type="button" value="+" @click="addTodo">
+		<ul class="task-count">
+			<li>{{ unCheckedLen }}个任务未完成</li>
+			<li class="action">
+				<a :class="{active: visibility !== 'undo' && visibility !== 'done'}" href="#all">所有任务</a>
+				<a :class="{active: visibility == 'undo'}" href="#undo">未完成任务</a>
+				<a :class="{active: visibility == 'done'}" href="#done">完成任务</a>
+			</li>
+		</ul>
+		<div class="tasks">
+			<span class="no-task-tip" v-show="!list.length">还没有添加任何任务</span>
+			<ul class="todo-list">
+				<li class="todo" v-for="item in filteredList" :class="{completed:item.isChecked,editing:item === editItem}">
+					<div class="view">
+						<div class="word">
+							<input class="toggle" type="checkbox" v-model="item.isChecked">
+							<label @dblclick='editTodo(item)'>{{item.title}}</label>
+						</div>
+						<button class="destroy" type="text"  @click="deleteTodo(item)">×</button>
+					</div>
+					<input
+                    class="edit"
+                    type="text"
+                    v-model='item.title'
+                    v-focus="editItem === item"
+                    @blur='editEnd'
+                    @keyup.enter="editEnd"
+                    @keyup.esc="cancel(item)">
+				</li>
+			</ul>
+		</div>
+	</div>
+</body>
+<script src="list.js" charset="utf-8"></script>
+</html>
