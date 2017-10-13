@@ -8,13 +8,46 @@
 		</div>
 		<div class="menu_search">
 			<input type="text" placeholder="探索音乐、歌手、歌词、用户" autofocus="" id="inpSearch" class="search_inp" value="handclap"/>
-			<span class="search_btn" id="top_searchBtn"><i class="fa fa-search" aria-hidden="true"></i></span>
+			<span class="search_btn" id="top_searchBtn" @click='pageUpAndSearch'><i class="fa fa-search" aria-hidden="true"></i></span>
 		</div>
 	</div>
 </template>
 
 <script>
+
+import axios from 'axios'
+import showTipBox from 'common/js/showTip'
+import funcSearch from 'common/js/funcSearch'
+
 export default {
+	methods: {
+		pageUpAndSearch() {
+			var str = $('#inpSearch').val().trim()
+			if (!str) {
+				showTipBox("error","不能为空哟！");
+				return;
+			}
+			
+			funcSearch()
+
+			let that = this
+			axios.get('/api/search', {
+			    params: {
+			        keywords: $('#inpSearch').val()
+			    }
+			}).then(function (res) {
+				// 添加搜索概述
+				that.$root.bus.$emit('takeNum',res.data.result);
+
+				that.$root.bus.$emit('takeName',$('#inpSearch').val());
+
+				that.$emit('passData',res.data.result)
+
+			}).catch(function (error) {
+			    console.log(error);
+			});
+		}
+	}
 }
 </script>
 

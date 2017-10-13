@@ -1,5 +1,5 @@
 <template>
-    <!-- page_main 歌单：我喜欢的音乐 -->
+    <!-- page_Search 搜索列表 -->
 	<div class="page_search R_page" id="pageSearch" style="display:none;">
 		<div class="main_container">
 			<div class="listcontainer">
@@ -16,6 +16,7 @@
 						<label class="label_btn" for="fm">主播电台</label>
 						<label class="label_btn" for="user">用户</label>
 					</div>
+
                     <!-- song -->
 					<input type="radio" id="song" name="tablist_s" checked="" />
                     <div class="tabitem musiclist">
@@ -30,11 +31,19 @@
                                     <th>时长</th>
                                 </tr>
                             </thead>
-                            <tbody class="infolist" id="infoList_search"></tbody>
-                            </tfoot>
+                            <tbody class="infolist" id="infoList_search">
+								<tr v-for='song,i in songData.songs' @dblclick='playMusic'>
+									<td class="index">{{(i+1) <10 ? "0"+(i+1) : (i+1)}}</td>
+									<td><i class="fa fa-heart-o" aria-hidden="true"></i>&nbsp;<i class="fa fa-download" aria-hidden="true"></i></td>
+									<td>{{song.name}}</td>
+									<td>{{artists[i]}}</td>
+									<td>{{song.album.name}}</td>
+									<td>{{timeObj[i].I}}:{{timeObj[i].S}}</td>
+									<td style="display:none">{{song.album.picUrl}}</td>
+								</tr>
+                            </tbody>
                         </table>
                     </div>
-
                     <!-- singer -->
 					<input type="radio" id="singer" name="tablist_s" />
 					<div class="tabitem singerlist">
@@ -77,7 +86,53 @@
 </template>
 
 <script>
+
+import {formatTime,toDB} from 'common/js/formatTime'
+
 export default {
+	data() {
+		return {
+			artistsName:[],
+			songDuration:[]
+		}
+	},
+	props:[
+		'songData'
+	],
+	computed: {
+		artists: function() {
+			let that = this
+			this.songData.songs.forEach(function(song) {
+				song.artists.map(artist => {
+                    that.artistsName.push(artist.name);
+                }).join('');
+			})
+			return that.artistsName
+		},
+		timeObj: function() {
+			let that = this
+			this.songData.songs.forEach(function(song) {
+				that.songDuration.push(formatTime(song.duration/1000));
+			})
+			return that.songDuration
+		}
+	},
+	created() {
+		//  搜索概述
+		this.$root.bus.$on('takeName', (data)=>{$("#search_count").find(".input").html(data)})
+		this.$root.bus.$on('takeNum', (data)=>{$("#search_count").find(".count").html(data.songCount)})
+	},
+	methods: {
+		playMusic() {
+			console.log(1);
+			// style: 展开歌曲详情页
+			$("#pageSongDetail").css({
+				"top":"60px",
+				"right":0,
+				"opacity":1
+			});
+		}
+	}
 }
 </script>
 

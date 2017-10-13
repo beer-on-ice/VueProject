@@ -27,7 +27,9 @@ module.exports = {
       'vue$': 'vue/dist/vue.esm.js',
       '@': resolve('src'),
       'common':resolve('src/common'),
-      'components':resolve('src/components')
+      'components':resolve('src/components'),
+      // 2. 定义别名和插件位置
+      'jquery': 'jquery' 
     }
   },
   module: {
@@ -69,10 +71,12 @@ module.exports = {
     ]
   },
   plugins: [
-    new webpack.optimize.CommonsChunkPlugin('common.js'),
+    // 3. 配置全局使用 jquery
     new webpack.ProvidePlugin({
-      jQuery: "jquery",
-      $: "jquery"
+        $: "jquery",
+        jQuery: "jquery",
+        jquery: "jquery",
+        "window.jQuery": "jquery"
     })
   ]
 }
