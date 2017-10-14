@@ -15,6 +15,6 @@ export function formatTime(seconds) {
 
 
 // 时间补零操作
-function toDB(nub) {
-	return nub<10?"0" + nub:""+nub;
+export function toDB(nub) {
+	return nub<10 ? "0" + nub : "" + nub;
 }

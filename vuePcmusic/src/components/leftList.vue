@@ -47,13 +47,13 @@
 		</div>
 		<!-- 全屏小窗 -->
 		<div class="playlist_smallwindow clearfix">
-			<div class="poster" id="btnExpandPlayBox">
-				<img src="../common/images/temp_pic001.jpg" alt="" id="smallwindow_albumPic" />
+			<div class="poster" id="btnExpandPlayBox" @click='expandDetail'>
+				<img :src="src" alt="" id="smallwindow_albumPic" />
 				<div class="poster_hoverback"><i class="fa fa-expand" aria-hidden="true"></i></div>
 			</div>
 			<div class="info">
-				<p class="songname" id="smallwindow_songName">-SONGNAME-</p>
-				<p class="singername" id="smallwindow_singerName">-SINGER-</p>
+				<p class="songname" id="smallwindow_songName">{{songName}} </p>
+				<p class="singername" id="smallwindow_singerName">{{singerName}}</p>
 			</div>
 			<div class="btngroups">
 				<div class="btn collect"><i class="fa fa-heart-o" aria-hidden="true"></i></div>
@@ -65,6 +65,46 @@
 
 <script>
 export default {
+	data() {
+		return {
+			srcUrl:require('../common/images/temp_pic001.jpg')
+		}
+	},
+	props: [
+		'songInfo'
+	],
+	computed: {
+		src: function() {
+			if(this.songInfo.picUrl) {
+				return this.songInfo.picUrl
+			} else {
+				return this.srcUrl
+			}
+		},
+		songName: function() {
+			if(this.songInfo.name) {
+				return this.songInfo.name
+			} else {
+				return '-SONGNAME-'
+			}
+		},
+		singerName: function() {
+			if(this.songInfo.singer) {
+				return this.songInfo.singer
+			} else {
+				return '-SINGER-'
+			}
+		}
+	},
+	methods: {
+		expandDetail() {
+			$("#pageSongDetail").css({
+				"top":"60px",
+				"right":0,
+				"opacity":1
+			});
+		}
+	}
 }
 </script>
 

@@ -4,7 +4,7 @@
 		<!-- 模糊背景 -->
 		<div class="g_blurbg" id="bgBlur"></div>
 		<div class="maincontainer clearfix">
-			<div class="compressbtn" id="btnCompressPlayBox" title="收起音乐详情页">
+			<div class="compressbtn" id="btnCompressPlayBox" title="收起音乐详情页" @click='closeDetail'>
 				<i class="fa fa-compress" aria-hidden="true"></i>
 			</div>
 			<div class="discsection">
@@ -42,16 +42,18 @@
 </template>
 
 <script>
-  export default {
-    data() {
-      return {
-      }
-    },
-    created() {
-    },
-    methods: {
-    }
-  }
+
+export default {
+	methods: {
+		closeDetail() {
+			$("#pageSongDetail").css({
+				"top":"100%",
+				"right":"100%",
+				"opacity":0
+			});
+		}
+	}
+}
 </script>
 
 <style>

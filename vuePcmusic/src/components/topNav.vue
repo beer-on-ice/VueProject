@@ -27,10 +27,25 @@ export default {
 				showTipBox("error","不能为空哟！");
 				return;
 			}
-			
+
 			funcSearch()
 
 			let that = this
+			// $.ajax({
+			// 	url: '/api/search',
+		    //     data: {
+		    //         keywords: $('#inpSearch').val()
+		    //     },
+			// 	success(data) {
+			// 		let res = JSON.parse(data)
+			// 		console.log(res);
+			// 		that.$root.bus.$emit('takeNum',res.result.songs);
+			//
+			// 		that.$root.bus.$emit('takeName',$('#inpSearch').val());
+			//
+			// 		that.$emit('passData',res.result)
+			// 	}
+			// })
 			axios.get('/api/search', {
 			    params: {
 			        keywords: $('#inpSearch').val()
@@ -51,7 +66,7 @@ export default {
 }
 </script>
 
-<style lang="css" scoped>
+<style lang="css">
 /* ------------------------page_menu------------------------------- */
 .page_menu  {
 	position:fixed;

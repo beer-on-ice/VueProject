@@ -16,7 +16,6 @@
 						<label class="label_btn" for="fm">主播电台</label>
 						<label class="label_btn" for="user">用户</label>
 					</div>
-
                     <!-- song -->
 					<input type="radio" id="song" name="tablist_s" checked="" />
                     <div class="tabitem musiclist">
@@ -32,14 +31,16 @@
                                 </tr>
                             </thead>
                             <tbody class="infolist" id="infoList_search">
-								<tr v-for='song,i in songData.songs' @dblclick='playMusic'>
+								<tr
+								v-for='song,i in songData.songs'
+								@dblclick='playMusic(song.id,song,artists[i])'>
 									<td class="index">{{(i+1) <10 ? "0"+(i+1) : (i+1)}}</td>
 									<td><i class="fa fa-heart-o" aria-hidden="true"></i>&nbsp;<i class="fa fa-download" aria-hidden="true"></i></td>
 									<td>{{song.name}}</td>
 									<td>{{artists[i]}}</td>
 									<td>{{song.album.name}}</td>
 									<td>{{timeObj[i].I}}:{{timeObj[i].S}}</td>
-									<td style="display:none">{{song.album.picUrl}}</td>
+									<!-- <td style="display:none">{{song.album.picUrl}}</td> -->
 								</tr>
                             </tbody>
                         </table>
@@ -88,12 +89,14 @@
 <script>
 
 import {formatTime,toDB} from 'common/js/formatTime'
+import axios from 'axios'
 
 export default {
 	data() {
 		return {
 			artistsName:[],
-			songDuration:[]
+			songDuration:[],
+			musicid:''
 		}
 	},
 	props:[
@@ -123,13 +126,38 @@ export default {
 		this.$root.bus.$on('takeNum', (data)=>{$("#search_count").find(".count").html(data.songCount)})
 	},
 	methods: {
-		playMusic() {
-			console.log(1);
-			// style: 展开歌曲详情页
-			$("#pageSongDetail").css({
-				"top":"60px",
-				"right":0,
-				"opacity":1
+		playMusic(musicid,song,singer) {
+			// 双击的歌曲样式变化
+			$('#infoList_search tr').find("td.index").each(function(index,item) {
+				$(item).removeClass("active").html(toDB(index+1));
+			});
+			$(event.currentTarget).find("td.index").html('<i class="fa fa-volume-up" aria-hidden="true"></i>').addClass("active");
+
+			let that = this
+			axios.get('/api/music/url', {
+			    params: {
+			        id: musicid
+			    }
+			}).then(function (res) {
+				// 播放按钮变化
+				that.$root.bus.$emit('playOn');
+				that.$emit('mediaOn',res.data.data[0].url);
+				song.singer = singer
+				// console.log(song);
+			}).catch(function (error) {
+			    console.log(error);
+			});
+			axios.get('/api/song/detail', {
+			    params: {
+			        ids: musicid
+			    }
+			}).then(function (res) {
+				console.log(res);
+				song.picUrl = res.data.songs[0].al.picUrl
+				that.$emit('sendMusicDetail',song);
+				// console.log(res.data.songs[0].al.picUrl);
+			}).catch(function (error) {
+			    console.log(error);
 			});
 		}
 	}

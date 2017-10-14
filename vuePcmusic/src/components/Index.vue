@@ -1,10 +1,13 @@
 <template>
-    <div class="mianer">
+    <div class="mianer" onselectstart="return false;">
         <top-nav @passData='getData'></top-nav>
-        <left-list></left-list>
+        <left-list :song-info='songInfo'></left-list>
         <player-bar></player-bar>
         <page-main></page-main>
-        <page-search :song-data='songData'></page-search>
+        <page-search
+        :song-data='songData'
+        @mediaOn='mediaPlay'
+        @sendMusicDetail='getMusicDetail'></page-search>
         <song-detail></song-detail>
         <tip-box></tip-box>
         <!-- audio -->
@@ -26,7 +29,9 @@
     export default {
         data() {
             return {
-                songData:{}
+                songData:{},
+                src:'',
+                songInfo:{}
             }
         },
         created() {
@@ -54,6 +59,17 @@
         methods: {
             getData(data) {
                 this.songData = data
+            },
+            mediaPlay(url) {
+                var media = $("#audio").get(0);
+                $(media).attr("src",url);
+                //	歌曲播放
+                $(media).on("canplay",function () {
+                    this.play();
+                });
+            },
+            getMusicDetail(song) {
+                this.songInfo = song
             }
         },
         components: {
@@ -68,4 +84,4 @@
     }
 </script>
 
-<style lang="css" scoped></style>
+<style lang="css"></style>

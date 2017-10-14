@@ -33,11 +33,19 @@
 </template>
 
 <script>
+import {stylePlayBtn} from 'common/js/styleActive'
+
 export default {
+	created() {
+		this.$root.bus.$on('playOn',function() {
+			//播放按钮变化
+			stylePlayBtn($('#playBtnGroup').find(".play"),"play");
+		})
+	}
 }
 </script>
 
-<style lang="css" scoped>
+<style lang="css">
 /* ------------------------page_playerbar------------------------------- */
 .page_playerbar{
     position:fixed;
@@ -69,11 +77,11 @@ export default {
     color:#f7f7f7;
     cursor:pointer;
 }
-.playerbar_playbtngroup>.btn.play{
+.playerbar_playbtngroup>.btn.play {
     width:44px;
     height:44px;
 }
-.playerbar_playbtngroup>.btn>.fa{
+.playerbar_playbtngroup>.btn>.fa {
     position:relative;
     top:50%;left:0;
     -webkit-transform:translate(0,-50%);

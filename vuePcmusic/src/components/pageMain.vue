@@ -160,7 +160,7 @@ export default {
 }
 </script>
 
-<style lang="css" scoped>
+<style lang="css">
 /* ------------------------R_page page_right------------------------------- */
 .R_page{
     padding:60px 0 60px 220px;
