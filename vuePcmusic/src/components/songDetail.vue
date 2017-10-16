@@ -10,7 +10,7 @@
 			<div class="discsection">
 				<div class="disc_needle" id="discNeedle"><img src="../common/images/needle.png" alt=""></div>
 				<div class="disc_arc" id="bgDisc" >
-					<div class="poster"><img src="../common/images/disc-o.png" alt=""></div>
+					<div class="poster"><img :src="src" alt=""></div>
 				</div>
 				<div class="disc_btns">
 					<span class="btn playall"><i class="fa fa-heart-o" aria-hidden="true"></i>&nbsp;&nbsp;喜欢</span>
@@ -21,13 +21,13 @@
 			</div>
 			<div class="lyricsection">
 				<div class="lrcinfo" id="songDetail">
-					<p class="info_song"><span class="songname">--SONGNAME--</span><span class="label mv">MV</span><span class="label quality">320k</span></p>
+					<p class="info_song"><span class="songname">{{songName}}</span><span class="label mv">MV</span><span class="label quality">320k</span></p>
 					<p class="info_album">
-						<span class="album">专辑：<span class="albumname">--ALBUMNAME--</span>
+						<span class="album">专辑：<span class="albumname">{{albumName}}</span>
 						</span>
-						<span class="singer">歌手：<span class="singersname">--ALBUMNAME--</span>
+						<span class="singer">歌手：<span class="singersname">{{singerName}}</span>
 						</span>
-						<span class="origin">来源：<span class="originname">--ORIGIN--</span>
+						<span class="origin">来源：<span class="originname">孤独的键</span>
 						</span>
 					</p>
 				</div>
@@ -44,6 +44,44 @@
 <script>
 
 export default {
+	data() {
+		return {
+			srcUrl:require('../common/images/disc-o.png')
+		}
+	},
+	props: [
+		'songInfo'
+	],
+	computed: {
+		src: function() {
+			if(this.songInfo.picUrl) {
+				return this.songInfo.picUrl
+			} else {
+				return this.srcUrl
+			}
+		},
+		songName: function() {
+			if(this.songInfo.name) {
+				return this.songInfo.name
+			} else {
+				return '-SONGNAME-'
+			}
+		},
+		albumName: function() {
+			if(this.songInfo.album) {
+				return this.songInfo.album.name
+			} else {
+				return '--ALBUMNAME--'
+			}
+		},
+		singerName: function() {
+			if(this.songInfo.singer) {
+				return this.songInfo.singer
+			} else {
+				return '--SINGERNAME--'
+			}
+		}
+	},
 	methods: {
 		closeDetail() {
 			$("#pageSongDetail").css({

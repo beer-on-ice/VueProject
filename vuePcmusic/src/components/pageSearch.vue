@@ -40,7 +40,6 @@
 									<td>{{artists[i]}}</td>
 									<td>{{song.album.name}}</td>
 									<td>{{timeObj[i].I}}:{{timeObj[i].S}}</td>
-									<!-- <td style="display:none">{{song.album.picUrl}}</td> -->
 								</tr>
                             </tbody>
                         </table>
@@ -88,6 +87,7 @@
 
 <script>
 
+import audioError from 'common/js/audioError'
 import {formatTime,toDB} from 'common/js/formatTime'
 import axios from 'axios'
 
@@ -134,6 +134,7 @@ export default {
 			$(event.currentTarget).find("td.index").html('<i class="fa fa-volume-up" aria-hidden="true"></i>').addClass("active");
 
 			let that = this
+			// 获取歌曲URL
 			axios.get('/api/music/url', {
 			    params: {
 			        id: musicid
@@ -143,16 +144,15 @@ export default {
 				that.$root.bus.$emit('playOn');
 				that.$emit('mediaOn',res.data.data[0].url);
 				song.singer = singer
-				// console.log(song);
 			}).catch(function (error) {
 			    console.log(error);
 			});
+			// 获取歌曲信息
 			axios.get('/api/song/detail', {
 			    params: {
 			        ids: musicid
 			    }
 			}).then(function (res) {
-				console.log(res);
 				song.picUrl = res.data.songs[0].al.picUrl
 				that.$emit('sendMusicDetail',song);
 				// console.log(res.data.songs[0].al.picUrl);

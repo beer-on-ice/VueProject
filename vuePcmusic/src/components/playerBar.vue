@@ -3,9 +3,9 @@
     <div class="page_playerbar clearfix">
         <!-- 播放控制按钮组 -->
         <div class="playerbar_playbtngroup" id="playBtnGroup">
-            <div class="btn prev"><i class="fa fa-step-backward" aria-hidden="true"></i></div>
-            <div class="btn play"><i class="fa fa-play" aria-hidden="true"></i></div>
-            <div class="btn next"><i class="fa fa-step-forward" aria-hidden="true"></i></div>
+            <div class="btn prev" @click='playBtnPrev'><i class="fa fa-step-backward" aria-hidden="true"></i></div>
+            <div class="btn play" @click='playBtnToggle'><i class="fa fa-play" aria-hidden="true"></i></div>
+            <div class="btn next" @click='playBtnNext'><i class="fa fa-step-forward" aria-hidden="true"></i></div>
         </div>
         <!-- 进度条 -->
         <div class="playerbar_timeprogress">
@@ -21,7 +21,7 @@
         <!-- 其他控制按钮组 -->
         <div class="playerbar_others">
             <div class="volume">
-                <div class="mutebtn" id="muteBtn" title="静音"><i class="fa fa-volume-up" aria-hidden="true"></i></div>
+                <div class="mutebtn" id="muteBtn" title="静音" @click='mute'><i class="fa fa-volume-up" aria-hidden="true"></i></div>
                 <div class="progress" id="vol_progress_box">
                     <div class="progress_curbar" id="vol_progress_bar">
                         <div class="curbar_arc" id="vol_progress_arc"></div>
@@ -33,7 +33,11 @@
 </template>
 
 <script>
+import showTipBox from 'common/js/showTip'
 import {stylePlayBtn} from 'common/js/styleActive'
+import {formatTime,toDB} from 'common/js/formatTime'
+import {roundOn,roundOff} from 'common/js/turnRound'
+import dragProgress from 'common/js/dragProgress'
 
 export default {
 	created() {
@@ -41,7 +45,104 @@ export default {
 			//播放按钮变化
 			stylePlayBtn($('#playBtnGroup').find(".play"),"play");
 		})
-	}
+        // 进度条变化
+        this.$root.bus.$on('updateTimeBar',function() {
+            var media = $("#audio").get(0)
+            var objTimeCurTime = formatTime(media.currentTime);
+        	var objTimeDuration = formatTime(media.duration);
+        	$('#audio_currentTime').html(objTimeCurTime.I+":"+objTimeCurTime.S);
+        	$('#audio_duration').html(objTimeDuration.I+":"+objTimeDuration.S);
+        	$('#progress_box div:nth-child(2)').css("width",(media.currentTime/media.duration).toFixed(4)*100+"%");
+        })
+
+	},
+    mounted() {
+        var media = $('#audio').get(0)
+        var volume = 0.5;
+        // 进度条初始化
+        $('#progress_box div:nth-child(2)').css("width","0%");
+        $('#vol_progress_box div:nth-child(1)').css("width","50%");
+        $('#vol_progress_box div:nth-child(1) div').css("width","14px");
+
+        //改变音乐进度条
+        dragProgress({
+        	progressBar:$('#progress_bar'),
+        	progressArc:$('#progress_arc'),
+        	progressBox:$('#progress_box'),
+        	audio:$(media),
+        	callback_move:function (nowdisX) {
+        		// 改变播放时间
+        			//计算出移动了多少秒
+               	var changeVal=(media.duration * nowdisX /100).toFixed(2);
+               	var objTime = formatTime(changeVal);
+               	$('#audio_currentTime').html(objTime.I+":"+objTime.S);
+               	return changeVal;
+        	},
+        	callback_up:function (changeVal) {
+        		// 改变播放位置
+        		media.currentTime = changeVal;
+        		stylePlayBtn($('#playBtnGroup').find(".play"),"play");
+        	}
+        })
+
+        // 调节音量
+        dragProgress({
+        	progressBar:$('#vol_progress_bar'),
+        	progressArc:$('#vol_progress_arc'),
+        	progressBox:$('#vol_progress_box'),
+        	audio:$(media),
+        	callback_move:function (nowdisX) {
+        		// 更新音量
+            	media.volume=(1*nowdisX/100).toFixed(2);
+        		//为0则是静音
+               	if (media.volume <= 0) {
+               		$('#muteBtn').html('<i class="fa fa-volume-off" aria-hidden="true"></i>')
+               	} else {
+               		$('#muteBtn').html('<i class="fa fa-volume-up" aria-hidden="true"></i>')
+               	}
+               	return 0;
+        	}
+        });
+    },
+    methods: {
+        // 播放按钮点击
+        playBtnToggle() {
+            if (!$('#audio').get(0).src) {
+                showTipBox("info","没有播放资源，请选择曲目");
+            } else {
+                if (!$('#audio').get(0).paused) {
+                    $('#audio').get(0).pause();
+                    // play按钮样式
+                    stylePlayBtn($('#playBtnGroup').find(".play"),"pause");
+                    roundOff()
+                } else {
+                    $('#audio').get(0).play();
+                    // play按钮样式
+                    stylePlayBtn($('#playBtnGroup').find(".play"),"play");
+                    roundOn()
+                }
+                this.$emit('playActiveSong')
+            }
+        },
+        playBtnPrev() {
+            this.$emit('playPrevSong')
+        },
+        playBtnNext() {
+            this.$emit('playNextSong')
+        },
+        mute() {
+            var media = $('#audio').get(0)
+            if (!media.muted) {
+        		media.muted = true;
+        		$('#muteBtn').html('<i class="fa fa-volume-off" aria-hidden="true"></i>').attr("title","恢复音量");
+        		$('#vol_progress_bar').css("display","none");
+        	} else {
+        		media.muted = false;
+                $('#muteBtn').html('<i class="fa fa-volume-up" aria-hidden="true"></i>').attr("title","静音");
+        		$('#vol_progress_bar').css("display","block");
+        	}
+        }
+    }
 }
 </script>
 

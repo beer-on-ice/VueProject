@@ -26,7 +26,7 @@
 				<p class="title">创建的歌单
 					<span class="title_btngroups">
 						<a href="javascript:void(0);" class="btn addlist" id="addList"><i class="fa fa-plus-circle" aria-hidden="true"></i></a>
-						<a href="javascript:void(0);" class="btn unfoldlist"><i class="fa fa-angle-down" aria-hidden="true"></i></a>
+						<a href="javascript:void(0);" class="btn unfoldlist" @click='toggleList'><i class="fa fa-angle-down" aria-hidden="true"></i></a>
 					</span>
 				</p>
 				<div class="btngroups">
@@ -37,7 +37,7 @@
 			<div class="list list_collect">
 				<p class="title">收藏的歌单
 					<span class="title_btngroups">
-						<a href="javascript:void(0);" class="btn unfoldlist"><i class="fa fa-angle-down" aria-hidden="true"></i></a>
+						<a href="javascript:void(0);" class="btn unfoldlist"  @click='toggleList'><i class="fa fa-angle-down" aria-hidden="true"></i></a>
 					</span>
 				</p>
 				<div class="btngroups">
@@ -64,6 +64,9 @@
 </template>
 
 <script>
+import {styleActive} from 'common/js/styleActive'
+
+
 export default {
 	data() {
 		return {
@@ -96,6 +99,17 @@ export default {
 			}
 		}
 	},
+	created() {
+		///////////////////  基础的交互样式       //////////////////////
+		$(function () {
+			// tab选项卡切换样式
+			styleActive([$(".R_page .tabbtns"),".label_btn"],"click","active");
+			// list切换样式
+			styleActive([$("#listContainer>.list>.btngroups"),".btn"],"click","active");
+			// tr切换样式
+			styleActive([$(".infolist"),"tr"],"click","active");
+		})
+	},
 	methods: {
 		expandDetail() {
 			$("#pageSongDetail").css({
@@ -103,12 +117,23 @@ export default {
 				"right":0,
 				"opacity":1
 			});
+		},
+		toggleList(e) {
+			// 收起 | 展开 歌单列表
+			var $btnGroups = $(e.currentTarget).parents(".list").find(".btngroups");
+			if ($btnGroups.css("display")==="block") {
+				$btnGroups.slideUp(500);
+				$(this).html('<i class="fa fa-angle-right" aria-hidden="true"></i>');
+			} else {
+				$btnGroups.slideDown(500);
+				$(this).html('<i class="fa fa-angle-down" aria-hidden="true"></i>');
+			}
 		}
 	}
 }
 </script>
 
-<style lang="css" scoped>
+<style lang="css">
 /* ------------------------page_list------------------------------- */
 .page_list {
 	position:absolute;
