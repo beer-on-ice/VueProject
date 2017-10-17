@@ -34,10 +34,11 @@
 
 <script>
 import showTipBox from 'common/js/showTip'
-import {stylePlayBtn} from 'common/js/styleActive'
 import {formatTime,toDB} from 'common/js/formatTime'
 import {roundOn,roundOff} from 'common/js/turnRound'
 import dragProgress from 'common/js/dragProgress'
+import {stylePlayBtn} from 'common/js/styleActive'
+
 
 export default {
 	created() {
@@ -107,20 +108,9 @@ export default {
     methods: {
         // 播放按钮点击
         playBtnToggle() {
-            if (!$('#audio').get(0).src) {
+            if (!$('#audio').get(0).src && !$("#infoList_search").find('tr.active').length) {
                 showTipBox("info","没有播放资源，请选择曲目");
             } else {
-                if (!$('#audio').get(0).paused) {
-                    $('#audio').get(0).pause();
-                    // play按钮样式
-                    stylePlayBtn($('#playBtnGroup').find(".play"),"pause");
-                    roundOff()
-                } else {
-                    $('#audio').get(0).play();
-                    // play按钮样式
-                    stylePlayBtn($('#playBtnGroup').find(".play"),"play");
-                    roundOn()
-                }
                 this.$emit('playActiveSong')
             }
         },

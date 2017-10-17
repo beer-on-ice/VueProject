@@ -33,7 +33,8 @@
                             <tbody class="infolist" id="infoList_search">
 								<tr
 								v-for='song,i in songData.songs'
-								@dblclick='playMusic(song.id,song,artists[i])'>
+								@dblclick='playMusic(song.id,song,artists[i])'
+								@click='readyPlay(song.id,song,artists[i])'>
 									<td class="index">{{(i+1) <10 ? "0"+(i+1) : (i+1)}}</td>
 									<td><i class="fa fa-heart-o" aria-hidden="true"></i>&nbsp;<i class="fa fa-download" aria-hidden="true"></i></td>
 									<td>{{song.name}}</td>
@@ -91,12 +92,23 @@ import audioError from 'common/js/audioError'
 import {formatTime,toDB} from 'common/js/formatTime'
 import axios from 'axios'
 
+
+import http from '../utils/http'
+import api from '../utils/api'
+
 export default {
 	data() {
 		return {
 			artistsName:[],
 			songDuration:[],
-			musicid:''
+			musicid:'',
+			songMess: {
+				name:'',
+				url:'',
+				singer:'',
+				albumUrl:'',
+				albumName:''
+			}
 		}
 	},
 	props:[
@@ -132,33 +144,46 @@ export default {
 				$(item).removeClass("active").html(toDB(index+1));
 			});
 			$(event.currentTarget).find("td.index").html('<i class="fa fa-volume-up" aria-hidden="true"></i>').addClass("active");
-
 			let that = this
-			// 获取歌曲URL
-			axios.get('/api/music/url', {
-			    params: {
-			        id: musicid
-			    }
-			}).then(function (res) {
-				// 播放按钮变化
-				that.$root.bus.$emit('playOn');
-				that.$emit('mediaOn',res.data.data[0].url);
+
+			this.fetchData(musicid,song,singer,function(songUrl,picUrl){
 				song.singer = singer
-			}).catch(function (error) {
-			    console.log(error);
-			});
-			// 获取歌曲信息
-			axios.get('/api/song/detail', {
-			    params: {
-			        ids: musicid
-			    }
-			}).then(function (res) {
-				song.picUrl = res.data.songs[0].al.picUrl
+				song.picUrl = picUrl
+				that.$root.bus.$emit('playOn');
+				that.$emit('mediaOn',songUrl);
 				that.$emit('sendMusicDetail',song);
-				// console.log(res.data.songs[0].al.picUrl);
-			}).catch(function (error) {
-			    console.log(error);
-			});
+			})
+		},
+		readyPlay(musicid,song,singer) {
+			let that = this
+			this.fetchData(musicid,song,singer,function(songUrl,picUrl){
+				that.songMess.name = song.name
+				that.songMess.url = songUrl
+				that.songMess.singer = singer
+				that.songMess.albumUrl = picUrl
+				that.songMess.albumName = song.album.name
+
+				// that.$emit('sendMusicDetail',song);
+				// song.singer = singer
+				// song.picUrl = picUrl
+			})
+			this.$emit('mediaMess',this.songMess)
+		},
+		fetchData: async function (musicid,song,singer,cb) {
+			let that = this
+			let params = {
+				id: musicid
+			}
+			let params2 = {
+				ids: musicid
+			}
+			const res = await http.get(api.songD, params)
+			const res2 = await http.get(api.songAD, params2)
+			if (res && res.data.code === 200) {
+				if (res2 && res2.data.code === 200) {
+					cb(res.data.data[0].url,res2.data.songs[0].al.picUrl)
+				}
+			}
 		}
 	}
 }

@@ -19,6 +19,9 @@ import axios from 'axios'
 import showTipBox from 'common/js/showTip'
 import funcSearch from 'common/js/funcSearch'
 
+import http from '../utils/http'
+import api from '../utils/api'
+
 export default {
 	methods: {
 		pageUpAndSearch() {
@@ -27,40 +30,54 @@ export default {
 				showTipBox("error","不能为空哟！");
 				return;
 			}
+			this.fetchData()
+		// $.ajax({
+		// 	url: '/api/search',
+	    //     data: {
+	    //         keywords: $('#inpSearch').val()
+	    //     },
+		// 	success(data) {
+		// 		let res = JSON.parse(data)
+		// 		console.log(res);
+		// 		that.$root.bus.$emit('takeNum',res.result.songs);
+		//
+		// 		that.$root.bus.$emit('takeName',$('#inpSearch').val());
+		//
+		// 		that.$emit('passData',res.result)
+		// 	}
+		// })
+		// axios.get('/api/search', {
+		//     params: {
+		//         keywords: $('#inpSearch').val()
+		//     }
+		// }).then(function (res) {
+		// 	// 添加搜索概述
+		// 	that.$root.bus.$emit('takeNum',res.data.result);
+		//
+		// 	that.$root.bus.$emit('takeName',$('#inpSearch').val());
+		//
+		// 	that.$emit('passData',res.data.result)
+		//
+		// }).catch(function (error) {
+		//     console.log(error);
+		// });
+		},
+		fetchData: async function () {
+			let that = this
 
 			funcSearch()
 
-			let that = this
-			// $.ajax({
-			// 	url: '/api/search',
-		    //     data: {
-		    //         keywords: $('#inpSearch').val()
-		    //     },
-			// 	success(data) {
-			// 		let res = JSON.parse(data)
-			// 		console.log(res);
-			// 		that.$root.bus.$emit('takeNum',res.result.songs);
-			//
-			// 		that.$root.bus.$emit('takeName',$('#inpSearch').val());
-			//
-			// 		that.$emit('passData',res.result)
-			// 	}
-			// })
-			axios.get('/api/search', {
-			    params: {
-			        keywords: $('#inpSearch').val()
-			    }
-			}).then(function (res) {
-				// 添加搜索概述
+		    let params = {
+			    keywords: $('#inpSearch').val()
+		    }
+		    const res = await http.get(api.search, params)
+		    if (res && res.data.code === 200) {
 				that.$root.bus.$emit('takeNum',res.data.result);
 
 				that.$root.bus.$emit('takeName',$('#inpSearch').val());
 
 				that.$emit('passData',res.data.result)
-
-			}).catch(function (error) {
-			    console.log(error);
-			});
+		    }
 		}
 	}
 }

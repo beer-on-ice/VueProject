@@ -5,21 +5,13 @@
 			<div class="list list_recommend">
 				<p class="title">推荐</p>
 				<div class="btngroups">
-					<p class="btn find"><i class="fa fa-music" aria-hidden="true"></i>&nbsp;&nbsp;发现音乐</p>
-					<p class="btn fm"><i class="fa fa-bullseye" aria-hidden="true"></i>&nbsp;&nbsp;私人FM</p>
-					<p class="btn mv"><i class="fa fa-youtube-play" aria-hidden="true"></i>&nbsp;&nbsp;MV</p>
-					<p class="btn friends"><i class="fa fa-user-plus" aria-hidden="true"></i>&nbsp;&nbsp;我的朋友</p>
+					<p class="btn find" v-for='item in options.recommends'><i class="fa" :class="item.ico" aria-hidden="true"></i>&nbsp;&nbsp;{{item.name}}</p>
 				</div>
 			</div>
 			<div class="list list_me">
 				<p class="title">我的音乐</p>
 				<div class="btngroups">
-					<p class="btn local"><i class="fa fa-music" aria-hidden="true"></i>&nbsp;&nbsp;本地音乐</p>
-					<p class="btn download"><i class="fa fa-download" aria-hidden="true"></i>&nbsp;&nbsp;下载管理</p>
-					<p class="btn cloud"><i class="fa fa-cloud" aria-hidden="true"></i>&nbsp;&nbsp;我的音乐云盘</p>
-					<p class="btn singers"><i class="fa fa-user-plus" aria-hidden="true"></i>&nbsp;&nbsp;我的歌手</p>
-					<p class="btn me_mv"><i class="fa fa-youtube-play" aria-hidden="true"></i>&nbsp;&nbsp;我的MV</p>
-					<p class="btn me_fm"><i class="fa fa-bullseye" aria-hidden="true"></i>&nbsp;&nbsp;我的电台</p>
+					<p class="btn local" v-for='item in options.myLists'><i class="fa" :class='item.ico' aria-hidden="true"></i>&nbsp;&nbsp;{{item.name}}</p>
 				</div>
 			</div>
 			<div class="list list_create">
@@ -41,7 +33,7 @@
 					</span>
 				</p>
 				<div class="btngroups">
-					<p class="btn list_collect_id001"><i class="fa fa-music" aria-hidden="true"></i>&nbsp;&nbsp;爵士的大脑，后摇的身躯</p>
+					<p class="btn list_collect_id001" v-for='item in options.saveLists'><i class="fa" :class="item.ico" aria-hidden="true"></i>&nbsp;&nbsp;{{item.name}}</p>
 				</div>
 			</div>
 		</div>
@@ -70,7 +62,59 @@ import {styleActive} from 'common/js/styleActive'
 export default {
 	data() {
 		return {
-			srcUrl:require('../common/images/temp_pic001.jpg')
+			srcUrl:require('../common/images/temp_pic001.jpg'),
+			options: {
+				recommends:[
+					{
+						ico: 'fa-music',
+						name: '发现音乐'
+					},
+					{
+						ico: 'fa-bullseye',
+						name: '私人FM'
+					},
+					{
+						ico: 'fa-youtube-play',
+						name: 'MV'
+					},
+					{
+						ico: 'fa-user-plus',
+						name: '我的朋友'
+					}
+				],
+				myLists:[
+					{
+						ico:'fa-music',
+						name: '本地音乐'
+					},
+					{
+						ico:'fa-download',
+						name: '下载管理'
+					},
+					{
+						ico:'fa-cloud',
+						name: '我的音乐云盘'
+					},
+					{
+						ico:'fa-user-plus',
+						name: '我的歌手'
+					},
+					{
+						ico: 'fa-youtube-play',
+						name: '我的MV'
+					},
+					{
+						ico: 'fa-bullseye',
+						name: '我的电台'
+					}
+				],
+				saveLists:[
+					{
+						ico: 'fa-music',
+						name:'爵士的大脑，后摇的身躯'
+					}
+				]
+			}
 		}
 	},
 	props: [
