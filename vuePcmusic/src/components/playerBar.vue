@@ -108,17 +108,15 @@ export default {
     methods: {
         // 播放按钮点击
         playBtnToggle() {
-            if (!$('#audio').get(0).src && !$("#infoList_search").find('tr.active').length) {
-                showTipBox("info","没有播放资源，请选择曲目");
-            } else {
-                this.$emit('playActiveSong')
-            }
+            this.$emit('playActiveSong')
         },
         playBtnPrev() {
             this.$emit('playPrevSong')
+            this.$root.bus.$emit('playPrevSongs')
         },
         playBtnNext() {
             this.$emit('playNextSong')
+            this.$root.bus.$emit('playNextSongs')
         },
         mute() {
             var media = $('#audio').get(0)

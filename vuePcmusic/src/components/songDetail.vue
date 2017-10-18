@@ -42,43 +42,68 @@
 </template>
 
 <script>
+import mainLrcScroll from 'common/js/lyric'
 
 export default {
 	data() {
 		return {
-			srcUrl:require('../common/images/disc-o.png')
+			srcUrl:require('../common/images/disc-o.png'),
+			songS:'--SONGNAME--',
+			singerS: '--SINGERNAME--',
+			albumS:'--ALBUMNAME--'
 		}
 	},
 	props: [
-		'songInfo'
+		'songMess'
 	],
+	watch: {
+		songMess: {
+			handler:function(val,oldVal) {
+				this.srcUrl = val.albumUrl
+				this.songS = val.name
+				this.singerS = val.singer
+				this.albumS = val.albumName
+				if(this.songMess.lyric) {
+					mainLrcScroll({
+						"jQ_lrcContainer":$("#lrcContainer"),
+						"jQ_lrcBox":$("#lrcBox"),
+						"jQ_audio":$("#audio"),
+						"str":this.songMess.lyric
+					})
+				} else {
+					$("#lrcBox").html("<p>暂无歌词</p>");
+				}
+			},
+			deep:true
+		}
+	},
 	computed: {
 		src: function() {
-			if(this.songInfo.picUrl) {
-				return this.songInfo.picUrl
+			if(this.songMess.picUrl) {
+				return this.songMess.picUrl
 			} else {
 				return this.srcUrl
 			}
 		},
 		songName: function() {
-			if(this.songInfo.name) {
-				return this.songInfo.name
+			if(this.songMess.name) {
+				return this.songMess.name
 			} else {
-				return '-SONGNAME-'
+				return this.songS
 			}
 		},
 		albumName: function() {
-			if(this.songInfo.album) {
-				return this.songInfo.album.name
+			if(this.songMess.album) {
+				return this.songMess.albumName
 			} else {
-				return '--ALBUMNAME--'
+				return this.albumS
 			}
 		},
 		singerName: function() {
-			if(this.songInfo.singer) {
-				return this.songInfo.singer
+			if(this.songMess.singer) {
+				return this.songMess.singer
 			} else {
-				return '--SINGERNAME--'
+				return this.albumS
 			}
 		}
 	},

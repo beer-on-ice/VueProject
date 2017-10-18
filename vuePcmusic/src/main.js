@@ -4,9 +4,9 @@ import router from './router'
 import $ from 'jquery'
 
 // 引入静态资源
+import 'font-awesome/css/font-awesome.css'
 require('common/css/reset.css')
 require('common/css/base.css')
-import 'font-awesome/css/font-awesome.css'
 
 Vue.config.productionTip = false
 

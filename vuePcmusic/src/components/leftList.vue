@@ -63,6 +63,9 @@ export default {
 	data() {
 		return {
 			srcUrl:require('../common/images/temp_pic001.jpg'),
+			songS:'-SONGNAME-',
+			singerS: '-SINGER-',
+			canChange: false,
 			options: {
 				recommends:[
 					{
@@ -118,28 +121,34 @@ export default {
 		}
 	},
 	props: [
-		'songInfo'
+		'songMess'
 	],
+	mounted() {
+		let that = this
+		this.$root.bus.$on('btnPlayMusic',function() {
+			that.canChange = true
+		})
+	},
 	computed: {
 		src: function() {
-			if(this.songInfo.picUrl) {
-				return this.songInfo.picUrl
+			if(this.canChange) {
+				return this.songMess.albumUrl
 			} else {
 				return this.srcUrl
 			}
 		},
 		songName: function() {
-			if(this.songInfo.name) {
-				return this.songInfo.name
+			if(this.canChange) {
+				return this.songMess.name
 			} else {
-				return '-SONGNAME-'
+				return this.songS
 			}
 		},
 		singerName: function() {
-			if(this.songInfo.singer) {
-				return this.songInfo.singer
+			if(this.canChange) {
+				return this.songMess.singer
 			} else {
-				return '-SINGER-'
+				return this.singerS
 			}
 		}
 	},
@@ -180,7 +189,7 @@ export default {
 <style lang="css">
 /* ------------------------page_list------------------------------- */
 .page_list {
-	position:absolute;
+	position:fixed;
 	top:0;left:0;
 	width:220px;
 	height:100%;
