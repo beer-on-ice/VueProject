@@ -2,12 +2,15 @@
     <div class="mianer" onselectstart="return false;" ondragstart="return false;">
         <top-nav @passData='getData'></top-nav>
         <left-list
-            :song-mess='songMess'></left-list>
+            :song-mess='songMess'
+            ></left-list>
         <player-bar
             @playPrevSong='prevSong'
             @playNextSong='nextSong'
             @playActiveSong='activeSong'></player-bar>
-        <page-main></page-main>
+        <page-main
+            @listSongPlay='listPlay'
+            @listReadyPlay='listReady'></page-main>
         <page-search
             :song-data='songData'
             @mediaOn = 'mediaPlay'
@@ -15,6 +18,7 @@
         <song-detail
             :song-mess='songMess'></song-detail>
         <tip-box></tip-box>
+        <loading></loading>
         <!-- audio -->
     	<audio
             id="audio"
@@ -33,6 +37,7 @@
     import PageSearch from './pageSearch'
     import SongDetail from './songDetail'
     import TipBox from './TipBox'
+    import Loading from './loading'
 
     import {roundOn,roundOff} from 'common/js/turnRound'
     import audioError from 'common/js/audioError'
@@ -40,6 +45,8 @@
     import {stylePlayBtn} from 'common/js/styleActive'
     import showTipBox from 'common/js/showTip'
 
+    import http from '../utils/http'
+    import api from '../utils/api'
 
     export default {
         data() {
@@ -57,6 +64,9 @@
             songReady(songMess) {
                 this.songMess = songMess
             },
+            listReady(data) {
+                this.songMess = data
+            },
             // 监控音乐进度
             update() {
                 this.$root.bus.$emit('updateTimeBar')
@@ -69,8 +79,7 @@
                 }
             },
             end() {
-                // 循环播放
-                // this.$refs.audio.currentTime = 0
+                // 循环播放 this.$refs.audio.currentTime = 0
                 // 下一首
                 let nextSong = $('td.index.active').parent().next('tr')
                 if(!nextSong.length) {
@@ -115,7 +124,7 @@
             },
             activeSong() {
                 // 如果没有歌曲在播放，且没有选中任意歌曲，就出提示框
-                if (!this.$refs.audio.src && !$("#infoList_search").find('tr.active').length) {
+                if (!this.$refs.audio.src && !$(".infolist").find('tr.active').length) {
                     showTipBox("info","没有播放资源，请选择曲目");
                 } else {
                     // 如果有歌曲在播放，就执行暂停播放功能
@@ -140,6 +149,12 @@
                         roundOn()
                     }
                 }
+            },
+            listPlay(data) {
+                this.$refs.audio.src = data.url
+                stylePlayBtn($('#playBtnGroup').find(".play"),"play");
+                playStyle()
+                roundOn()
             }
         },
         watch: {
@@ -160,7 +175,8 @@
             PageMain,
             PageSearch,
             SongDetail,
-            TipBox
+            TipBox,
+            Loading
         }
     }
 </script>

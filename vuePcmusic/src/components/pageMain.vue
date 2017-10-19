@@ -6,29 +6,34 @@
                 <!-- listinfo -->
 				<div class="listinfo clearfix">
 					<div class="info_listpic">
-						<img src="../common/images/temp_pic001.jpg" alt="" id="playlist_listPic" />
+						<img :src="src" alt="" id="playlist_listPic" />
 					</div>
 					<div class="info_detailtext">
 						<div class="playinfo">
-							<span><i class="fa fa-music" aria-hidden="true"></i>&nbsp;&nbsp;<span id="playlist_trackCount">0</span></span>
-							<span><i class="fa fa-play-circle-o" aria-hidden="true"></i>&nbsp;&nbsp;<span id="playlist_playCount">0</span></span>
+							<span><i class="fa fa-music" aria-hidden="true"></i>&nbsp;&nbsp;<span id="playlist_trackCount">{{info.songNum}}</span></span>
+							<span><i class="fa fa-play-circle-o" aria-hidden="true"></i>&nbsp;&nbsp;<span id="playlist_playCount">{{info.actNum}}</span></span>
 						</div>
 						<div class="detail_name">
 							<span class="listtag">歌单</span>
-							<span class="listname" id="playlist_listName">孤独的键</span>
+							<span class="listname" id="playlist_listName">{{info.name}}</span>
 						</div>
 						<div class="detail_time">
-							<span class="userpic"><a href="javascript:void(0);"><img src="../common/images/user_face.png" alt="" id="playlist_userFace" /></a></span>
-							<span class="username"><a href="javascript:void(0);" id="playlist_userName">孤独的箭</a></span>
-							<span class="createtime" id="playlist_createTime">1995-10-01</span>
+							<span class="userpic"><a href="javascript:void(0);"><img :src="avaSrc" alt="" id="playlist_userFace" /></a></span>
+							<span class="username"><a href="javascript:void(0);" id="playlist_userName">{{info.creator}}</a></span>
+							<span class="createtime" id="playlist_createTime">{{info.createTime}}</span>
 							<span>创建</span>
 						</div>
 						<div class="detail_btns">
 							<span class="btn playall"><i class="fa fa-play-circle-o" aria-hidden="true" style="color:#c52f30;"></i>&nbsp;&nbsp;播放全部</span><!--
 							--><span class="btn plus"><i class="fa fa-plus" aria-hidden="true"></i></span>
-							<span class="btn playall"><i class="fa fa-folder" aria-hidden="true"></i>&nbsp;&nbsp;收藏(0)</span>
+							<span class="btn playall"><i class="fa fa-folder" aria-hidden="true"></i>&nbsp;&nbsp;收藏({{info.subscribedCount}})</span>
 							<span class="btn playall"><i class="fa fa-share-square-o" aria-hidden="true"></i>&nbsp;&nbsp;分享(0)</span>
 							<span class="btn playall"><i class="fa fa-download" aria-hidden="true"></i>&nbsp;&nbsp;下载全部</span>
+						</div>
+						<div class="detail_description">
+							<p class='description'>
+								{{info.description}}
+							</p>
 						</div>
 					</div>
 				</div>
@@ -59,26 +64,17 @@
                                 </tr>
                             </thead>
                             <tbody class="infolist" id="infoList_playlist">
-                                <tr data-musicid="407839677">
-                                    <td class="index" data-num="01">01</td>
-                                    <td><i class="fa fa-heart-o addMylove" aria-hidden="true"></i>&nbsp;
-                        <i class="fa fa-download" aria-hidden="true"></i></td>
-                                    <td>HandClap</td>
-                                    <td>Fitz &amp; the Tantrums</td>
-                                    <td>Fitz &amp; the Tantrums</td>
-                                    <td>03:13</td>
-                                    <td style="display:none">http://p1.music.126.net/SVMVN3UZpDQ3AL57nTZSNg==/18209012067816536.jpg</td>
-                                </tr>
-                                <tr data-musicid="26584442">
-                                    <td class="index" data-num="01">02</td>
-                                    <td><i class="fa fa-heart-o addMylove" aria-hidden="true"></i>&nbsp;
-                        <i class="fa fa-download" aria-hidden="true"></i></td>
-                                    <td>风的季节</td>
-                                    <td>Soler</td>
-                                    <td>历久尝新</td>
-                                    <td>04:09</td>
-                                    <td style="display:none">http://p1.music.126.net/-eqaVo-47yPxQ-RVz3wwcA==/4439827952969202.jpg</td>
-                                </tr>
+								<tr
+								v-for='item,i in songLists'
+								@dblclick='listPlaySong(item)'
+								@click='listReadyPlay(item)'>
+									<td class="index">{{(i+1) <10 ? "0"+(i+1) : (i+1)}}</td>
+									<td><i class="fa fa-heart-o" aria-hidden="true"></i>&nbsp;<i class="fa fa-download" aria-hidden="true"></i></td>
+									<td>{{item.name}}</td>
+									<td>{{item.singer}}</td>
+									<td>{{item.albumName}}</td>
+									<td>{{item.duration.I}}:{{item.duration.S}}</td>
+								</tr>
                             </tbody>
                             </tfoot>
                         </table>
@@ -156,7 +152,118 @@
 </template>
 
 <script>
-export default {}
+import {toYMD} from 'common/js/formatTime'
+import {funcMain} from 'common/js/funcSearch'
+import {formatTime,toDB} from 'common/js/formatTime'
+import http from '../utils/http'
+import api from '../utils/api'
+
+
+export default {
+	data() {
+		return {
+			info: {
+				name:'我喜欢的音乐',
+				creator: '李锦',
+				createTime:'1995-10-00',
+				actNum:'1000',
+				songNum:'1000',
+				subscribedCount:'999',
+				coverImg:require('../common/images/temp_pic001.jpg'),
+				avatorImg:require('../common/images/user_face.png'),
+				description:'暂无简介'
+			},
+			songLists: [],
+		}
+	},
+	created() {
+		let that = this
+	  	this.$root.bus.$on('sendDetail',function(item) {
+			// if(!$('.infolist tr').length) {
+			// 	$('#loadingBox').css('display','block')
+			// }
+
+			funcMain() // 显示主页
+
+			that.fetchData(item.id) // 获取歌单详情
+
+			that.info.name = item.name
+			that.info.creator = item.creator.nickname
+			that.info.coverImg = item.coverImgUrl
+			that.info.createTime = toYMD(item.createTime)
+			that.info.actNum = item.playCount
+			that.info.songNum = item.trackCount
+			that.info.subscribedCount = item.subscribedCount
+			that.info.coverImg = item.coverImgUrl
+			that.info.avatorImg = item.creator.avatarUrl
+		})
+	},
+	computed: {
+		src: function() {
+			if(this.info.coverImg) {
+				return this.info.coverImg
+			} else {
+				return this.srcUrl
+			}
+		},
+		avaSrc: function() {
+			if(this.info.avatorImg) {
+				return this.info.avatorImg
+			} else {
+				return this.srcUrl
+			}
+		}
+	},
+	methods: {
+		listPlaySong(data) {
+			this.$root.bus.$emit('songPlaystatus',data)
+			this.$emit('listSongPlay',data)
+		},
+		listReadyPlay(data) {
+			this.$emit('listReadyPlay',data)
+		},
+		fetchData: async function(id) {
+			let list = []
+			let params =  {id: id}
+			const res = await http.get(api.listDetail, params)
+			// 歌曲简介
+			if(res.data.playlist.description) {
+				this.info.description = res.data.playlist.description
+			} else {
+				this.info.description = '暂无简介'
+			}
+			// 歌单所有歌曲信息
+			for(var i=0;i<res.data.privileges.length;i++) {
+				let params2 =  {id: res.data.privileges[i].id}
+				const res2 = await http.get(api.songD, params2)
+				let params3 =  {ids: res.data.privileges[i].id}
+				const res3 = await http.get(api.songAD, params3)
+				const lyric = await http.get(api.lyric, params2)
+				if(lyric.data.lrc) {
+					list.push({
+						name: res3.data.songs[0].name,
+						albumName: res3.data.songs[0].al.name,
+						albumUrl:res3.data.songs[0].al.picUrl,
+						singer:res3.data.songs[0].ar[0].name,
+						url:res2.data.data[0].url,
+						lyric:lyric.data.lrc.lyric,
+						duration:formatTime(res3.data.songs[0].dt/1000)
+					})
+				} else {
+					list.push({
+						name: res3.data.songs[0].name,
+						albumName: res3.data.songs[0].al.name,
+						albumUrl:res3.data.songs[0].al.picUrl,
+						singer:res3.data.songs[0].ar[0].name,
+						url:res2.data.data[0].url,
+						duration:formatTime(res3.data.songs[0].dt/1000)
+					})
+				}
+			}
+			this.songLists = list
+		}
+	}
+}
 </script>
 
 <style lang="css">
@@ -265,4 +372,12 @@ export default {}
 	overflow:hidden;
 }
 /*followers e*/
+
+.detail_description {
+	margin-top:10px;
+	height: 100px;
+	line-height:20px;
+	overflow-y:scroll;
+	text-indent: 20px;
+}
 </style>

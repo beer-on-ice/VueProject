@@ -33,6 +33,7 @@
 				</div>
 				<div class="lrccontainer" id="lrcContainer">
 					<div class="lrcbox" id="lrcBox">
+						{{lyric}}
 						<!-- <p>暂无歌词</p> -->
 					</div>
 				</div>
@@ -50,62 +51,71 @@ export default {
 			srcUrl:require('../common/images/disc-o.png'),
 			songS:'--SONGNAME--',
 			singerS: '--SINGERNAME--',
-			albumS:'--ALBUMNAME--'
+			albumS:'--ALBUMNAME--',
+			canChange: false
 		}
 	},
 	props: [
 		'songMess'
 	],
-	watch: {
-		songMess: {
-			handler:function(val,oldVal) {
-				this.srcUrl = val.albumUrl
-				this.songS = val.name
-				this.singerS = val.singer
-				this.albumS = val.albumName
-				if(this.songMess.lyric) {
-					mainLrcScroll({
-						"jQ_lrcContainer":$("#lrcContainer"),
-						"jQ_lrcBox":$("#lrcBox"),
-						"jQ_audio":$("#audio"),
-						"str":this.songMess.lyric
-					})
-				} else {
-					$("#lrcBox").html("<p>暂无歌词</p>");
-				}
-			},
-			deep:true
-		}
-	},
 	computed: {
 		src: function() {
-			if(this.songMess.picUrl) {
-				return this.songMess.picUrl
+			if(this.canChange) {
+				return this.songMess.albumUrl
 			} else {
 				return this.srcUrl
 			}
 		},
 		songName: function() {
-			if(this.songMess.name) {
+			if(this.canChange) {
 				return this.songMess.name
 			} else {
 				return this.songS
 			}
 		},
 		albumName: function() {
-			if(this.songMess.album) {
+			if(this.canChange) {
 				return this.songMess.albumName
 			} else {
 				return this.albumS
 			}
 		},
 		singerName: function() {
-			if(this.songMess.singer) {
+			if(this.canChange) {
 				return this.songMess.singer
 			} else {
 				return this.albumS
 			}
+		},
+		lyric: function() {
+			if(this.canChange && this.songMess.lyric) {
+				mainLrcScroll({
+					"jQ_lrcContainer":$("#lrcContainer"),
+					"jQ_lrcBox":$("#lrcBox"),
+					"jQ_audio":$("#audio"),
+					"str":this.songMess.lyric
+				})
+			} else {
+				$("#lrcBox").html("<p>暂无歌词</p>");
+			}
 		}
+	},
+	mounted() {
+		let that = this
+		this.$root.bus.$on('btnPlayMusic',function() {
+			that.canChange = true
+		})
+		this.$root.bus.$on('playOn',function() {
+			that.canChange = true
+		})
+		this.$root.bus.$on('songPlaystatus',function(data) {
+			that.canChange = true
+			that.songMess.name = data.name
+			that.songMess.singer = data.singer
+			that.songMess.albumUrl = data.albumUrl
+			that.songMess.albumName = data.albumName
+			that.songMess.lyric = data.lyric
+		})
 	},
 	methods: {
 		closeDetail() {

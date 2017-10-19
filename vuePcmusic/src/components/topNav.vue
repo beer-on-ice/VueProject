@@ -17,7 +17,7 @@
 
 import axios from 'axios'
 import showTipBox from 'common/js/showTip'
-import funcSearch from 'common/js/funcSearch'
+import {funcSearch} from 'common/js/funcSearch'
 
 import http from '../utils/http'
 import api from '../utils/api'

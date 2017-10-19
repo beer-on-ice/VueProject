@@ -140,32 +140,25 @@ export default {
 	methods: {
 		playMusic(musicid,song,singer) {
 			playStyle()
-
+			this.$root.bus.$emit('playOn'); // 点击播放按钮变化
 			let that = this
 			this.fetchData(musicid,song,singer,function(songUrl,picUrl,lyric){
-				that.$root.bus.$emit('playOn'); // 点击播放按钮变化
-
-				that.songMess.singer = singer
-				that.songMess.albumUrl = picUrl
-				that.songMess.albumName = song.album.name
-				that.songMess.lyric = lyric
 				that.$emit('mediaOn',songUrl);
 			})
 		},
 		readyPlay(musicid,song,singer) {
 			let that = this
 			this.fetchData(musicid,song,singer,function(songUrl,picUrl,lyric){
-				that.songMess.name = song.name
-				that.songMess.url = songUrl
-				that.songMess.singer = singer
-				that.songMess.albumUrl = picUrl
-				that.songMess.albumName = song.album.name
-				that.songMess.lyric = lyric
+					that.songMess.name = song.name
+					that.songMess.albumName = song.album.name
+					that.songMess.url = songUrl
+					that.songMess.singer = singer
+					that.songMess.albumUrl = picUrl
+					that.songMess.lyric = lyric
 			})
 			this.$emit('mediaMess',this.songMess)
 		},
 		fetchData: async function (musicid,song,singer,cb) {
-			let that = this
 			let params = {
 				id: musicid
 			}

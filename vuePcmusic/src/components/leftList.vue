@@ -22,8 +22,8 @@
 					</span>
 				</p>
 				<div class="btngroups">
-					<p class="btn list_create_like active" id="list_create_like"><i class="fa fa-heart-o" aria-hidden="true"></i>&nbsp;&nbsp;孤独的键</p>
-					<p class="btn list_create_001"><i class="fa fa-music" aria-hidden="true"></i>&nbsp;&nbsp;我喜欢的音乐</p>
+					<!-- <p class="btn list_create_like active" id="list_create_like" v-for='item in loveOne' @click='sendListDetail(item)'><i class="fa fa-heart-o" aria-hidden="true"></i>&nbsp;&nbsp;{{item.name}}</p> -->
+					<p class="btn list_create_001" v-for='item in userSongList' @click='sendListDetail(item)' ><i class="fa fa-music" aria-hidden="true"></i>&nbsp;&nbsp;{{item.name}}</p>
 				</div>
 			</div>
 			<div class="list list_collect">
@@ -33,7 +33,7 @@
 					</span>
 				</p>
 				<div class="btngroups">
-					<p class="btn list_collect_id001" v-for='item in options.saveLists'><i class="fa" :class="item.ico" aria-hidden="true"></i>&nbsp;&nbsp;{{item.name}}</p>
+					<p class="btn list_collect_id001" v-for='item in saveSongList' @click='sendListDetail(item)'><i class="fa fa-music" aria-hidden="true"></i>&nbsp;&nbsp;{{item.name}}</p>
 				</div>
 			</div>
 		</div>
@@ -57,7 +57,8 @@
 
 <script>
 import {styleActive} from 'common/js/styleActive'
-
+import http from '../utils/http'
+import api from '../utils/api'
 
 export default {
 	data() {
@@ -66,6 +67,8 @@ export default {
 			songS:'-SONGNAME-',
 			singerS: '-SINGER-',
 			canChange: false,
+			userSongList: [],
+			saveSongList:[],
 			options: {
 				recommends:[
 					{
@@ -110,12 +113,6 @@ export default {
 						ico: 'fa-bullseye',
 						name: '我的电台'
 					}
-				],
-				saveLists:[
-					{
-						ico: 'fa-music',
-						name:'爵士的大脑，后摇的身躯'
-					}
 				]
 			}
 		}
@@ -123,10 +120,31 @@ export default {
 	props: [
 		'songMess'
 	],
+	created() {
+		///////////////////  基础的交互样式       //////////////////////
+		$(function () {
+			// tab选项卡切换样式
+			styleActive([$(".R_page .tabbtns"),".label_btn"],"click","active");
+			// list切换样式
+			styleActive([$("#listContainer>.list>.btngroups"),".btn"],"click","active");
+			// tr切换样式
+			styleActive([$(".infolist"),"tr"],"click","active");
+		})
+		this.fetchData(63691806) // 获取用户歌单
+	},
 	mounted() {
 		let that = this
 		this.$root.bus.$on('btnPlayMusic',function() {
 			that.canChange = true
+		})
+		this.$root.bus.$on('playOn',function() {
+			that.canChange = true
+		})
+		this.$root.bus.$on('songPlaystatus',function(data) {
+			that.canChange = true
+			that.songMess.singer = data.singer
+			that.songMess.albumUrl = data.albumUrl
+			that.songMess.name = data.name
 		})
 	},
 	computed: {
@@ -152,17 +170,6 @@ export default {
 			}
 		}
 	},
-	created() {
-		///////////////////  基础的交互样式       //////////////////////
-		$(function () {
-			// tab选项卡切换样式
-			styleActive([$(".R_page .tabbtns"),".label_btn"],"click","active");
-			// list切换样式
-			styleActive([$("#listContainer>.list>.btngroups"),".btn"],"click","active");
-			// tr切换样式
-			styleActive([$(".infolist"),"tr"],"click","active");
-		})
-	},
 	methods: {
 		expandDetail() {
 			$("#pageSongDetail").css({
@@ -180,6 +187,23 @@ export default {
 			} else {
 				$btnGroups.slideDown(500);
 				$(this).html('<i class="fa fa-angle-down" aria-hidden="true"></i>');
+			}
+		},
+		sendListDetail(data) {
+			this.$root.bus.$emit('sendDetail',data)
+		},
+		fetchData: async function(id) {
+			let params = {uid: id}
+			const res = await http.get(api.userList, params)
+			if (res && res.data.code === 200) {
+				for(var i=0;i<res.data.playlist.length;i++) {
+					if(res.data.playlist[i].creator.userId === id) {
+						this.userSongList.push(res.data.playlist[i])
+					} else {
+						this.saveSongList.push(res.data.playlist[i])
+					}
+				}
+
 			}
 		}
 	}
@@ -203,6 +227,7 @@ export default {
 	overflow-y:scroll;
 }
 .list_container>.list {
+	width:100%;
 	margin-bottom:10px;
 }
 .list>.title {
@@ -219,6 +244,7 @@ export default {
 }
 .list>.title>.title_btngroups>.btn {
 	margin:0 3px;
+
 }
 .list>.title>.title_btngroups>.btn>.fa {
 	font-size:0.8rem;
@@ -229,6 +255,9 @@ export default {
 	border-left:3px solid transparent;
 	color:#656567;
 	cursor:pointer;
+	text-overflow:ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
 }
 .list>.btngroups>.btn:hover {
 	color:#111;

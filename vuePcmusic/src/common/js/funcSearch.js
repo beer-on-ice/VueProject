@@ -1,6 +1,6 @@
 // 搜索歌曲功能函数
 
-export default function funcSearch() {
+export function funcSearch() {
     // 显示搜索页 隐藏列表页
     $("#pageMain").slideUp(300);
     $("#pageSearch").slideDown(300);
@@ -11,3 +11,10 @@ export default function funcSearch() {
         "opacity":0
     });
 };
+
+
+export function funcMain() {
+    // 显示搜索页 隐藏列表页
+    $("#pageSearch").slideUp(300);
+    $("#pageMain").slideDown(300);
+}
