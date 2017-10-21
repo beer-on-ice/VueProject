@@ -1,6 +1,6 @@
 <template>
     <!-- page_Search 搜索列表 -->
-	<div class="page_search R_page" id="pageSearch" style="display:none;">
+	<div class="page_search R_page" id="pageSearch">
 		<div class="main_container">
 			<div class="listcontainer">
                 <p style="margin:20px 40px;color:#bbb;" id="search_count">搜索 "<span class="input" style="color:#0b75c3;">STRING</span>"，共搜到 <span class="count">0</span> 条结果，本页最多显示 100 条结果</p>
@@ -33,7 +33,7 @@
                             <tbody class="infolist" id="infoList_search">
 									<tr
 									v-for='song,i in songData.songs'
-									@dblclick='playMusic(song.id,song,artists[i])'
+									@dblclick='playMusic()'
 									@click='readyPlay(song.id,song,artists[i])'>
 									<td class="index">{{(i+1) <10 ? "0"+(i+1) : (i+1)}}</td>
 										<td><i class="fa fa-heart-o" aria-hidden="true"></i>&nbsp;<i class="fa fa-download" aria-hidden="true"></i></td>
@@ -108,7 +108,7 @@ export default {
 				albumUrl:'',
 				albumName:'',
 				lyric:''
-			}
+			},
 		}
 	},
 	props:[
@@ -134,17 +134,16 @@ export default {
 	},
 	created() {
 		//  搜索概述
-		this.$root.bus.$on('takeName', (data)=>{$("#search_count").find(".input").html(data)})
-		this.$root.bus.$on('takeNum', (data)=>{$("#search_count").find(".count").html(data.songCount)})
+		this.$root.bus.$on('takeName', (data) => {$("#search_count").find(".input").html(data)})
+		this.$root.bus.$on('takeNum',(data)=> {
+			$("#search_count").find(".count").html(data.songCount)
+		})
 	},
 	methods: {
-		playMusic(musicid,song,singer) {
+		playMusic() {
 			playStyle()
 			this.$root.bus.$emit('playOn'); // 点击播放按钮变化
-			let that = this
-			this.fetchData(musicid,song,singer,function(songUrl,picUrl,lyric){
-				that.$emit('mediaOn',songUrl);
-			})
+			this.$emit('mediaOn');
 		},
 		readyPlay(musicid,song,singer) {
 			let that = this

@@ -2,8 +2,8 @@
 
 export function funcSearch() {
     // 显示搜索页 隐藏列表页
-    $("#pageMain").slideUp(300);
-    $("#pageSearch").slideDown(300);
+    $('#pageSearch .listcontainer').css('display','block').animate({top:"60px",opacity: 1},500)
+    $('#pageMain .listcontainer').animate({top:"100%",opacity: 0},500).css('display','none')
     // 缩放歌曲详情页
     $("#pageSongDetail").css({
         "top":"100%",
@@ -15,6 +15,6 @@ export function funcSearch() {
 
 export function funcMain() {
     // 显示搜索页 隐藏列表页
-    $("#pageSearch").slideUp(300);
-    $("#pageMain").slideDown(300);
+    $('#pageMain .listcontainer').css('display','block').animate({top:"60px",opacity: 1},500)
+    $('#pageSearch .listcontainer').animate({top:"100%",opacity: 0},500).css('display','none')
 }

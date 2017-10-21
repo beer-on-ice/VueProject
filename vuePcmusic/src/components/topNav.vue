@@ -22,7 +22,13 @@ import {funcSearch} from 'common/js/funcSearch'
 import http from '../utils/http'
 import api from '../utils/api'
 
+
 export default {
+	data() {
+		return {
+			show: false // 控制loading组件
+		}
+	},
 	methods: {
 		pageUpAndSearch() {
 			var str = $('#inpSearch').val().trim()
@@ -72,11 +78,13 @@ export default {
 		    }
 		    const res = await http.get(api.search, params)
 		    if (res && res.data.code === 200) {
+				this.show = true
+
 				that.$root.bus.$emit('takeNum',res.data.result);
 
 				that.$root.bus.$emit('takeName',$('#inpSearch').val());
 
-				that.$emit('passData',res.data.result)
+				that.$emit('passData',res.data.result, this.show)
 		    }
 		}
 	}

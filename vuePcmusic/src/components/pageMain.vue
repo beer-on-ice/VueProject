@@ -148,6 +148,7 @@
                 </div>
 			</div>
 		</div>
+		<loading v-show='show'></loading>
 	</div>
 </template>
 
@@ -157,7 +158,7 @@ import {funcMain} from 'common/js/funcSearch'
 import {formatTime,toDB} from 'common/js/formatTime'
 import http from '../utils/http'
 import api from '../utils/api'
-
+import Loading from './loading'
 
 export default {
 	data() {
@@ -174,14 +175,12 @@ export default {
 				description:'暂无简介'
 			},
 			songLists: [],
+			show: false
 		}
 	},
 	created() {
 		let that = this
 	  	this.$root.bus.$on('sendDetail',function(item) {
-			// if(!$('.infolist tr').length) {
-			// 	$('#loadingBox').css('display','block')
-			// }
 
 			funcMain() // 显示主页
 
@@ -216,7 +215,6 @@ export default {
 	},
 	methods: {
 		listPlaySong(data) {
-			this.$root.bus.$emit('songPlaystatus',data)
 			this.$emit('listSongPlay',data)
 		},
 		listReadyPlay(data) {
@@ -224,6 +222,7 @@ export default {
 		},
 		fetchData: async function(id) {
 			let list = []
+
 			let params =  {id: id}
 			const res = await http.get(api.listDetail, params)
 			// 歌曲简介
@@ -249,6 +248,7 @@ export default {
 						lyric:lyric.data.lrc.lyric,
 						duration:formatTime(res3.data.songs[0].dt/1000)
 					})
+					this.show = true
 				} else {
 					list.push({
 						name: res3.data.songs[0].name,
@@ -258,10 +258,15 @@ export default {
 						url:res2.data.data[0].url,
 						duration:formatTime(res3.data.songs[0].dt/1000)
 					})
+					this.show = true
 				}
 			}
 			this.songLists = list
+			this.show = false
 		}
+	},
+	components: {
+  	    Loading
 	}
 }
 </script>

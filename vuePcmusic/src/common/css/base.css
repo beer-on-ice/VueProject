@@ -22,6 +22,8 @@
     overflow-y:scroll;
 }
 .listcontainer{
+	position:fixed;
+	top:100%;
     width:100%;
     overflow:hidden;
 }
@@ -190,6 +192,7 @@
 	white-space:nowrap;
 	text-overflow:ellipsis;
 	overflow:hidden;
+	cursor: pointer;
 }
 .musiclist>table th{
 	border-right:1px solid #e0e0e0;

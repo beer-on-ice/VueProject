@@ -2,12 +2,12 @@
     <div class="mianer" onselectstart="return false;" ondragstart="return false;">
         <top-nav @passData='getData'></top-nav>
         <left-list
-            :song-mess='songMess'
-            ></left-list>
+            :song-mess='songMess'></left-list>
         <player-bar
             @playPrevSong='prevSong'
             @playNextSong='nextSong'
             @playActiveSong='activeSong'></player-bar>
+        <page-find></page-find>
         <page-main
             @listSongPlay='listPlay'
             @listReadyPlay='listReady'></page-main>
@@ -18,7 +18,6 @@
         <song-detail
             :song-mess='songMess'></song-detail>
         <tip-box></tip-box>
-        <loading></loading>
         <!-- audio -->
     	<audio
             id="audio"
@@ -36,11 +35,10 @@
     import PageMain from './PageMain'
     import PageSearch from './pageSearch'
     import SongDetail from './songDetail'
+    import PageFind from './PageFind'
     import TipBox from './TipBox'
-    import Loading from './loading'
 
     import {roundOn,roundOff} from 'common/js/turnRound'
-    import audioError from 'common/js/audioError'
     import playStyle from 'common/js/playStyle'
     import {stylePlayBtn} from 'common/js/styleActive'
     import showTipBox from 'common/js/showTip'
@@ -54,18 +52,19 @@
                 songData:{},
                 src:'',
                 songMess:{},
-                isPlay: false
+                isPlay: false,
+                readyMess:{}
             }
         },
         methods: {
-            getData(data) {
+            getData(data,boolean) {
                 this.songData = data
             },
-            songReady(songMess) {
-                this.songMess = songMess
+            songReady(data) {
+                this.readyMess = data
             },
             listReady(data) {
-                this.songMess = data
+                this.readyMess = data
             },
             // 监控音乐进度
             update() {
@@ -92,18 +91,17 @@
                     this.isPlay = true
                 }
             },
-            mediaPlay(src) {
-                this.$refs.audio.src = src
-                roundOn()
-            },
             prevSong() {
                 let prevSong = $('td.index.active').parent().prev('tr')
-                if(!prevSong.length) {
+                if (!this.$refs.audio.src && !$(".infolist").find('tr.active').length) {
+                    showTipBox("info","没有播放资源，请选择曲目");
+                } else if(!prevSong.length) {
                     roundOn()
                     stylePlayBtn($('#playBtnGroup').find(".play"),"play");
                     this.$refs.audio.currentTime = 0
                 } else {
                     prevSong.click()// 先点击上一首歌
+                    this.songMess = this.readyMess
                     playStyle() //给上一首歌切换样式
                     roundOn()
                     this.$root.bus.$emit('playOn');
@@ -112,10 +110,13 @@
             },
             nextSong() {
                 let nextSong = $('td.index.active').parent().next('tr')
-                if(!nextSong.length) {
+                if (!this.$refs.audio.src && !$(".infolist").find('tr.active').length) {
+                    showTipBox("info","没有播放资源，请选择曲目");
+                } else if(!nextSong.length) {
                     showTipBox("info","已经是最后一首音乐了！")
                 } else {
                     nextSong.click()// 先点击下一首歌
+                    this.songMess = this.readyMess
                     playStyle() //给下一首歌切换样式
                     roundOn()
                     this.$root.bus.$emit('playOn');
@@ -141,6 +142,7 @@
                             roundOn()
                         }
                     } else {
+                        this.songMess = this.readyMess
                         // 如果没有歌曲在播放，就执行选中的歌曲点击按钮播放
                         this.$refs.audio.src = this.songMess.url
                         this.$root.bus.$emit('btnPlayMusic')
@@ -150,7 +152,14 @@
                     }
                 }
             },
+            mediaPlay() {
+                this.songMess = this.readyMess
+                this.$root.bus.$emit('songPlaystatus',this.songMess)
+                this.$refs.audio.src = this.songMess.url
+                roundOn()
+            },
             listPlay(data) {
+                this.$root.bus.$emit('songPlaystatus',data)
                 this.$refs.audio.src = data.url
                 stylePlayBtn($('#playBtnGroup').find(".play"),"play");
                 playStyle()
@@ -158,7 +167,7 @@
             }
         },
         watch: {
-            songMess: {
+            readyMess: {
                 handler:function(val,oldVal) {
                     if(this.isPlay) {
                         this.$refs.audio.src = val.url
@@ -176,7 +185,7 @@
             PageSearch,
             SongDetail,
             TipBox,
-            Loading
+            PageFind
         }
     }
 </script>

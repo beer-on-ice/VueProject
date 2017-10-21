@@ -5,7 +5,7 @@
 			<div class="list list_recommend">
 				<p class="title">推荐</p>
 				<div class="btngroups">
-					<p class="btn find" v-for='item in options.recommends'><i class="fa" :class="item.ico" aria-hidden="true"></i>&nbsp;&nbsp;{{item.name}}</p>
+					<p class="btn find" v-for='item,i in options.recommends' :class="{active: i === defaultOne}"><i class="fa" :class="item.ico" aria-hidden="true"></i>&nbsp;&nbsp;{{item.name}}</p>
 				</div>
 			</div>
 			<div class="list list_me">
@@ -22,8 +22,7 @@
 					</span>
 				</p>
 				<div class="btngroups">
-					<!-- <p class="btn list_create_like active" id="list_create_like" v-for='item in loveOne' @click='sendListDetail(item)'><i class="fa fa-heart-o" aria-hidden="true"></i>&nbsp;&nbsp;{{item.name}}</p> -->
-					<p class="btn list_create_001" v-for='item in userSongList' @click='sendListDetail(item)' ><i class="fa fa-music" aria-hidden="true"></i>&nbsp;&nbsp;{{item.name}}</p>
+					<p class="btn list_create_001" v-for='item,i in userSongList' @click='sendListDetail(item)' ><i class="fa fa-music" aria-hidden="true" :class='{"fa-heart-o": i === defaultOne}'></i>&nbsp;&nbsp;{{item.name}}</p>
 				</div>
 			</div>
 			<div class="list list_collect">
@@ -63,6 +62,7 @@ import api from '../utils/api'
 export default {
 	data() {
 		return {
+			defaultOne: 0,
 			srcUrl:require('../common/images/temp_pic001.jpg'),
 			songS:'-SONGNAME-',
 			singerS: '-SINGER-',
@@ -131,8 +131,10 @@ export default {
 			styleActive([$(".infolist"),"tr"],"click","active");
 		})
 		this.fetchData(63691806) // 获取用户歌单
+
 	},
 	mounted() {
+
 		let that = this
 		this.$root.bus.$on('btnPlayMusic',function() {
 			that.canChange = true
@@ -191,6 +193,7 @@ export default {
 		},
 		sendListDetail(data) {
 			this.$root.bus.$emit('sendDetail',data)
+			this.$emit('showDetail')
 		},
 		fetchData: async function(id) {
 			let params = {uid: id}
