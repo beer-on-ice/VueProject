@@ -140,7 +140,7 @@ export default {
 	overflow:auto;
 	-webkit-transition:all 0.5s ease;
 	transition:all 0.5s ease;
-	z-index:8;
+	z-index:9999;
 }
 .page_songdetail>.maincontainer{
 	width:1000px;

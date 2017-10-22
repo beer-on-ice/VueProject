@@ -224,6 +224,7 @@ export default {
 	border-right:1px solid #dadadc;
 	background-color:#f5f5f7;
 	box-sizing:border-box;
+	z-index:9999;
 }
 .page_list>.list_container {
 	height:100%;

@@ -143,7 +143,7 @@ export default {
     height:60px;
     border-top:1px solid #dadadc;
     background-color:#f6f6f8;
-    z-index:9;
+    z-index:99999;
 }
 
 .playerbar_playbtngroup{

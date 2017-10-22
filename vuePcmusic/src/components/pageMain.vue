@@ -27,12 +27,12 @@
 							<span class="btn playall"><i class="fa fa-play-circle-o" aria-hidden="true" style="color:#c52f30;"></i>&nbsp;&nbsp;播放全部</span><!--
 							--><span class="btn plus"><i class="fa fa-plus" aria-hidden="true"></i></span>
 							<span class="btn playall"><i class="fa fa-folder" aria-hidden="true"></i>&nbsp;&nbsp;收藏({{info.subscribedCount}})</span>
-							<span class="btn playall"><i class="fa fa-share-square-o" aria-hidden="true"></i>&nbsp;&nbsp;分享(0)</span>
+							<span class="btn playall"><i class="fa fa-share-square-o" aria-hidden="true"></i>&nbsp;&nbsp;分享({{info.shareCount}})</span>
 							<span class="btn playall"><i class="fa fa-download" aria-hidden="true"></i>&nbsp;&nbsp;下载全部</span>
 						</div>
 						<div class="detail_description">
 							<p class='description'>
-								{{info.description}}
+								简介：{{info.description}}
 							</p>
 						</div>
 					</div>
@@ -42,7 +42,7 @@
                 <div class="listtab">
                     <div class="tabbtns clearfix">
 						<label class="label_btn active" for="music">歌单列表</label>
-						<label class="label_btn" for="comment">评论(0)</label>
+						<label class="label_btn" for="comment">评论({{total}})</label>
 						<label class="label_btn" for="follower">收藏者</label>
 						<div class="menu_search">
 							<input type="text" placeholder="搜索歌单音乐" class="search_inp" />
@@ -90,43 +90,27 @@
                             <a href="javascript:void(0);" class="btn at"><i class="fa fa-at" aria-hidden="true"></i></a>
                             <a href="javascript:void(0);" class="btn comment">评论</a>
                         </div>
-                        <div class="commenttable">
+                        <div class="commenttable" v-show='total'>
                             <div class="comment new">
-                                <div class="title">最新评论(0)</div>
-                                <div class="content">
-                                    <p><span class="username"><a href="javascript:void(0);">用户008</a></span>：<span class="usersay">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laborum, earum cupiditate facere suscipit tenetur quia ab quasi ea eligendi, neque esse quidem. Eius, quasi! Odit veniam repellat amet, accusamus voluptatem.</span></p>
+                                <div class="title">最新评论({{total}})</div>
+                                <div class="content" v-for='item in comments'>
+                                    <p><span class="username"><a href="javascript:void(0);">{{item.nickname}}</a></span>：<span class="usersay">{{item.content}}</span></p>
                                     <div class="btngroups clearfix">
-                                        <span class="time">2016年12月31日 10:35:06</span>
+                                        <span class="time">{{item.time}}</span>
                                         <span class="btn">
                                             <a href="javascript:void(0);" class="btn_report">举报</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-                                            <a href="javascript:void(0);" class="btn_support"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i>(0)</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+                                            <a href="javascript:void(0);" class="btn_support"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i>({{item.likedCount}})</a>&nbsp;&nbsp;|&nbsp;&nbsp;
                                             <a href="javascript:void(0);" class="btn_share">分享</a>&nbsp;&nbsp;|&nbsp;&nbsp;
                                             <a href="javascript:void(0);" class="btn_reply">回复</a>
                                         </span>
                                     </div>
-                                    <div class="userface"><a href="javascript:void(0);"><img src="../common/images/user_face.png" alt="" /></a></div>
-                                </div>
-                                <div class="content">
-                                    <p><span class="username"><a href="javascript:void(0);">用户008</a></span>：<span class="usersay">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</span></p>
-                                    <div class="btngroups clearfix">
-                                        <span class="time">2016年12月31日 10:35:06</span>
-                                        <span class="btn">
-                                            <a href="javascript:void(0);" class="btn_report">举报</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-                                            <a href="javascript:void(0);" class="btn_support"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i>(0)</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-                                            <a href="javascript:void(0);" class="btn_share">分享</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-                                            <a href="javascript:void(0);" class="btn_reply">回复</a>
-                                        </span>
-                                    </div>
-                                    <div class="userface"><a href="javascript:void(0);"><img src="../common/images/user_face.png" alt="" /></a></div>
-                                </div>
-                            </div>
-                            <div class="comment prefect">
-                                <div class="title">精彩评论(0)</div>
-                                <div class="content">
-                                    <p style="color:#ccc;">-- 暂无评论 --</p>
+                                    <div class="userface"><a href="javascript:void(0);"><img :src="item.avatar" alt="" /></a></div>
                                 </div>
                             </div>
                         </div>
+						<p style='margin-top:20px;font-size:16px;' v-show='!total'>
+							暂无评论,快来抢沙发吧~
+						</p>
                     </div>
 
                     <!-- followers -->
@@ -155,7 +139,7 @@
 <script>
 import {toYMD} from 'common/js/formatTime'
 import {funcMain} from 'common/js/funcSearch'
-import {formatTime,toDB} from 'common/js/formatTime'
+import {formatTime,toDB,formatCommentTime} from 'common/js/formatTime'
 import http from '../utils/http'
 import api from '../utils/api'
 import Loading from './loading'
@@ -172,29 +156,32 @@ export default {
 				subscribedCount:'999',
 				coverImg:require('../common/images/temp_pic001.jpg'),
 				avatorImg:require('../common/images/user_face.png'),
-				description:'暂无简介'
+				description:'暂无简介',
+				shareCount: '999'
 			},
 			songLists: [],
+			comments:[],
+			total:0,
 			show: false
 		}
 	},
 	created() {
 		let that = this
-	  	this.$root.bus.$on('sendDetail',function(item) {
+	  	this.$root.bus.$on('sendDetail',function(data) {
 
 			funcMain() // 显示主页
 
-			that.fetchData(item.id) // 获取歌单详情
+			that.fetchData(data.id) // 获取歌单详情
+			that.info.name = data.name
+			that.info.creator = data.creator.nickname
+			that.info.coverImg = data.coverImgUrl
+			that.info.createTime = toYMD(data.createTime)
+			that.info.actNum = data.playCount
+			that.info.songNum = data.trackCount
+			that.info.subscribedCount = data.subscribedCount
+			that.info.coverImg = data.coverImgUrl
+			that.info.avatorImg = data.creator.avatarUrl
 
-			that.info.name = item.name
-			that.info.creator = item.creator.nickname
-			that.info.coverImg = item.coverImgUrl
-			that.info.createTime = toYMD(item.createTime)
-			that.info.actNum = item.playCount
-			that.info.songNum = item.trackCount
-			that.info.subscribedCount = item.subscribedCount
-			that.info.coverImg = item.coverImgUrl
-			that.info.avatorImg = item.creator.avatarUrl
 		})
 	},
 	computed: {
@@ -222,9 +209,13 @@ export default {
 		},
 		fetchData: async function(id) {
 			let list = []
+			let commentslist = []
 
 			let params =  {id: id}
 			const res = await http.get(api.listDetail, params)
+			const res2 = await http.get(api.listComment, params)
+			this.info.shareCount = res.data.playlist.shareCount
+
 			// 歌曲简介
 			if(res.data.playlist.description) {
 				this.info.description = res.data.playlist.description
@@ -261,6 +252,13 @@ export default {
 					this.show = true
 				}
 			}
+			// 歌曲评论
+			for(var i=0;i<res2.data.comments.length;i++) {
+				commentslist.push({nickname:res2.data.comments[i].user.nickname,avatar:res2.data.comments[i].user.avatarUrl,content:res2.data.comments[i].content,time:formatCommentTime(res2.data.comments[i].time),likedCount:res2.data.comments[i].likedCount})
+			}
+
+			this.total = res2.data.total
+			this.comments = commentslist
 			this.songLists = list
 			this.show = false
 		}

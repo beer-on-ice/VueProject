@@ -10,6 +10,10 @@
 			<input type="text" placeholder="探索音乐、歌手、歌词、用户" autofocus="" id="inpSearch" class="search_inp" value="handclap"/>
 			<span class="search_btn" id="top_searchBtn" @click='pageUpAndSearch'><i class="fa fa-search" aria-hidden="true"></i></span>
 		</div>
+		<div class="menu_login" @click='loginIn'>
+			<img src="../common/images/user_face.png" alt="" class='useravatar'>
+			<span class='status'>未登录</span>
+		</div>
 	</div>
 </template>
 
@@ -37,36 +41,10 @@ export default {
 				return;
 			}
 			this.fetchData()
-		// $.ajax({
-		// 	url: '/api/search',
-	    //     data: {
-	    //         keywords: $('#inpSearch').val()
-	    //     },
-		// 	success(data) {
-		// 		let res = JSON.parse(data)
-		// 		console.log(res);
-		// 		that.$root.bus.$emit('takeNum',res.result.songs);
-		//
-		// 		that.$root.bus.$emit('takeName',$('#inpSearch').val());
-		//
-		// 		that.$emit('passData',res.result)
-		// 	}
-		// })
-		// axios.get('/api/search', {
-		//     params: {
-		//         keywords: $('#inpSearch').val()
-		//     }
-		// }).then(function (res) {
-		// 	// 添加搜索概述
-		// 	that.$root.bus.$emit('takeNum',res.data.result);
-		//
-		// 	that.$root.bus.$emit('takeName',$('#inpSearch').val());
-		//
-		// 	that.$emit('passData',res.data.result)
-		//
-		// }).catch(function (error) {
-		//     console.log(error);
-		// });
+		},
+		loginIn() {
+			console.log(1);
+			this.$emit('onLogin')
 		},
 		fetchData: async function () {
 			let that = this
@@ -101,7 +79,7 @@ export default {
 	padding:0 15px;
 	box-sizing:border-box;
 	background-color:#c52f30;
-	z-index:9;
+	z-index:99999;
 }
 .page_menu>div {
 	float:left;
@@ -156,4 +134,24 @@ export default {
 	font-size:0.7rem;
 	color:#ccc;
 }
+
+.page_menu>.menu_login {
+	position:absolute;
+	left:1700px;
+	cursor: pointer;
+}
+.page_menu>.menu_login>.useravatar {
+	float:left;
+	width:30px;
+	height:30px;
+	border-radius: 30px;
+}
+.page_menu>.menu_login>.status {
+	float:right;
+	line-height:30px;
+	margin-left:15px;
+	color:white;
+}
+
+
 </style>

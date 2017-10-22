@@ -1,13 +1,15 @@
 <template>
     <div class="mianer" onselectstart="return false;" ondragstart="return false;">
-        <top-nav @passData='getData'></top-nav>
+        <top-nav
+        @passData='getData'
+        @onLogin='on'></top-nav>
         <left-list
             :song-mess='songMess'></left-list>
         <player-bar
             @playPrevSong='prevSong'
             @playNextSong='nextSong'
             @playActiveSong='activeSong'></player-bar>
-        <page-find></page-find>
+        <page-find v-show='false'></page-find>
         <page-main
             @listSongPlay='listPlay'
             @listReadyPlay='listReady'></page-main>
@@ -18,6 +20,7 @@
         <song-detail
             :song-mess='songMess'></song-detail>
         <tip-box></tip-box>
+        <login @offLogin="off" v-if="isLogin"></login>
         <!-- audio -->
     	<audio
             id="audio"
@@ -37,6 +40,7 @@
     import SongDetail from './songDetail'
     import PageFind from './PageFind'
     import TipBox from './TipBox'
+    import Login from './login'
 
     import {roundOn,roundOff} from 'common/js/turnRound'
     import playStyle from 'common/js/playStyle'
@@ -53,10 +57,17 @@
                 src:'',
                 songMess:{},
                 isPlay: false,
-                readyMess:{}
+                readyMess:{},
+                isLogin: false
             }
         },
         methods: {
+            on() {
+                this.isLogin = true
+            },
+            off() {
+                this.isLogin = false
+            },
             getData(data,boolean) {
                 this.songData = data
             },
@@ -185,9 +196,12 @@
             PageSearch,
             SongDetail,
             TipBox,
-            PageFind
+            PageFind,
+            Login
         }
     }
 </script>
 
-<style lang="css"></style>
+<style lang="css">
+
+</style>
