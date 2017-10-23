@@ -130,7 +130,10 @@ export default {
 			// tr切换样式
 			styleActive([$(".infolist"),"tr"],"click","active");
 		})
-		this.fetchData(63691806) // 获取用户歌单
+		let that = this
+		this.$root.bus.$on('offLogin2',function(data) {
+			that.fetchData(data.userid) // 获取用户歌单
+		})
 
 	},
 	mounted() {

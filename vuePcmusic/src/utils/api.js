@@ -7,5 +7,6 @@ export default {
     userList:'/api/user/playlist', // 用户歌单
     listDetail:'/api/playlist/detail', //歌单详情
     listComment:'/api/comment/playlist', // 歌单评论
-    login:'/api/login/cellphone'// 登录
+    login:'/api/login/cellphone',// 登录
+    banner:'/api/banner' // banner
 }

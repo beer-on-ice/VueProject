@@ -32,7 +32,8 @@ export default {
         return {
             show: false,
             show2: false,
-            tip:false
+            tip:false,
+            userMess:{}
         }
     },
     methods: {
@@ -55,11 +56,9 @@ export default {
                 $('.tip').html('不能为空')
             } else if(!(/^1[3|4|5|8][0-9]\d{4,8}$/.test($('.input .phoneNum').val()))){
                 this.tip = true
-                $('.tip').html('不正确的手机号或者密码')
+                $('.tip').html('手机或密码格式不正确')
             } else{
-                this.tip = false
                 this.fetchData($('.input .phoneNum').val(),$('.input .password').val())
-                this.$emit('offLogin')
             }
         },
         sureOn() {
@@ -67,9 +66,25 @@ export default {
             this.$emit('offLogin')
         },
         fetchData: async function(data1,data2) {
+            let that = this
             let params = {phone:data1,password:data2}
             const res = await http.get(api.login, params)
-            console.log(res);
+            if(res && res.data.loginType === 1 && res.data.code === 200) {
+                that.tip = false
+                that.userMess = {nickname: res.data.profile.nickname,avatarUrl:res.data.profile.avatarUrl,userid:res.data.profile.userId}
+                that.$root.bus.$emit('userMess',that.userMess)
+
+                if(!this.tip) {
+                    this.$emit('offLogin')
+                }
+            } else if(res && res.data.code === 502) {
+                that.tip = true
+                $('.tip').html('密码错误')
+
+                if(!this.tip) {
+                    this.$emit('offLogin')
+                }
+            }
         }
     }
 }

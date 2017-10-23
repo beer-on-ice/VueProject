@@ -7,12 +7,12 @@
 			<a href="javascript:void(0);" class="btn forward"><i class="fa fa-angle-right" aria-hidden="true"></i></a>
 		</div>
 		<div class="menu_search">
-			<input type="text" placeholder="探索音乐、歌手、歌词、用户" autofocus="" id="inpSearch" class="search_inp" value="handclap"/>
+			<input type="text" placeholder="探索音乐、歌手、歌词、用户" autofocus="" id="inpSearch" class="search_inp" value=""/>
 			<span class="search_btn" id="top_searchBtn" @click='pageUpAndSearch'><i class="fa fa-search" aria-hidden="true"></i></span>
 		</div>
 		<div class="menu_login" @click='loginIn'>
-			<img src="../common/images/user_face.png" alt="" class='useravatar'>
-			<span class='status'>未登录</span>
+			<img :src="loginUser.avatarUrl" alt="" class='useravatar'>
+			<span class='status'>{{loginUser.nickname}}</span>
 		</div>
 	</div>
 </template>
@@ -30,8 +30,20 @@ import api from '../utils/api'
 export default {
 	data() {
 		return {
-			show: false // 控制loading组件
+			show: false, // 控制loading组件
+			loginUser:{
+				avatarUrl: require("../common/images/user_face2.png"),
+				nickname:'未登录',
+				userid:''
+			}
 		}
+	},
+	created() {
+		let that = this
+		this.$root.bus.$on('userMess',function(data) {
+			that.$set(that.loginUser,'avatarUrl',data.avatarUrl)
+			that.$set(that.loginUser,'nickname',data.nickname)
+		})
 	},
 	methods: {
 		pageUpAndSearch() {
@@ -43,7 +55,6 @@ export default {
 			this.fetchData()
 		},
 		loginIn() {
-			console.log(1);
 			this.$emit('onLogin')
 		},
 		fetchData: async function () {
@@ -65,7 +76,7 @@ export default {
 				that.$emit('passData',res.data.result, this.show)
 		    }
 		}
-	}
+	},
 }
 </script>
 
