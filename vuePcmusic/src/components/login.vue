@@ -82,6 +82,7 @@ export default {
                 $('.tip').html('密码错误')
 
                 if(!this.tip) {
+                    this.$root.bus.$emit('loginIN')
                     this.$emit('offLogin')
                 }
             }

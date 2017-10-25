@@ -131,7 +131,7 @@ export default {
 			styleActive([$(".infolist"),"tr"],"click","active");
 		})
 		let that = this
-		this.$root.bus.$on('offLogin2',function(data) {
+		this.$root.bus.$on('userMess',function(data) {
 			that.fetchData(data.userid) // 获取用户歌单
 		})
 
