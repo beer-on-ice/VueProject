@@ -12,7 +12,7 @@
         <page-find></page-find>
         <page-main
             @listSongPlay='listPlay'
-            @listReadyPlay='listReady'></page-main>
+            @listPlayReady='listReady'></page-main>
         <page-search
             :song-data='songData'
             @mediaOn = 'mediaPlay'
@@ -171,9 +171,12 @@
                 this.$refs.audio.src = this.songMess.url
                 roundOn()
             },
-            listPlay(data) {
-                this.$root.bus.$emit('songPlaystatus',data)
-                this.$refs.audio.src = data.url
+            listPlay() {
+
+                this.songMess = this.readyMess
+                this.$root.bus.$emit('songPlaystatus',this.songMess)
+                
+                this.$refs.audio.src = this.songMess.url
                 stylePlayBtn($('#playBtnGroup').find(".play"),"play");
                 playStyle()
                 roundOn()

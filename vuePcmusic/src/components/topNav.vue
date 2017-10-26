@@ -7,12 +7,34 @@
 			<a href="javascript:void(0);" class="btn forward"><i class="fa fa-angle-right" aria-hidden="true"></i></a>
 		</div>
 		<div class="menu_search">
-			<input type="text" placeholder="探索音乐、歌手、歌词、用户" autofocus="" id="inpSearch" class="search_inp" value=""/>
+			<input
+			type="text"
+			placeholder="探索音乐、歌手、歌词、用户"
+			autofocus=""
+			id="inpSearch"
+			class="search_inp"
+			@keyup = 'suggest'
+			value=""/>
 			<span class="search_btn" id="top_searchBtn" @click='pageUpAndSearch'><i class="fa fa-search" aria-hidden="true"></i></span>
 		</div>
 		<div class="menu_login" @click='loginIn'>
 			<img :src="loginUser.avatarUrl" alt="" class='useravatar'>
 			<span class='status'>{{loginUser.nickname}}</span>
+		</div>
+		<div class="menu_search_suggest" v-show="suggestShow">
+			<div class="hot"></div>
+			<dl>
+				<dt v-show='songs.length'><i class="fa fa-music"></i>{{type[0]}}</dt>
+				<dd v-for="item in songs" @click='tuen(item.name)'>{{item.name}}</dd>
+				<dt v-show='singers.length'><i class="fa fa-user"></i>{{type[1]}}</dt>
+				<dd v-for="item in singers" @click='(item.name)'>{{item.name}}</dd>
+				<dt v-show='albums.length'><i class="fa fa-life-ring"></i>{{type[2]}}</dt>
+				<dd v-for="item in albums" @click='tuen(item.name)'>{{item.name}}</dd>
+				<dt v-show='mvs.length'><i class="fa fa-youtube-play "></i>{{type[3]}}</dt>
+				<dd v-for="item in mvs" @click='tuen(item.name)'>{{item.name}}</dd>
+				<dt v-show='playlists.length'><i class="fa fa-bars"></i>{{type[4]}}</dt>
+				<dd v-for="item in playlists" @click='tuen(item.name)'>{{item.name}}</dd>
+			</dl>
 		</div>
 	</div>
 </template>
@@ -35,9 +57,45 @@ export default {
 				avatarUrl: require("../common/images/user_face2.png"),
 				nickname:'未登录',
 				userid:''
-			}
+			},
+			suggestion:[],
+			type: [
+				'单曲',
+				'歌手',
+				'专辑',
+				'MV',
+				'歌单'
+			],
+			suggestShow:false
 		}
 	},
+	computed: {
+	    albums: function () {
+	        return this.suggestion.filter(function (album) {
+	      		return album.type === 0
+	        })
+	    },
+		singers: function () {
+	        return this.suggestion.filter(function (singer) {
+	      		return singer.type === 1
+	        })
+	    },
+		mvs: function () {
+	        return this.suggestion.filter(function (mv) {
+	      		return mv.type === 2
+	        })
+	    },
+		playlists: function () {
+	        return this.suggestion.filter(function (playlist) {
+	      		return playlist.type === 3
+	        })
+	    },
+		songs: function () {
+	        return this.suggestion.filter(function (song) {
+	      		return song.type === 4
+	        })
+	    },
+  	},
 	created() {
 		let that = this
 		this.$root.bus.$on('userMess',function(data) {
@@ -46,34 +104,66 @@ export default {
 		})
 	},
 	methods: {
+		suggest() {
+			this.fetchData()
+			this.suggestShow = true
+		},
+		tuen(name) {
+			$('#inpSearch').val(name)
+			this.suggestShow = false
+		},
 		pageUpAndSearch() {
+			this.suggestShow = false
+
 			var str = $('#inpSearch').val().trim()
 			if (!str) {
 				showTipBox("error","不能为空哟！");
 				return;
 			}
+			funcSearch()
+
 			this.fetchData()
+
 		},
 		loginIn() {
 			this.$emit('onLogin')
 		},
 		fetchData: async function () {
-			let that = this
-
-			funcSearch()
-
 		    let params = {
 			    keywords: $('#inpSearch').val()
 		    }
 		    const res = await http.get(api.search, params)
+			const res2 = await http.get(api.suggest, params)
+
 		    if (res && res.data.code === 200) {
 				this.show = true
 
-				that.$root.bus.$emit('takeNum',res.data.result);
+				this.$root.bus.$emit('takeNum',res.data.result);
 
-				that.$root.bus.$emit('takeName',$('#inpSearch').val());
+				this.$root.bus.$emit('takeName',$('#inpSearch').val());
 
-				that.$emit('passData',res.data.result, this.show)
+				this.$emit('passData',res.data.result, this.show)
+		    }
+
+			if (res2 && res2.data.code === 200) {
+				let suggests = []
+				res2.data.result.albums && res2.data.result.albums.forEach(function(item) {
+					suggests.push({name:item.name,id:item.id,type: 0})
+				})
+				res2.data.result.artists && res2.data.result.artists.forEach(function(item) {
+					suggests.push({name:item.name,id:item.id,type: 1})
+				})
+				res2.data.result.mvs && res2.data.result.mvs.forEach(function(item) {
+					suggests.push({name:item.name,id:item.id,type: 2})
+				})
+				res2.data.result.playlists && res2.data.result.playlists.forEach(function(item) {
+					suggests.push({name:item.name,id:item.id,type: 3})
+				})
+				res2.data.result.songs && res2.data.result.songs.forEach(function(item) {
+					suggests.push({name:item.name,id:item.id,type: 4})
+				})
+				this.suggestion = suggests
+
 		    }
 		}
 	},
@@ -164,5 +254,45 @@ export default {
 	color:white;
 }
 
+.page_menu> .menu_search_suggest {
+	width:222px;
+	height:200px;
+	z-index:99999999;
+	position:fixed;
+	top:150px;
+	left:320px;
+}
 
+.page_menu> .menu_search_suggest> .hot {
+	width:222px;
+	height:43px;
+	background: url('../common/images/hot.png')
+}
+
+.page_menu> .menu_search_suggest > dl {
+	background:#fafafa;
+	width:220px;
+	border:1px solid #ccc;
+	border-top:none;
+	margin-top:-6px;
+}
+
+.page_menu> .menu_search_suggest > dl dt{
+	height:25px;
+	background: #e6e7ea;
+	padding-left:5px;
+}
+
+.page_menu> .menu_search_suggest > dl dt i{
+	margin: 0 5px;
+}
+
+.page_menu> .menu_search_suggest > dl dd{
+	margin:6px 20px;
+	width:200px;
+	font:14px/20px '微软雅黑';
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+}
 </style>

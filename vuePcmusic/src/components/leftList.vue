@@ -5,7 +5,11 @@
 			<div class="list list_recommend">
 				<p class="title">推荐</p>
 				<div class="btngroups">
-					<p class="btn find" v-for='item,i in options.recommends' :class="{active: i === defaultOne}"><i class="fa" :class="item.ico" aria-hidden="true"></i>&nbsp;&nbsp;{{item.name}}</p>
+					<p
+					class="btn find"
+					v-for='item,i in options.recommends'
+					:class="{active: i === defaultOne}"
+					@click="showPage"><i class="fa" :class="item.ico" aria-hidden="true"></i>&nbsp;&nbsp;{{item.name}}</p>
 				</div>
 			</div>
 			<div class="list list_me">
@@ -56,6 +60,7 @@
 
 <script>
 import {styleActive} from 'common/js/styleActive'
+import {funcFind} from 'common/js/funcSearch'
 import http from '../utils/http'
 import api from '../utils/api'
 
@@ -150,6 +155,7 @@ export default {
 			that.songMess.singer = data.singer
 			that.songMess.albumUrl = data.albumUrl
 			that.songMess.name = data.name
+			
 		})
 	},
 	computed: {
@@ -176,6 +182,9 @@ export default {
 		}
 	},
 	methods: {
+		showPage() {
+			funcFind()
+		},
 		expandDetail() {
 			$("#pageSongDetail").css({
 				"top":"60px",

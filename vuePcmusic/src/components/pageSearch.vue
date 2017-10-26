@@ -91,7 +91,7 @@ import axios from 'axios'
 import http from '../utils/http'
 import api from '../utils/api'
 
-import {formatTime,toDB} from 'common/js/formatTime'
+import {formatTime,toDB,formatCommentTime} from 'common/js/formatTime'
 import playStyle from 'common/js/playStyle'
 import {formatLyricTime} from 'common/js/lyric'
 
@@ -107,7 +107,10 @@ export default {
 				singer:'',
 				albumUrl:'',
 				albumName:'',
-				lyric:''
+				lyric:'',
+				comments:[],
+				simsongs:[],
+				simusers:[]
 			},
 		}
 	},
@@ -147,35 +150,70 @@ export default {
 		},
 		readyPlay(musicid,song,singer) {
 			let that = this
-			this.fetchData(musicid,song,singer,function(songUrl,picUrl,lyric){
+			this.fetchData(musicid,song,singer,function(songUrl,picUrl,lyric,comment,simsongs,simusers){
 					that.songMess.name = song.name
 					that.songMess.albumName = song.album.name
 					that.songMess.url = songUrl
 					that.songMess.singer = singer
 					that.songMess.albumUrl = picUrl
 					that.songMess.lyric = lyric
+					that.songMess.comments = comment
+					that.songMess.simsongs = simsongs
+					that.songMess.simusers = simusers
 			})
 			this.$emit('mediaMess',this.songMess)
 		},
 		fetchData: async function (musicid,song,singer,cb) {
-			let params = {
-				id: musicid
-			}
-			let params2 = {
-				ids: musicid
-			}
+			let songcomments = []
+			let hotComments = []
+			let comments = []
+			let simsongs = []
+			let simusers = []
+
+
+			let params = {id: musicid}
+			let params2 = {ids: musicid}
 			const lyric = await http.get(api.lyric, params)
 			const res = await http.get(api.songD, params)
 			const res2 = await http.get(api.songAD, params2)
+			const res3 = await http.get(api.songComment, params)
+			const res6 = await http.get(api.simSong, params)
+			const res7 = await http.get(api.simUser, params)
+
+			for(var i=0;i<res6.data.songs.length;i++) {
+				simsongs.push({name:res6.data.songs[i].name,id:res6.data.songs[i].id,singer:res6.data.songs[i].artists[0].name})
+			}
+			for(var i=0;i<res7.data.userprofiles.length;i++) {
+				simusers.push({name:res7.data.userprofiles[i].nickname,id:res7.data.userprofiles[i].userId,avatarUrl:res7.data.userprofiles[i].avatarUrl,reason:res7.data.userprofiles[i].recommendReason})
+			}
+
+			// 歌曲评论
+			for(var i=0;i<res3.data.hotComments.length;i++) {
+				let paramsU = {
+					uid: res3.data.hotComments[i].user.userId
+				}
+				const res4 = await http.get(api.user, paramsU)
+				hotComments.push({img:res4.data.profile.avatarUrl,name:res4.data.profile.nickname,id:res3.data.hotComments[i].user.userId,likedCount:res3.data.hotComments[i].likedCount,time:formatCommentTime(res3.data.hotComments[i].time),content:res3.data.comments[i].content})
+			}
+			for(var i=0;i<res3.data.comments.length;i++) {
+				let paramsU = {
+					uid: res3.data.comments[i].user.userId
+				}
+				const res5 = await http.get(api.user, paramsU)
+				comments.push({img:res5.data.profile.avatarUrl,name:res5.data.profile.nickname,id:res3.data.comments[i].user.userId,likedCount:res3.data.comments[i].likedCount,time:formatCommentTime(res3.data.comments[i].time),content:res3.data.comments[i].content})
+			}
+			songcomments.push({total:res3.data.total,hotComments:hotComments,comments:comments})
+
 			if (res && res.data.code === 200) {
 				if (res2 && res2.data.code === 200) {
 					if(lyric.data.lrc) {
-						cb(res.data.data[0].url,res2.data.songs[0].al.picUrl,lyric.data.lrc.lyric)
+						cb(res.data.data[0].url,res2.data.songs[0].al.picUrl,lyric.data.lrc.lyric,songcomments,simsongs,simusers)
 					} else {
-						cb(res.data.data[0].url,res2.data.songs[0].al.picUrl,'')
+						cb(res.data.data[0].url,res2.data.songs[0].al.picUrl,'',songcomments,simsongs,simusers)
 					}
 				}
 			}
+
 		}
 	}
 }

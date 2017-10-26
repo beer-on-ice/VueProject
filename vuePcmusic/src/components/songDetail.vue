@@ -38,12 +38,75 @@
 					</div>
 				</div>
 			</div>
+			<lineBar :name="names[0]"></lineBar>
+			<div class="commentsection clearfix">
+				<input type="radio" id="comment" name="tablist" />
+                <div class="tabitem commentlist">
+                    <div class="commentbox clearfix">
+                        <textarea name="" id="" cols="30" rows="10" maxlength="140"></textarea>
+                        <a href="javascript:void(0);" class="btn emoji"><i class="fa fa-smile-o" aria-hidden="true"></i></a>
+                        <a href="javascript:void(0);" class="btn at"><i class="fa fa-at" aria-hidden="true"></i></a>
+                    </div>
+                    <div class="commenttable">
+                        <div class="comment new">
+                            <div class="title" v-show="allcomments.comments[0].hotComments.length">精彩评论({{allcomments.comments[0].hotComments.length}})</div>
+                            <div class="content" v-for='item in allcomments.comments[0].hotComments'>
+                                <p><span class="username"><a href="javascript:void(0);">{{item.name}}</a></span>：<span class="usersay">{{item.content}}</span></p>
+                                <div class="btngroups clearfix">
+                                    <span class="time">{{item.time}}</span>
+                                    <span class="btn">
+										<a href="javascript:void(0);" class="btn_support"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i>({{item.likedCount}})</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+										<a href="javascript:void(0);" class="btn_share">分享</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+									<a href="javascript:void(0);" class="btn_reply">回复</a>
+                                    </span>
+                                </div>
+                                <div class="userface"><a href="javascript:void(0);"><img :src="item.img" alt="" /></a></div>
+                            </div>
+
+							<div class="title" v-show="allcomments.comments[0].total">最新评论({{allcomments.comments[0].total}})</div>
+                            <div class="content" v-for='item in allcomments.comments[0].comments'>
+                                <p><span class="username"><a href="javascript:void(0);">{{item.name}}</a></span>：<span class="usersay">{{item.content}}</span></p>
+                                <div class="btngroups clearfix">
+                                    <span class="time">{{item.time}}</span>
+                                    <span class="btn">
+                                        <a href="javascript:void(0);" class="btn_support"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i>({{item.likedCount}})</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+                                        <a href="javascript:void(0);" class="btn_share">分享</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+                                        <a href="javascript:void(0);" class="btn_reply">回复</a>
+                                    </span>
+                                </div>
+                                <div class="userface"><a href="javascript:void(0);"><img :src="item.img" alt="" /></a></div>
+                            </div>
+                        </div>
+                    </div>
+					<p style='margin-top:20px;font-size:16px;' v-show="allcomments.comments[0].total === 0">
+						暂无评论,快来抢沙发吧~
+					</p>
+                </div>
+			</div>
+			<lineBar :name="names[1]" class='lineSim'></lineBar>
+			<ul class="similarSongsection clearfix">
+				<li v-for='item in songMess.simsongs'>
+					<span>{{item.name}}</span>
+					<span>{{item.singer}}</span>
+				</li>
+			</ul>
+			<lineBar :name="names[2]" class='lineSim2'></lineBar>
+			<ul class="similarUsersection clearfix">
+				<li v-for='item in songMess.simusers'>
+					<div class="">
+						<img :src="item.avatarUrl" alt="">
+						<span>{{item.name}}</span>
+					</div>
+					<p>{{item.reason}}</p>
+				</li>
+			</ul>
 		</div>
 	</div>
 </template>
 
 <script>
 import mainLrcScroll from 'common/js/lyric'
+import LineBar from './lineBar'
 
 export default {
 	data() {
@@ -52,7 +115,21 @@ export default {
 			songS:'--SONGNAME--',
 			singerS: '--SINGERNAME--',
 			albumS:'--ALBUMNAME--',
-			canChange: false
+			canChange: false,
+			names:[
+				'听友评论',
+				'相似歌曲',
+				'最近5个听过此歌的人'
+			],
+			allcomments: {
+				comments:[
+					{
+						total:0,
+						hotComments:[],
+						comments:[]
+					}
+				]
+			}
 		}
 	},
 	props: [
@@ -115,6 +192,10 @@ export default {
 			that.songMess.albumUrl = data.albumUrl
 			that.songMess.albumName = data.albumName
 			that.songMess.lyric = data.lyric
+			that.songMess.comments = data.comments
+			that.songMess.simsongs = data.simsongs
+			that.songMess.simusers = data.simusers
+
 		})
 	},
 	methods: {
@@ -124,6 +205,19 @@ export default {
 				"right":"100%",
 				"opacity":0
 			});
+		}
+	},
+	components: {
+		LineBar
+	},
+	watch: {
+		songMess: {
+			handler:function(val,oldVal) {
+				if(val.comments[0]) {
+					this.allcomments = val
+				}
+			},
+			deep:true
 		}
 	}
 }
@@ -293,5 +387,152 @@ export default {
 	filter:blur(100px);
 	z-index:-1;
     background-image:url('../common/images/al8.png');
+}
+
+
+.page_songdetail>.maincontainer>.linewrap {
+	float:left;
+	margin-top:88px;
+	width:620px;
+}
+.page_songdetail>.maincontainer>.commentsection {
+	float:left;
+}
+
+.page_songdetail>.maincontainer>.commentsection> #comment {
+	visibility: hidden;
+}
+/*comments s*/
+.page_songdetail>.maincontainer>.commentsection>.commentlist{
+	padding:15px 0;
+}
+.page_songdetail>.maincontainer>.commentsection>.commentlist>.commentbox{
+	width:600px;
+	padding:10px 10px 15px 10px;
+	background-color:#f0f0f2;
+	position:relative;
+}
+.page_songdetail>.maincontainer>.commentsection>.commentlist>.commentbox>textarea {
+	margin-bottom:10px;
+	padding:5px 10px;
+	width:100%;
+	height:40px;
+	resize:none;
+	outline:none;
+	border:1px solid #e3e3e5;
+	background-color:#fff;
+	box-sizing:border-box;
+}
+
+.page_songdetail>.maincontainer>.commentsection>.commentlist>.commentbox>.btn.emoji,
+.page_songdetail>.maincontainer>.commentsection>.commentlist>.commentbox>.btn.at{
+	position:absolute;
+	right:10px;
+	bottom:33px;
+	margin-right:10px;
+	font-size:1rem;
+}
+
+.page_songdetail>.maincontainer>.commentsection>.commentlist>.commentbox>.btn.emoji {
+	right:40px;
+}
+
+.page_songdetail>.maincontainer>.commentsection>.commentlist>.commenttable{
+	margin:30px 0;
+	width:600px;
+}
+.page_songdetail>.maincontainer>.commentsection>.commentlist>.commenttable>.comment>.title{
+	margin:10px 0;
+	font-size:0.8rem;
+	color:#a5a4a9;
+}
+.page_songdetail>.maincontainer>.commentsection>.commentlist>.commenttable>.comment>.content{
+	padding:1em 0 1em 60px;
+	border-top:1px solid #eee;
+	position:relative;
+}
+.page_songdetail>.maincontainer>.commentsection>.commentlist>.commenttable>.comment>.content>.userface{
+	position:absolute;
+	top:1em;left:0;
+	width:40px;
+	height:40px;
+}
+.page_songdetail>.maincontainer>.commentsection>.commentlist>.commenttable>.comment>.content>.userface>a>img{
+	width:100%;
+	height:auto;
+}
+.page_songdetail>.maincontainer>.commentsection>.commentlist>.commenttable>.comment>.content>p{
+	margin-bottom:1em;
+}
+.page_songdetail>.maincontainer>.commentsection>.commentlist>.commenttable>.comment>.content>p>.username>a{
+	color:#0b75c3;
+}
+.page_songdetail>.maincontainer>.commentsection>.commentlist>.commenttable>.comment>.content>p>.usersay{
+	color:#343434;
+}
+.page_songdetail>.maincontainer>.commentsection>.commentlist>.commenttable>.comment>.content>.btngroups>.time{
+	float:left;
+	color:#939393;
+}
+.page_songdetail>.maincontainer>.commentsection>.commentlist>.commenttable>.comment>.content>.btngroups>.btn{
+	float:right;
+}
+/*comments e*/
+
+
+.page_songdetail>.maincontainer>.lineSim {
+	width:250px;
+	margin:-40px 0 0 100px;
+}
+.page_songdetail>.maincontainer>.similarSongsection {
+	float:left;
+	width:250px;
+	margin:20px 0 0 100px;
+}
+
+.page_songdetail>.maincontainer>.similarSongsection li{
+	width:100%;
+	float:left;
+	margin-top: 20px;
+}
+
+.page_songdetail>.maincontainer>.similarSongsection span:nth-of-type(1){
+	float:left;
+}
+.page_songdetail>.maincontainer>.similarSongsection span:nth-of-type(2){
+	float:right;
+}
+
+.page_songdetail>.maincontainer>.lineSim2 {
+	width:250px;
+	margin:150px 0 0 100px;
+}
+
+.page_songdetail>.maincontainer>.similarUsersection {
+	float:left;
+	width:250px;
+	margin:20px 0 0 100px;
+}
+
+.page_songdetail>.maincontainer>.similarUsersection li {
+	width:100%;
+	float:left;
+	margin-top:20px;
+}
+
+.page_songdetail>.maincontainer>.similarUsersection div img{
+	width:30px;
+	float:left;
+	border-radius:50%;
+}
+
+.page_songdetail>.maincontainer>.similarUsersection div span{
+	float:left;
+	margin:5px 0 0 5px;
+}
+
+.page_songdetail>.maincontainer>.similarUsersection p{
+	margin-top:5px;
+	float:right;
 }
 </style>

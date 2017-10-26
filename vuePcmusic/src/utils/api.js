@@ -1,5 +1,6 @@
 export default {
 	search: '/api/search', // 搜索歌曲
+	suggest:'/api/search/suggest', // 搜索建议
 	songD: '/api/music/url', // 歌曲信息
 	songAD: '/api/song/detail', // 歌曲专辑信息]
 	lyric: '/api/lyric', //歌词
@@ -15,4 +16,7 @@ export default {
 	newsong: '/api/personalized/newsong', // 推荐新音乐
 	mv: '/api/personalized/mv', // 推荐mv
 	djprogram:'/api/personalized/djprogram', // 推荐电台
+	songComment:'/api/comment/music', // 歌曲评论
+	simSong:'/api/simi/song', // 相似歌曲
+	simUser:'/api/simi/user' //最近五个听过的
 }

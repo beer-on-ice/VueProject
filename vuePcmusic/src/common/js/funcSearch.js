@@ -20,3 +20,11 @@ export function funcMain() {
     $('#pageSearch').animate({top:"100%",opacity: 0},500).css('display','none')
     $('#pageFind').animate({top:"100%",opacity: 0},500).css('display','none')
 }
+
+
+export function funcFind() {
+    // 显示搜索页 隐藏列表页
+    $('#pageFind').css('display','block').animate({top:"0",opacity: 1},500)
+    $('#pageSearch').animate({top:"100%",opacity: 0},500).css('display','none')
+    $('#pageMain').animate({top:"100%",opacity: 0},500).css('display','none')
+}

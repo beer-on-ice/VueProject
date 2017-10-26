@@ -172,6 +172,7 @@ export default {
 			funcMain() // 显示主页
 
 			that.fetchData(data.id) // 获取歌单详情
+
 			that.info.name = data.name
 			that.info.creator = data.creator.nickname
 			that.info.coverImg = data.coverImgUrl
@@ -201,15 +202,16 @@ export default {
 		}
 	},
 	methods: {
-		listPlaySong(data) {
-			this.$emit('listSongPlay',data)
+		listPlaySong() {
+			this.$emit('listSongPlay')
 		},
 		listReadyPlay(data) {
-			this.$emit('listReadyPlay',data)
+			this.fetchData2(data)
 		},
 		fetchData: async function(id) {
 			let list = []
 			let commentslist = []
+			let songcommentlist = []
 
 			let params =  {id: id}
 			const res = await http.get(api.listDetail, params)
@@ -229,6 +231,7 @@ export default {
 				let params3 =  {ids: res.data.privileges[i].id}
 				const res3 = await http.get(api.songAD, params3)
 				const lyric = await http.get(api.lyric, params2)
+
 				if(lyric.data.lrc) {
 					list.push({
 						name: res3.data.songs[0].name,
@@ -237,7 +240,8 @@ export default {
 						singer:res3.data.songs[0].ar[0].name,
 						url:res2.data.data[0].url,
 						lyric:lyric.data.lrc.lyric,
-						duration:formatTime(res3.data.songs[0].dt/1000)
+						duration:formatTime(res3.data.songs[0].dt/1000),
+						id: res.data.privileges[i].id
 					})
 					this.show = true
 				} else {
@@ -247,12 +251,13 @@ export default {
 						albumUrl:res3.data.songs[0].al.picUrl,
 						singer:res3.data.songs[0].ar[0].name,
 						url:res2.data.data[0].url,
-						duration:formatTime(res3.data.songs[0].dt/1000)
+						duration:formatTime(res3.data.songs[0].dt/1000),
+						id: res.data.privileges[i].id
 					})
 					this.show = true
 				}
 			}
-			// 歌曲评论
+			// 歌单评论
 			for(var i=0;i<res2.data.comments.length;i++) {
 				commentslist.push({nickname:res2.data.comments[i].user.nickname,avatar:res2.data.comments[i].user.avatarUrl,content:res2.data.comments[i].content,time:formatCommentTime(res2.data.comments[i].time),likedCount:res2.data.comments[i].likedCount})
 			}
@@ -261,6 +266,48 @@ export default {
 			this.comments = commentslist
 			this.songLists = list
 			this.show = false
+
+		},
+		fetchData2: async function(data) {
+			let hotComments = []
+			let comments = []
+			let simsongs = []
+			let simusers = []
+			let songcommentlist = []
+
+			let params = {id: data.id}
+			const res3 = await http.get(api.songComment, params)
+			const res6 = await http.get(api.simSong, params)
+			const res7 = await http.get(api.simUser, params)
+
+			for(var i=0;i<res6.data.songs.length;i++) {
+				simsongs.push({name:res6.data.songs[i].name,id:res6.data.songs[i].id,singer:res6.data.songs[i].artists[0].name})
+			}
+			for(var i=0;i<res7.data.userprofiles.length;i++) {
+				simusers.push({name:res7.data.userprofiles[i].nickname,id:res7.data.userprofiles[i].userId,avatarUrl:res7.data.userprofiles[i].avatarUrl,reason:res7.data.userprofiles[i].recommendReason})
+			}
+			// 歌曲评论
+			for(var i=0;i<res3.data.hotComments.length;i++) {
+				let paramsU = {
+					uid: res3.data.hotComments[i].user.userId
+				}
+				const res4 = await http.get(api.user, paramsU)
+				hotComments.push({img:res4.data.profile.avatarUrl,name:res4.data.profile.nickname,id:res3.data.hotComments[i].user.userId,likedCount:res3.data.hotComments[i].likedCount,time:formatCommentTime(res3.data.hotComments[i].time),content:res3.data.comments[i].content})
+			}
+			for(var i=0;i<res3.data.comments.length;i++) {
+				let paramsU = {
+					uid: res3.data.comments[i].user.userId
+				}
+				const res5 = await http.get(api.user, paramsU)
+				comments.push({img:res5.data.profile.avatarUrl,name:res5.data.profile.nickname,id:res3.data.comments[i].user.userId,likedCount:res3.data.comments[i].likedCount,time:formatCommentTime(res3.data.comments[i].time),content:res3.data.comments[i].content})
+			}
+			songcommentlist.push({total:res3.data.total,hotComments:hotComments,comments:comments})
+
+			data.comments = songcommentlist
+			data.simsongs = simsongs
+			data.simusers = simusers
+
+			this.$emit('listPlayReady',data)
 		}
 	},
 	components: {

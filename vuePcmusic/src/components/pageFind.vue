@@ -652,11 +652,11 @@ export default {
 }
 
 #newsong {
-	margin:50px 0 0 200px;
+	margin:50px 0 0 100px;
 }
 
 #newsong li {
-	width:600px;
+	width:700px;
 	float:left;
 	margin-bottom:30px;
 }
@@ -735,10 +735,12 @@ export default {
 	white-space: nowrap;
 }
 
-#djs {}
+#djs {
+	margin-left:100px;
+}
 
 #djs li {
-	width:770px;
+	width:700px;
 	float:left;
 	margin-top:20px;
 }
@@ -756,6 +758,10 @@ export default {
 
 #djs li div span {
 	display: block;
+	width:300px;
+	overflow: hidden;
+	text-overflow:ellipsis;
+	white-space: nowrap;
 	font:20px/40px '微软雅黑';
 }
 
