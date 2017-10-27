@@ -5,6 +5,9 @@
 ### 运用到的技术：
 jQuery+axios+vue-router+webpack2+vue-cli
 
+
+![](https://i.imgur.com/G8P1eSv.gif)
+项目地址：[https://github.com/beer-on-ice/VueProject/tree/master/vuePcmusic](https://github.com/beer-on-ice/VueProject/tree/master/vuePcmusic)
 ### 已实现功能：
 1. 发现音乐pageFind
 	-	banner轮播图，推荐音乐，推荐歌单等功能
