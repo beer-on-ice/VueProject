@@ -53,6 +53,7 @@ export default {
 	data() {
 		return {
 			show: false, // 控制loading组件
+			suggestShow:false,
 			loginUser:{
 				avatarUrl: require("../common/images/user_face2.png"),
 				nickname:'未登录',
@@ -65,10 +66,10 @@ export default {
 				'专辑',
 				'MV',
 				'歌单'
-			],
-			suggestShow:false
+			]
 		}
 	},
+	// 搜索建议分类
 	computed: {
 	    albums: function () {
 	        return this.suggestion.filter(function (album) {
@@ -96,6 +97,7 @@ export default {
 	        })
 	    },
   	},
+	// 登录后改变右上角信息
 	created() {
 		let that = this
 		this.$root.bus.$on('userMess',function(data) {
@@ -104,14 +106,17 @@ export default {
 		})
 	},
 	methods: {
+		// 搜索建议
 		suggest() {
 			this.fetchData()
 			this.suggestShow = true
 		},
+		// 搜索建议点击填充input
 		tuen(name) {
 			$('#inpSearch').val(name)
 			this.suggestShow = false
 		},
+		// 搜索点击
 		pageUpAndSearch() {
 			this.suggestShow = false
 
@@ -142,9 +147,9 @@ export default {
 
 				this.$root.bus.$emit('takeName',$('#inpSearch').val());
 
-				this.$emit('passData',res.data.result, this.show)
+				this.$emit('passData',res.data.result)
 		    }
-
+			// 搜索建议
 			if (res2 && res2.data.code === 200) {
 				let suggests = []
 				res2.data.result.albums && res2.data.result.albums.forEach(function(item) {

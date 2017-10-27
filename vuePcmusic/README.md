@@ -1,21 +1,26 @@
-# pcmus
+# 网易云音乐web版（vue)
 
-> A Vue.js project
+## 状态： 进行中
 
-## Build Setup
+### 运用到的技术：
+jQuery+axios+vue-router+webpack2+vue-cli
 
-``` bash
-# install dependencies
-npm install
+### 已实现功能：
+1. 发现音乐pageFind
+	-	banner轮播图，推荐音乐，推荐歌单等功能
+2. 用户登录功能login
+3. 登录后用户歌单列表的展示
+4. 歌单歌曲列表，歌单评价，歌单信息
+5. 搜索功能，搜索候选
+6. 音乐播放，暂停，切换
+7. 音乐详情
+	- 歌词滚动
+	- 歌曲信息展示
+	- 歌曲评论
+	- 相似歌曲
+	- 最近听的人
+8. 所有id都有预留，可进行下一步开发
 
-# serve with hot reload at localhost:8080
-npm run dev
-
-# build for production with minification
-npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
-```
-
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+### 问题：
+1. 获取歌曲信息时间过长，如果多次快速切换歌曲，会导致乱序
+2. 歌曲在播放时，点击其他歌曲，浏览小窗和详情信息都会变成点击的歌曲的相关信息

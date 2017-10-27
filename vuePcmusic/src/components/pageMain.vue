@@ -65,9 +65,9 @@
                             </thead>
                             <tbody class="infolist" id="infoList_playlist">
 								<tr
-								v-for='item,i in songLists'
-								@dblclick='listPlaySong(item)'
-								@click='listReadyPlay(item)'>
+									v-for='item,i in songLists'
+									@dblclick='listPlaySong'
+									@click='listReadyPlay(item)'>
 									<td class="index">{{(i+1) <10 ? "0"+(i+1) : (i+1)}}</td>
 									<td><i class="fa fa-heart-o" aria-hidden="true"></i>&nbsp;<i class="fa fa-download" aria-hidden="true"></i></td>
 									<td>{{item.name}}</td>
@@ -147,6 +147,7 @@ import Loading from './loading'
 export default {
 	data() {
 		return {
+			// 默认信息
 			info: {
 				name:'我喜欢的音乐',
 				creator: '李锦',
@@ -159,29 +160,33 @@ export default {
 				description:'暂无简介',
 				shareCount: '999'
 			},
+			// 歌曲列表
 			songLists: [],
+			// 评论列表
 			comments:[],
+			// 总评论数量
 			total:0,
 			show: false
 		}
 	},
+	// 渲染歌单列表歌曲，以及歌单的信息
 	created() {
 		let that = this
-	  	this.$root.bus.$on('sendDetail',function(data) {
+	  	this.$root.bus.$on('sendDetail',function(result) {
 
 			funcMain() // 显示主页
 
-			that.fetchData(data.id) // 获取歌单详情
+			that.fetchData(result.id) // 获取歌单所有歌曲详情
 
-			that.info.name = data.name
-			that.info.creator = data.creator.nickname
-			that.info.coverImg = data.coverImgUrl
-			that.info.createTime = toYMD(data.createTime)
-			that.info.actNum = data.playCount
-			that.info.songNum = data.trackCount
-			that.info.subscribedCount = data.subscribedCount
-			that.info.coverImg = data.coverImgUrl
-			that.info.avatorImg = data.creator.avatarUrl
+			that.info.name = result.name
+			that.info.creator = result.creator.nickname
+			that.info.coverImg = result.coverImgUrl
+			that.info.createTime = toYMD(result.createTime)
+			that.info.actNum = result.playCount
+			that.info.songNum = result.trackCount
+			that.info.subscribedCount = result.subscribedCount
+			that.info.coverImg = result.coverImgUrl
+			that.info.avatorImg = result.creator.avatarUrl
 
 		})
 	},
@@ -202,18 +207,21 @@ export default {
 		}
 	},
 	methods: {
+		// 双击播放，传递事件
 		listPlaySong() {
 			this.$emit('listSongPlay')
 		},
-		listReadyPlay(data) {
-			this.fetchData2(data)
+		// 歌曲单击获取歌曲信息，包括名字，歌手，头像，播放地址，评论，最近听的人等
+		listReadyPlay(item) {
+			this.fetchData2(item)
 		},
-		fetchData: async function(id) {
+		// 获取歌曲信息，歌单评论信息
+		fetchData: async function(listid) {
 			let list = []
 			let commentslist = []
 			let songcommentlist = []
 
-			let params =  {id: id}
+			let params =  {id: listid}
 			const res = await http.get(api.listDetail, params)
 			const res2 = await http.get(api.listComment, params)
 			this.info.shareCount = res.data.playlist.shareCount
@@ -227,7 +235,7 @@ export default {
 			// 歌单所有歌曲信息
 			for(var i=0;i<res.data.privileges.length;i++) {
 				let params2 =  {id: res.data.privileges[i].id}
-				const res2 = await http.get(api.songD, params2)
+				const res9 = await http.get(api.songD, params2)
 				let params3 =  {ids: res.data.privileges[i].id}
 				const res3 = await http.get(api.songAD, params3)
 				const lyric = await http.get(api.lyric, params2)
@@ -238,7 +246,7 @@ export default {
 						albumName: res3.data.songs[0].al.name,
 						albumUrl:res3.data.songs[0].al.picUrl,
 						singer:res3.data.songs[0].ar[0].name,
-						url:res2.data.data[0].url,
+						url:res9.data.data[0].url,
 						lyric:lyric.data.lrc.lyric,
 						duration:formatTime(res3.data.songs[0].dt/1000),
 						id: res.data.privileges[i].id
@@ -250,7 +258,7 @@ export default {
 						albumName: res3.data.songs[0].al.name,
 						albumUrl:res3.data.songs[0].al.picUrl,
 						singer:res3.data.songs[0].ar[0].name,
-						url:res2.data.data[0].url,
+						url:res9.data.data[0].url,
 						duration:formatTime(res3.data.songs[0].dt/1000),
 						id: res.data.privileges[i].id
 					})
@@ -268,6 +276,7 @@ export default {
 			this.show = false
 
 		},
+		// 获取歌曲评论信息，相似歌曲，最近听的人信息
 		fetchData2: async function(data) {
 			let hotComments = []
 			let comments = []
@@ -276,7 +285,7 @@ export default {
 			let songcommentlist = []
 
 			let params = {id: data.id}
-			const res3 = await http.get(api.songComment, params)
+			const res8 = await http.get(api.songComment, params)
 			const res6 = await http.get(api.simSong, params)
 			const res7 = await http.get(api.simUser, params)
 
@@ -287,21 +296,21 @@ export default {
 				simusers.push({name:res7.data.userprofiles[i].nickname,id:res7.data.userprofiles[i].userId,avatarUrl:res7.data.userprofiles[i].avatarUrl,reason:res7.data.userprofiles[i].recommendReason})
 			}
 			// 歌曲评论
-			for(var i=0;i<res3.data.hotComments.length;i++) {
+			for(var i=0;i<res8.data.hotComments.length;i++) {
 				let paramsU = {
-					uid: res3.data.hotComments[i].user.userId
+					uid: res8.data.hotComments[i].user.userId
 				}
 				const res4 = await http.get(api.user, paramsU)
-				hotComments.push({img:res4.data.profile.avatarUrl,name:res4.data.profile.nickname,id:res3.data.hotComments[i].user.userId,likedCount:res3.data.hotComments[i].likedCount,time:formatCommentTime(res3.data.hotComments[i].time),content:res3.data.comments[i].content})
+				hotComments.push({img:res4.data.profile.avatarUrl,name:res4.data.profile.nickname,id:res8.data.hotComments[i].user.userId,likedCount:res8.data.hotComments[i].likedCount,time:formatCommentTime(res8.data.hotComments[i].time),content:res8.data.comments[i].content})
 			}
-			for(var i=0;i<res3.data.comments.length;i++) {
+			for(var i=0;i<res8.data.comments.length;i++) {
 				let paramsU = {
-					uid: res3.data.comments[i].user.userId
+					uid: res8.data.comments[i].user.userId
 				}
 				const res5 = await http.get(api.user, paramsU)
-				comments.push({img:res5.data.profile.avatarUrl,name:res5.data.profile.nickname,id:res3.data.comments[i].user.userId,likedCount:res3.data.comments[i].likedCount,time:formatCommentTime(res3.data.comments[i].time),content:res3.data.comments[i].content})
+				comments.push({img:res5.data.profile.avatarUrl,name:res5.data.profile.nickname,id:res8.data.comments[i].user.userId,likedCount:res8.data.comments[i].likedCount,time:formatCommentTime(res8.data.comments[i].time),content:res8.data.comments[i].content})
 			}
-			songcommentlist.push({total:res3.data.total,hotComments:hotComments,comments:comments})
+			songcommentlist.push({total:res8.data.total,hotComments:hotComments,comments:comments})
 
 			data.comments = songcommentlist
 			data.simsongs = simsongs

@@ -49,8 +49,8 @@
                     </div>
                     <div class="commenttable">
                         <div class="comment new">
-                            <div class="title" v-show="allcomments.comments[0].hotComments.length">精彩评论({{allcomments.comments[0].hotComments.length}})</div>
-                            <div class="content" v-for='item in allcomments.comments[0].hotComments'>
+                            <div class="title" v-show="allcomments[0].hotComments.length">精彩评论({{allcomments[0].hotComments.length}})</div>
+                            <div class="content" v-for='item in allcomments[0].hotComments'>
                                 <p><span class="username"><a href="javascript:void(0);">{{item.name}}</a></span>：<span class="usersay">{{item.content}}</span></p>
                                 <div class="btngroups clearfix">
                                     <span class="time">{{item.time}}</span>
@@ -63,8 +63,8 @@
                                 <div class="userface"><a href="javascript:void(0);"><img :src="item.img" alt="" /></a></div>
                             </div>
 
-							<div class="title" v-show="allcomments.comments[0].total">最新评论({{allcomments.comments[0].total}})</div>
-                            <div class="content" v-for='item in allcomments.comments[0].comments'>
+							<div class="title" v-show="allcomments[0].total">最新评论({{allcomments[0].total}})</div>
+                            <div class="content" v-for='item in allcomments[0].comments'>
                                 <p><span class="username"><a href="javascript:void(0);">{{item.name}}</a></span>：<span class="usersay">{{item.content}}</span></p>
                                 <div class="btngroups clearfix">
                                     <span class="time">{{item.time}}</span>
@@ -78,7 +78,7 @@
                             </div>
                         </div>
                     </div>
-					<p style='margin-top:20px;font-size:16px;' v-show="allcomments.comments[0].total === 0">
+					<p style='margin-top:20px;font-size:16px;' v-show="allcomments[0].total === 0">
 						暂无评论,快来抢沙发吧~
 					</p>
                 </div>
@@ -111,30 +111,46 @@ import LineBar from './lineBar'
 export default {
 	data() {
 		return {
+			// 默认信息
 			srcUrl:require('../common/images/disc-o.png'),
 			songS:'--SONGNAME--',
 			singerS: '--SINGERNAME--',
 			albumS:'--ALBUMNAME--',
 			canChange: false,
+			// 分割线名字
 			names:[
 				'听友评论',
 				'相似歌曲',
 				'最近5个听过此歌的人'
 			],
-			allcomments: {
-				comments:[
-					{
-						total:0,
-						hotComments:[],
-						comments:[]
-					}
-				]
-			}
+			// 歌曲评论信息
+			allcomments: [
+				{
+					total:0,
+					hotComments:[],
+					comments:[]
+				}
+			]
 		}
 	},
 	props: [
 		'songMess'
 	],
+	mounted() {
+		let that = this
+		// 播放时详情信息改变
+		this.$root.bus.$on('songPlaystatus',function(song) {
+			that.canChange = true
+			that.songMess.name = song.name
+			that.songMess.singer = song.singer
+			that.songMess.albumUrl = song.albumUrl
+			that.songMess.albumName = song.albumName
+			that.songMess.lyric = song.lyric
+			that.songMess.comments = song.comments
+			that.songMess.simsongs = song.simsongs
+			that.songMess.simusers = song.simusers
+		})
+	},
 	computed: {
 		src: function() {
 			if(this.canChange) {
@@ -177,28 +193,8 @@ export default {
 			}
 		}
 	},
-	mounted() {
-		let that = this
-		this.$root.bus.$on('btnPlayMusic',function() {
-			that.canChange = true
-		})
-		this.$root.bus.$on('playOn',function() {
-			that.canChange = true
-		})
-		this.$root.bus.$on('songPlaystatus',function(data) {
-			that.canChange = true
-			that.songMess.name = data.name
-			that.songMess.singer = data.singer
-			that.songMess.albumUrl = data.albumUrl
-			that.songMess.albumName = data.albumName
-			that.songMess.lyric = data.lyric
-			that.songMess.comments = data.comments
-			that.songMess.simsongs = data.simsongs
-			that.songMess.simusers = data.simusers
-
-		})
-	},
 	methods: {
+		// 缩小详情页按钮点击事件
 		closeDetail() {
 			$("#pageSongDetail").css({
 				"top":"100%",
@@ -213,8 +209,8 @@ export default {
 	watch: {
 		songMess: {
 			handler:function(val,oldVal) {
-				if(val.comments[0]) {
-					this.allcomments = val
+				if(val.comments) {
+					this.allcomments = val.comments
 				}
 			},
 			deep:true
@@ -397,6 +393,7 @@ export default {
 }
 .page_songdetail>.maincontainer>.commentsection {
 	float:left;
+	height:100%;
 }
 
 .page_songdetail>.maincontainer>.commentsection> #comment {

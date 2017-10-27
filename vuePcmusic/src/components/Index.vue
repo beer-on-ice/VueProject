@@ -27,7 +27,6 @@
     	<audio
             id="audio"
             ref='audio'
-            @canplay='ready'
             @timeupdate='update'
             @ended='end'>您的该版本浏览器不支持AUDIO标签！！！</audio>
     </div>
@@ -55,41 +54,39 @@
     export default {
         data() {
             return {
-                songData:{},
+                songData:{},  // pageSearch 信息
+                songMess:{},  // 播放的歌曲信息
+                readyMess:{},  // 准备播放的歌曲信息
                 src:'',
-                songMess:{},
-                isPlay: false,
-                readyMess:{},
-                isLogin: false
+                isPlay: false, // 是否播放开关
+                isLogin: false // 登录框开关
             }
         },
         methods: {
+            // 登录框判断
             on() {
                 this.isLogin = true
             },
             off() {
                 this.isLogin = false
             },
-            getData(data,boolean) {
-                this.songData = data
+            // 渲染search页
+            getData(result) {
+                this.songData = result
             },
+            // search页歌曲单击信息储存到readyMess
             songReady(data) {
-                this.readyMess = data
+                this.songMess = data
             },
+            // 歌单页歌曲单击信息储存到readyMess
             listReady(data) {
-                this.readyMess = data
+                this.songMess = data
             },
             // 监控音乐进度
             update() {
                 this.$root.bus.$emit('updateTimeBar')
             },
-            ready() {
-                this.isPlay = true
-                if(this.isPlay) {
-                    this.$refs.audio.play()
-                    this.isPlay = false
-                }
-            },
+            // 播放结束
             end() {
                 // 循环播放 this.$refs.audio.currentTime = 0
                 // 下一首
@@ -104,23 +101,26 @@
                     this.isPlay = true
                 }
             },
+            // 上一首按钮点击（判断是否有上一首？是否选择音乐播放？）
             prevSong() {
                 let prevSong = $('td.index.active').parent().prev('tr')
                 if (!this.$refs.audio.src && !$(".infolist").find('tr.active').length) {
                     showTipBox("info","没有播放资源，请选择曲目");
                 } else if(!prevSong.length) {
                     roundOn()
+                    this.$root.bus.$emit('playOn');
                     stylePlayBtn($('#playBtnGroup').find(".play"),"play");
                     this.$refs.audio.currentTime = 0
                 } else {
                     prevSong.click()// 先点击上一首歌
-                    this.songMess = this.readyMess
+
                     playStyle() //给上一首歌切换样式
                     roundOn()
                     this.$root.bus.$emit('playOn');
                     this.isPlay = true
                 }
             },
+            // 下一首按钮点击（判断是否有下一首？是否选择音乐播放？）
             nextSong() {
                 let nextSong = $('td.index.active').parent().next('tr')
                 if (!this.$refs.audio.src && !$(".infolist").find('tr.active').length) {
@@ -129,13 +129,14 @@
                     showTipBox("info","已经是最后一首音乐了！")
                 } else {
                     nextSong.click()// 先点击下一首歌
-                    this.songMess = this.readyMess
+                    this.isPlay = true
+
                     playStyle() //给下一首歌切换样式
                     roundOn()
                     this.$root.bus.$emit('playOn');
-                    this.isPlay = true
                 }
             },
+            // 当前播放按钮点击（判断是否选择音乐播放？是否暂停/播放？）
             activeSong() {
                 // 如果没有歌曲在播放，且没有选中任意歌曲，就出提示框
                 if (!this.$refs.audio.src && !$(".infolist").find('tr.active').length) {
@@ -155,39 +156,47 @@
                             roundOn()
                         }
                     } else {
-                        this.songMess = this.readyMess
                         // 如果没有歌曲在播放，就执行选中的歌曲点击按钮播放
-                        this.$refs.audio.src = this.songMess.url
-                        this.$root.bus.$emit('btnPlayMusic')
-                        stylePlayBtn($('#playBtnGroup').find(".play"),"play");
+                        this.isPlay = true
+                        this.$root.bus.$emit('songPlaystatus',this.songMess)
+
                         playStyle()
                         roundOn()
+                        this.$root.bus.$emit('playOn'); // 点击播放按钮变化
                     }
                 }
             },
+            // search页双击播放
             mediaPlay() {
-                this.songMess = this.readyMess
                 this.$root.bus.$emit('songPlaystatus',this.songMess)
-                this.$refs.audio.src = this.songMess.url
-                roundOn()
-            },
-            listPlay() {
-
-                this.songMess = this.readyMess
-                this.$root.bus.$emit('songPlaystatus',this.songMess)
-                
-                this.$refs.audio.src = this.songMess.url
-                stylePlayBtn($('#playBtnGroup').find(".play"),"play");
+                this.isPlay = true
+                // 播放样式改变
                 playStyle()
                 roundOn()
+                this.$root.bus.$emit('playOn'); // 点击播放按钮变化
+            },
+            // 歌单页双击播放
+            listPlay() {
+                this.$root.bus.$emit('songPlaystatus',this.songMess)
+                this.isPlay = true
+                // 播放样式改变
+                playStyle()
+                roundOn()
+                this.$root.bus.$emit('playOn'); // 点击播放按钮变化
             }
         },
         watch: {
-            readyMess: {
+            // 监测开关变化
+            isPlay: {
                 handler:function(val,oldVal) {
                     if(this.isPlay) {
-                        this.$refs.audio.src = val.url
-                        this.isPlay = false
+                        let that = this
+                        // 延时，以等待信息全部获取
+                        setTimeout(function() {
+                            that.$refs.audio.src = that.songMess.url
+                            that.$refs.audio.play()
+                            that.isPlay = false
+                        },2000)
                     }
                 },
                 deep:true

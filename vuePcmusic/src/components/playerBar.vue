@@ -118,6 +118,7 @@ export default {
             this.$emit('playNextSong')
             this.$root.bus.$emit('playNextSongs')
         },
+        // 静音
         mute() {
             var media = $('#audio').get(0)
             if (!media.muted) {

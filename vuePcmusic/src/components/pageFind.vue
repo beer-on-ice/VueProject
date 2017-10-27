@@ -148,9 +148,11 @@ export default {
 			timer: 0
 		}
 	},
+	// 发现页信息获取渲染
 	created() {
 		this.fetchData()
 	},
+	// 轮播图实现
 	mounted() {
 		let that = this
 		this.$nextTick(function() {
@@ -169,6 +171,7 @@ export default {
 		})
 	},
 	methods: {
+		// banner部分
 		change(index) {
 			this.act = index
 		},

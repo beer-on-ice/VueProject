@@ -100,7 +100,6 @@ export default {
 		return {
 			artistsName:[],
 			songDuration:[],
-			musicid:'',
 			songMess: {
 				name:'',
 				url:'',
@@ -143,11 +142,11 @@ export default {
 		})
 	},
 	methods: {
+		// 双击播放，传递事件
 		playMusic() {
-			playStyle()
-			this.$root.bus.$emit('playOn'); // 点击播放按钮变化
 			this.$emit('mediaOn');
 		},
+		// 点击歌曲。信息存储
 		readyPlay(musicid,song,singer) {
 			let that = this
 			this.fetchData(musicid,song,singer,function(songUrl,picUrl,lyric,comment,simsongs,simusers){
@@ -163,6 +162,7 @@ export default {
 			})
 			this.$emit('mediaMess',this.songMess)
 		},
+		// 获取点击的歌曲信息
 		fetchData: async function (musicid,song,singer,cb) {
 			let songcomments = []
 			let hotComments = []
@@ -188,6 +188,7 @@ export default {
 			}
 
 			// 歌曲评论
+			// 	热门评论
 			for(var i=0;i<res3.data.hotComments.length;i++) {
 				let paramsU = {
 					uid: res3.data.hotComments[i].user.userId
@@ -195,6 +196,7 @@ export default {
 				const res4 = await http.get(api.user, paramsU)
 				hotComments.push({img:res4.data.profile.avatarUrl,name:res4.data.profile.nickname,id:res3.data.hotComments[i].user.userId,likedCount:res3.data.hotComments[i].likedCount,time:formatCommentTime(res3.data.hotComments[i].time),content:res3.data.comments[i].content})
 			}
+			// 最新评论
 			for(var i=0;i<res3.data.comments.length;i++) {
 				let paramsU = {
 					uid: res3.data.comments[i].user.userId
@@ -206,6 +208,7 @@ export default {
 
 			if (res && res.data.code === 200) {
 				if (res2 && res2.data.code === 200) {
+					// 判断是否有歌词
 					if(lyric.data.lrc) {
 						cb(res.data.data[0].url,res2.data.songs[0].al.picUrl,lyric.data.lrc.lyric,songcomments,simsongs,simusers)
 					} else {

@@ -67,11 +67,15 @@ import api from '../utils/api'
 export default {
 	data() {
 		return {
+			// 默认选中
 			defaultOne: 0,
+			// 默认头像，名字等
 			srcUrl:require('../common/images/temp_pic001.jpg'),
 			songS:'-SONGNAME-',
 			singerS: '-SINGER-',
+			// 是否可以改变
 			canChange: false,
+
 			userSongList: [],
 			saveSongList:[],
 			options: {
@@ -122,6 +126,7 @@ export default {
 			}
 		}
 	},
+	// 接收父组件传来的歌曲信息
 	props: [
 		'songMess'
 	],
@@ -136,26 +141,19 @@ export default {
 			styleActive([$(".infolist"),"tr"],"click","active");
 		})
 		let that = this
+		// 获取登陆的用户歌单名字
 		this.$root.bus.$on('userMess',function(data) {
-			that.fetchData(data.userid) // 获取用户歌单
+			that.fetchData(data.userid)
 		})
-
 	},
 	mounted() {
-
 		let that = this
-		this.$root.bus.$on('btnPlayMusic',function() {
+		// 播放时小窗信息改变
+		this.$root.bus.$on('songPlaystatus',function(song) {
 			that.canChange = true
-		})
-		this.$root.bus.$on('playOn',function() {
-			that.canChange = true
-		})
-		this.$root.bus.$on('songPlaystatus',function(data) {
-			that.canChange = true
-			that.songMess.singer = data.singer
-			that.songMess.albumUrl = data.albumUrl
-			that.songMess.name = data.name
-			
+			that.songMess.singer = song.singer
+			that.songMess.albumUrl = song.albumUrl
+			that.songMess.name = song.name
 		})
 	},
 	computed: {
@@ -182,9 +180,11 @@ export default {
 		}
 	},
 	methods: {
+		// 发现音乐界面展示
 		showPage() {
 			funcFind()
 		},
+		// 歌曲详情页展示
 		expandDetail() {
 			$("#pageSongDetail").css({
 				"top":"60px",
@@ -192,8 +192,8 @@ export default {
 				"opacity":1
 			});
 		},
+		// 收起/展开 歌单列表
 		toggleList(e) {
-			// 收起 | 展开 歌单列表
 			var $btnGroups = $(e.currentTarget).parents(".list").find(".btngroups");
 			if ($btnGroups.css("display")==="block") {
 				$btnGroups.slideUp(500);
@@ -203,10 +203,12 @@ export default {
 				$(this).html('<i class="fa fa-angle-down" aria-hidden="true"></i>');
 			}
 		},
+		// 歌单点击，传递获取歌单信息事件
 		sendListDetail(data) {
 			this.$root.bus.$emit('sendDetail',data)
 			this.$emit('showDetail')
 		},
+		// 获取歌单名称列表
 		fetchData: async function(id) {
 			let params = {uid: id}
 			const res = await http.get(api.userList, params)
