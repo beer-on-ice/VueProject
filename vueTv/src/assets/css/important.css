@@ -1,0 +1,54 @@
+[class^="el-icon-my"],
+[class*=" el-icon-my"] {
+    font-family: "iconfont" !important;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.el-loading-mask {
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.el-loading-spinner .path {
+    stroke: #FF920B;
+}
+
+.el-badge__content {
+    background: #FF920B;
+    border: none;
+}
+
+.el-badge__content.is-fixed {
+    top: 5px;
+    right: 5px;
+}
+
+.el-tabs {
+    background: rgba(255, 255, 255, 0);
+}
+
+.el-tabs__header {
+    border: none;
+    margin: 0;
+}
+
+.el-tabs--card>.el-tabs__header .el-tabs__item.is-active {
+    border: 1px solid transparent;
+    border-bottom: 1px solid #FF920B;
+}
+
+.el-tabs__item:hover,
+.el-tabs__item.is-active {
+    color: #FF920B;
+}
+
+.el-tabs__item,
+.el-tabs__nav-next,
+.el-tabs__nav-prev {
+    color: #ccc;
+}
+
+.el-card {
+    border: none;
+    box-shadow: none;
+}
