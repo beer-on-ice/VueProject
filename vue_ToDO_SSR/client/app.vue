@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import Header from './components/header.vue '
+import Header from './components/header.vue'
 import Footer from './components/footer.vue'
 import ToDo from './views/todo/todo.vue'
 export default {
