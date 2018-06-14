@@ -1,6 +1,6 @@
 <template>
     <div id="footer">
-        <span>Written by Genius-Lijin</span>
+        <span>Written by Genius-lijin</span>
     </div>
 </template>
 <style lang="stylus" scoped>
