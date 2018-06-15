@@ -47,16 +47,16 @@ if(isDev) {
         },
         devServer,
         plugins: defaultPlugins.concat([
-            new webpack.HotModuleReplacementPlugin(),
-            new webpack.NoEmitOnErrorsPlugin()
+            new webpack.HotModuleReplacementPlugin()
+            // new webpack.NoEmitOnErrorsPlugin()
         ])
     })
-    
+
 } else {
     config = merge(baseConfig,{
         entry: { // 将所用到的类库单独打包
-            app: path.join(__dirname,'../client/main.js'),
-            vendor:['vue']
+            app: path.join(__dirname,'../client/main.js')
+            // vendor:['vue']
         },
         output: {
             filename: '[name].[chunkhash:8].js'
@@ -81,16 +81,22 @@ if(isDev) {
                 }
             ]
         },
+        optimization: {
+            splitChunks: {
+                chunks: 'all'
+            },
+            runtimeChunk: true
+        },
         plugins: defaultPlugins.concat([
-            new ExtractPlugin('styles.[contentHash:8].css'),
+            new ExtractPlugin('styles.[id].css')
             // 将类库文件单独打包出来
-            new webpack.optimize.CommonsChunkPlugin({
-                name: 'vendor'
-            }),
+            // new webpack.optimize.CommonsChunkPlugin({
+            //     name: 'vendor'
+            // }),
             // webpack相关的代码单独打包
-            new webpack.optimize.CommonsChunkPlugin({
-                name: 'runtime'
-            })
+            // new webpack.optimize.CommonsChunkPlugin({
+            //     name: 'runtime'
+            // })
         ])
     })
 }
