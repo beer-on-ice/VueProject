@@ -1,7 +1,7 @@
 module.exports = (isDev) => {
     return {
         preserveWhitespace: true, //保留空白节点
-        extractCSS: !isDev, // .vue文件css单独打包  
+        extractCSS: !isDev, // .vue文件css单独打包
         cssModules: {
             localIdentName: isDev?'[path]-[name]-[hash:base64:5]': '[hash:base64:5]' ,
             camelCase: true

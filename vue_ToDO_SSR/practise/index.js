@@ -2,4 +2,4 @@
 // import './lifecycle'
 // import './computed'
 // import './directive'
-import './template/define'
+import './component'

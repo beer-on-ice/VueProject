@@ -2,7 +2,10 @@
     <div id="app">
         <div id="cover"></div>
         <Header></Header>
-        <to-do></to-do>
+        <router-link to="/app">to app</router-link>
+        <router-link to="/login">to login</router-link>
+        <router-link to="/login/exact">to login-child</router-link>
+        <router-view/>
         <Footer></Footer>
     </div>
 </template>
@@ -10,16 +13,14 @@
 <script>
 import Header from './components/header.vue'
 import Footer from './components/footer.vue'
-import ToDo from './views/todo/todo.vue'
 export default {
+  name: 'app',
   data () {
-    return {
-    }
+    return {}
   },
   components: {
     Header,
-    Footer,
-    ToDo
+    Footer
   }
 }
 </script>
