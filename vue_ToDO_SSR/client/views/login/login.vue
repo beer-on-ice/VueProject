@@ -7,6 +7,10 @@
 
 <script>
   export default {
-
+    props: ['id'],
+    mounted () {
+      console.log(this.$route.params)
+      console.log(this.id)
+    }
   }
 </script>

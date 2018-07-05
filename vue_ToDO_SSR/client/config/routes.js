@@ -8,11 +8,19 @@ export default [
   },
   {
     path: '/app',
-    component: ToDo
+    component: ToDo,
+    name: 'app',
+    meta: {
+      title: 'this is app',
+      description: 'asdasdasd'
+    }
   },
   {
-    path: '/login',
+    path: '/login/:id',
     component: Login,
+    // props: true,
+    props: { id: '456' },
+    // props: (route) => ({ id: route.query.b }),
     children: [
       {
         path: 'exact',

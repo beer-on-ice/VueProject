@@ -2,10 +2,12 @@
     <div id="app">
         <div id="cover"></div>
         <Header></Header>
-        <router-link to="/app">to app</router-link>
-        <router-link to="/login">to login</router-link>
-        <router-link to="/login/exact">to login-child</router-link>
-        <router-view/>
+        <router-link :to="{name:'app'}">to app</router-link>
+        <router-link to="/login/123">to login</router-link>
+        <router-link to="/login/123/exact">to login-child</router-link>
+        <transition name="fade">
+          <router-view/>
+        </transition>
         <Footer></Footer>
     </div>
 </template>
@@ -18,6 +20,7 @@ export default {
   data () {
     return {}
   },
+
   components: {
     Header,
     Footer
