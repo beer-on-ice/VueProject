@@ -13,6 +13,10 @@ export default [
     meta: {
       title: 'this is app',
       description: 'asdasdasd'
+    },
+    beforeEnter: (to, from, next) => {
+      console.log('app route before enter')
+      next()
     }
   },
   {
