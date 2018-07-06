@@ -7,23 +7,24 @@ import createRouter from './config/router'
 const router = createRouter()
 
 // 可用于校验是否登陆等
-// router.beforeEach((to, from, next) => {
-//   console.log('before each invoked')
-//   if (to.fullPath === '/app') {
-//     next('/login/123')
-//   } else {
-//     next()
-//   }
-// })
+router.beforeEach((to, from, next) => {
+  console.log('before each invoked')
+  // if (to.fullPath === '/app') {
+  //   next('/login/123')
+  // } else {
+  //   next()
+  // }
+  next()
+})
 
-// router.beforeResolve((to, from, next) => {
-//   console.log('before resolve invoked')
-//   next()
-// })
+router.beforeResolve((to, from, next) => {
+  console.log('before resolve invoked')
+  next()
+})
 
-// router.afterEach((to, from, next) => {
-//   console.log('after each invoked')
-// })
+router.afterEach((to, from, next) => {
+  console.log('after each invoked')
+})
 
 new Vue({
   el: '#app',

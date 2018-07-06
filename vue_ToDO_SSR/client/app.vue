@@ -2,8 +2,9 @@
     <div id="app">
         <div id="cover"></div>
         <Header></Header>
-        <router-link :to="{name:'app'}">to app</router-link>
-        <router-link to="/login/123">to login</router-link>
+        <router-link to="/app">to app</router-link>
+        <router-link to="/login/123">to login123</router-link>
+        <router-link to="/login/456">to login456</router-link>
         <router-link to="/login/123/exact">to login-child</router-link>
         <transition name="fade">
           <router-view/>

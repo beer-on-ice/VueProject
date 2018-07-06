@@ -1,14 +1,14 @@
 <template>
     <section class="real-app">
         <input type="text" class="add-input" autofocus="autofocus" placeholder="接下去要做什么呢？" @keyup.enter="addTodo">
-        <item 
+        <item
         :todo="todo"
         v-for="todo in filteredTodos"
         :key="todo.id"
         @del = "delTodo"
         ></item>
-        <tabs 
-        :filter="filter" 
+        <tabs
+        :filter="filter"
         :todos="todos"
         @toggle="toggleFilter"
         @clearAllCompleted="clearAllCompleted"
@@ -22,6 +22,7 @@ import Tabs from './tabs.vue'
 let id = 0
 
 export default {
+
   data () {
     return {
       todos: [],

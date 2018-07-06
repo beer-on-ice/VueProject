@@ -3,6 +3,8 @@
         "env"
     ],
     "plugins": [
-        "transform-vue-jsx"
+        "transform-vue-jsx",
+        "syntax-dynamic-import"
+        // 异步组件，首屏加载更快，解决路由component引入‘方法’
     ]
 }
