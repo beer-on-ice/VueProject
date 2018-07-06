@@ -8,11 +8,14 @@ const baseConfig = require('./webpack.config.base')
 const isDev = process.env.NODE_ENV === 'development'
 const devServer = {
   port: '8080', // 启动端口
-  host: '127.0.0.1', //可以通过内网的ip进行防问,也可以通过localhost访问
+  host: '127.0.0.1', // 可以通过内网的ip进行防问,也可以通过localhost访问
   overlay: { // webpack编译出现错误，则显示到网页上
     errors: true
   },
-  //open: true // 自动打开浏览器
+  historyApiFallback: {
+    index: '/public/index.html' // 解决mode: history问题
+  },
+  // open: true // 自动打开浏览器
   hot: true // 热重载
 }
 const defaultPlugins = [
