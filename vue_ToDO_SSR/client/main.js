@@ -13,6 +13,12 @@ Vue.use(Router)
 const router = createRouter()
 const store = createStore()
 
+store.registerModule('c', {
+  state: {
+    text: 3
+  }
+})
+
 // 可用于校验是否登陆等
 router.beforeEach((to, from, next) => {
   console.log('before each invoked')
