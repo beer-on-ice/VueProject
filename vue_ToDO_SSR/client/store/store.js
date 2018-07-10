@@ -13,6 +13,12 @@ export default () => {
     mutations,
     getters,
     actions,
+    plugins: [
+      (store) => {
+        console.log('my plugins invoked')
+        // 可在此处执行订阅，watch等操作
+      }
+    ],
     modules: {
       a: {
         namespaced: true, // 命名空间

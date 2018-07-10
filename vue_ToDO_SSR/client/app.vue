@@ -51,8 +51,8 @@ export default {
       time: 2000
     })
     // 模块下mapActions调用
-    this['a/add']()
-    this.testAction()
+    // this['a/add']()
+    // this.testAction()
   },
   computed: {
     // count() {
