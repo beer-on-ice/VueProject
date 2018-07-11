@@ -4,6 +4,7 @@ const webpack = require('webpack')
 const merge = require('webpack-merge') // 合并webpack配置
 const ExtractPlugin = require('extract-text-webpack-plugin')
 const baseConfig = require('./webpack.config.base')
+const VueClientPlugin = require('vue-server-renderer/server-plugin')
 // 根据package.json 中的scripts->build / dev判断
 const isDev = process.env.NODE_ENV === 'development'
 const devServer = {
@@ -26,7 +27,8 @@ const defaultPlugins = [
   }),
   new HTMLPlugin({
     template: path.join(__dirname, 'template.html')
-  })
+  }),
+  new VueClientPlugin()
 ]
 let config
 
@@ -55,7 +57,6 @@ if (isDev) {
       new webpack.NoEmitOnErrorsPlugin()
     ])
   })
-
 } else {
   config = merge(baseConfig, {
     entry: { // 将所用到的类库单独打包
