@@ -8,4 +8,12 @@ export class pressList {
     const presses = await getAllPresses()
     ctx.body = presses
   }
+  @get('/s')
+  async getTest (ctx, next) {
+    ctx.body = 123
+  }
+  @post('/s')
+  async getTests (ctx, next) {
+    ctx.body = 456
+  }
 }
