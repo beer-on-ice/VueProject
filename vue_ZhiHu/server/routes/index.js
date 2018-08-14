@@ -1,9 +1,11 @@
-const router = require('koa-router')()
 const { getAllPresses } = require('../service/press')
+const {controller, get, post} = require('../lib/decorator')
 
-router.get('/', async (ctx, next) => {
-  const presses = await getAllPresses()
-  ctx.body = presses
-})
-
-module.exports = router
+@controller('/press')
+export class pressList {
+  @get('/')
+  async getPresses (ctx, next) {
+    const presses = await getAllPresses()
+    ctx.body = presses
+  }
+}

@@ -1,6 +1,6 @@
-const Press = require('../database/press')
+const Press = require('../database/schema/press')
 
-exports.getAllPresses = async () => {
+export const getAllPresses = async () => {
   const presses = await Press.find({})
   return presses
 }

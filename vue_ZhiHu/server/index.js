@@ -1,9 +1,22 @@
-const Koa = require('koa')
+
+// const Koa = require('koa')
+import Koa from 'koa'
 const { resolve } = require('path')
 const { connect, initSchemas } = require('./database/init')
-const router = require('koa-router')()
+const R = require('ramda')
+const MIDDLEWARES = ['router']
 
-const index = require('./routes/index.js')
+const useMiddlewares = app => {
+  R.map(
+    R.compose(
+      R.forEachObjIndexed(
+        initWith => initWith(app)
+      ),
+      require,
+      name => resolve(__dirname, `./middlewares/${name}`)
+    )
+  )(MIDDLEWARES)
+}
 
 ;(async () => {
   await connect()
@@ -14,9 +27,7 @@ const index = require('./routes/index.js')
 
   const app = new Koa()
 
-  router.use('/press', index.routes(), index.allowedMethods())
-
-  app.use(router.routes()).use(router.allowedMethods())
+  await useMiddlewares(app)
 
   app.listen(3000, () => {
     console.log('Server Start at Port 3000')

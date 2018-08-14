@@ -1,10 +1,12 @@
 const mongoose = require('mongoose')
 const {resolve} = require('path')
+const glob = require('glob')
 const db = 'mongodb://localhost:27017/zhihu'
 mongoose.Promise = global.Promise
 
 exports.initSchemas = () => {
-  require(resolve(__dirname, './press.js'))
+  // require(resolve(__dirname, './press.js'))
+  glob.sync(resolve(__dirname, './schema/', '**/*.js')).forEach(require)
 }
 
 exports.connect = () => {
