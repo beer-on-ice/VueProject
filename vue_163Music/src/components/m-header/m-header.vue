@@ -1,18 +1,17 @@
 <template>
   <div class="m-header">
     <div class="icon"></div>
-    <h1 class="text">孤独的箭</h1>
-    <router-link tag="div" class="mine" to="/user">
-      <i class="icon-mine"></i>
-    </router-link>
+    <h1 class="text">雲遊四海</h1>
   </div>
 </template>
 
-<script type="text/ecmascript-6">
-export default {}
+<script>
+export default {
+
+}
 </script>
 
-<style scoped lang="stylus" rel="stylesheet/stylus">
+<style lang="stylus" scoped>
 @import '~common/stylus/variable'
 @import '~common/stylus/mixin'
 .m-header
@@ -20,6 +19,7 @@ export default {}
   height 44px
   color $color-theme-self
   background $color-background-self
+  text-align center
   .icon
     display inline-block
     vertical-align top
@@ -33,6 +33,7 @@ export default {}
     vertical-align top
     line-height 44px
     font-size $font-size-large
+    font-family 'KaiTi'
   .mine
     position absolute
     top 0
