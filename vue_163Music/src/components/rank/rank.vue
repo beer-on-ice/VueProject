@@ -1,7 +1,5 @@
-<template>
-  <div>
-    排行页面
-  </div>
+<template lang='pug'>
+  div 排行页面
 </template>
 
 <script>

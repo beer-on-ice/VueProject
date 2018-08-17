@@ -21,7 +21,7 @@ export default {}
 </script>
 
 <style lang="stylus" scoped>
-@import "~common/stylus/variable"
+@import "~assets/stylus/variable"
 .tab
   display: flex
   height: 44px
