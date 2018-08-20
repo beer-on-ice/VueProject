@@ -23,7 +23,6 @@
     "@vue/cli-plugin-pwa": "^3.0.0",
     "@vue/cli-service": "^3.0.0",
     "@vue/eslint-config-standard": "^3.0.0",
-    "eslint-plugin-vue": "^4.7.1",
     "pug": "^2.0.3",
     "pug-plain-loader": "^1.0.0",
     "stylus": "^0.54.5",

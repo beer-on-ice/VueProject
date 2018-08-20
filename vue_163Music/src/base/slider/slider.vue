@@ -28,6 +28,14 @@ export default {
     interval: {
       type: Number,
       default: 4000
+    },
+    threshold: {
+      type: Number,
+      default: 0.3
+    },
+    speed: {
+      type: Number,
+      default: 400
     }
   },
   mounted () {
@@ -72,17 +80,16 @@ export default {
         momentum: false, // 惯性
         snap: {
           loop: this.loop,
-          threshold: 0.1
-        }
+          threshold: this.threshold,
+          speed: this.speed
+        },
+        stopPropagation: true
       })
       this.slider.on('scrollEnd', () => {
         let pageIndex = this.slider.getCurrentPage().pageX
         this.currentPageIndex = pageIndex
 
-        if (this.autoPlay) {
-          clearTimeout(this.timer)
-          this._play()
-        }
+        if (this.autoPlay) { this._play() }
       })
     },
     _initDots () {
@@ -90,9 +97,9 @@ export default {
     },
     _play () {
       let pageIndex = this.currentPageIndex + 1
+      clearTimeout(this.timer)
       this.timer = setTimeout(() => {
-        // goToPage(x, y, time, easing)
-        this.slider.goToPage(pageIndex, 0, 400)
+        this.slider.next()
       }, this.interval)
     }
   }
