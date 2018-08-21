@@ -1,8 +1,9 @@
-<template>
-  <div id="app">
-    <m-header></m-header>
-    <tab-bar></tab-bar>
-    <router-view></router-view>
+<template lang='pug'>
+  #app
+    m-header
+    tab-bar
+    keep-alive
+      router-view
   </div>
 </template>
 <script>

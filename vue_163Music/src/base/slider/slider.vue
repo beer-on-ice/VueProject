@@ -53,8 +53,11 @@ export default {
       this.slider.refresh()
     })
   },
+  destroyed () {
+    clearTimeout(this.timer)
+  },
   methods: {
-    // 设置slider宽度
+    // 初始化slider宽度
     _setSliderWidth (isResize) {
       this.children = this.$refs.sliderGroup.children
       let width = 0
@@ -73,6 +76,7 @@ export default {
       // 最外层容器宽度
       this.$refs.sliderGroup.style.width = width + 'px'
     },
+    // 初始化slider
     _initSlider () {
       this.slider = new BScroll(this.$refs.slider, {
         scrollX: true,
@@ -82,8 +86,7 @@ export default {
           loop: this.loop,
           threshold: this.threshold,
           speed: this.speed
-        },
-        stopPropagation: true
+        }
       })
       this.slider.on('scrollEnd', () => {
         let pageIndex = this.slider.getCurrentPage().pageX
@@ -92,9 +95,11 @@ export default {
         if (this.autoPlay) { this._play() }
       })
     },
+    // 初始化 点
     _initDots () {
       this.dots = new Array(this.children.length)
     },
+    // 下一张轮播图
     _play () {
       let pageIndex = this.currentPageIndex + 1
       clearTimeout(this.timer)

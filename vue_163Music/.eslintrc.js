@@ -1,5 +1,5 @@
 module.exports = {
-   //此项是用来告诉eslint找当前配置文件不能往父级查找
+  //此项是用来告诉eslint找当前配置文件不能往父级查找
   root: true,
   env: {
     node: true
@@ -16,6 +16,7 @@ module.exports = {
       "vars": "all",
       "args": "none"
     }],
+    "no-array-constructor": 0, //禁止使用数组构造器
   },
   parserOptions: {
     parser: 'babel-eslint'

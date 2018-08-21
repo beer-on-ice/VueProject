@@ -1,29 +1,39 @@
 <template lang="pug">
   .recommend
-    .recommend-content
-      // 此处v-if：接口获取完了，才开始slider.vue的mounted
-      .slider-wrapper(v-if="banners.length")
-        slider
-          div(v-for="item in banners")
-            a(:href="item.url")
-              img(:src="item.picUrl")
-      .recommend-list
-        h1.list-title 热门歌单推荐
-        ul
+    scroll.recommend-content(:data="discLists" ref="scroll")
+      div
+        // 此处v-if：接口获取完了，才开始slider.vue的mounted
+        .slider-wrapper(v-if="banners.length")
+          slider
+            div(v-for="item in banners")
+              a(:href="item.url")
+                img.needsclick(:src="item.picUrl" @load="loadImage")
+        .recommend-list
+          h1.list-title 热门歌单推荐
+          ul
+            li.item(v-for="item in discLists")
+              .icon
+                img(width="60" height="60" v-lazy="item.coverImgUrl")
+              .text
+                .name(v-html="item.name")
+                p.desc(v-html="item.description")
 </template>
 
 <script type="text/ecmascript-6">
+import Scroll from 'base/scroll/scroll'
 import Slider from 'base/slider/slider'
 import {vueAxios, api} from 'api/http'
 import {ERR_OK} from 'utils/config'
 export default{
   data () {
     return {
-      banners: []
+      banners: [],
+      discLists: []
     }
   },
   created () {
     this._getBanner()
+    this._getPlaylist()
   },
   methods: {
     // 获取首页banner
@@ -33,10 +43,26 @@ export default{
           this.banners = res.data.banners
         }
       })
+    },
+    // 获取推荐歌单
+    async _getPlaylist () {
+      await vueAxios.get(api.discList, {limit: 50}).then(res => {
+        if (res.status === ERR_OK) {
+          this.discLists = res.data.playlists
+        }
+      })
+    },
+    // 防止banner未加载时，高度未撑开
+    loadImage () {
+      if (!this.checkLoaded) {
+        this.$refs.scroll.refresh()
+        this.checkLoaded = true
+      }
     }
   },
   components: {
-    Slider
+    Slider,
+    Scroll
   }
 }
 
@@ -86,6 +112,9 @@ export default{
             color: $color-text
           .desc
             color: $color-text-d
+            text-overflow: ellipsis
+            white-space: nowrap
+            overflow: hidden
     .loading-container
       position: absolute
       width: 100%

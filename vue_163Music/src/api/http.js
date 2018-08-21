@@ -1,6 +1,25 @@
 import axios from 'axios'
 import qs from 'qs'
 
+export const api = {
+  /**
+   * 首页banner
+   */
+  banner: '/api/banner',
+  /** 推荐歌单
+   * cat：歌单分类
+   * limit: 取出歌单数量 , 默认为 20
+   */
+  discList: '/api/top/playlist/highquality',
+  /** 热门歌手 */
+  hotSingerList: '/api/toplist/artist',
+  /** 歌手列表
+   *  limit: 取出数量, 默认为 50
+   *  offset： 用于分页
+   */
+  singerList: '/api/top/artists'
+}
+
 export const vueAxios = {
   post (url, data) {
     return axios({
@@ -25,8 +44,4 @@ export const vueAxios = {
       }
     })
   }
-}
-
-export const api = {
-  banner: '/api/banner' // 推荐页banner
 }
