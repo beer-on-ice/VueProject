@@ -38,19 +38,23 @@ export default{
   methods: {
     // 获取首页banner
     async _getBanner () {
-      await vueAxios.get(api.banner).then(res => {
-        if (res.status === ERR_OK) {
-          this.banners = res.data.banners
-        }
-      })
+      try {
+        let res = await vueAxios.get(api.banner)
+        if (res.status !== ERR_OK) return
+        this.banners = res.data.banners
+      } catch (e) {
+        console.log(e)
+      }
     },
     // 获取推荐歌单
     async _getPlaylist () {
-      await vueAxios.get(api.discList, {limit: 50}).then(res => {
-        if (res.status === ERR_OK) {
-          this.discLists = res.data.playlists
-        }
-      })
+      try {
+        let res = await vueAxios.get(api.discList, {limit: 50})
+        if (res.status !== ERR_OK) return
+        this.discLists = res.data.playlists
+      } catch (e) {
+        console.log(e)
+      }
     },
     // 防止banner未加载时，高度未撑开
     loadImage () {
@@ -69,55 +73,54 @@ export default{
 </script>
 
 <style scoped lang="stylus">
-@import "~assets/stylus/variable"
-
+@import '~assets/stylus/variable'
 .recommend
-  position: fixed
-  width: 100%
-  top: 88px
-  bottom: 0
+  position fixed
+  width 100%
+  top 88px
+  bottom 0
   .recommend-content
-    height: 100%
-    overflow: hidden
+    height 100%
+    overflow hidden
     .slider-wrapper
-      position: relative
-      width: 100%
-      overflow: hidden
+      position relative
+      width 100%
+      overflow hidden
     .recommend-list
       .list-title
-        height: 65px
-        line-height: 65px
-        text-align: center
-        font-size: $font-size-medium
-        color: $color-theme
+        height 65px
+        line-height 65px
+        text-align center
+        font-size $font-size-medium
+        color $color-theme
       .item
-        display: flex
-        box-sizing: border-box
-        align-items: center
-        padding: 0 20px 20px 20px
+        display flex
+        box-sizing border-box
+        align-items center
+        padding 0 20px 20px 20px
         .icon
-          flex: 0 0 60px
-          width: 60px
-          padding-right: 20px
+          flex 0 0 60px
+          width 60px
+          padding-right 20px
         .text
-          display: flex
-          flex-direction: column
-          justify-content: center
-          flex: 1
-          line-height: 20px
-          overflow: hidden
-          font-size: $font-size-medium
+          display flex
+          flex-direction column
+          justify-content center
+          flex 1
+          line-height 20px
+          overflow hidden
+          font-size $font-size-medium
           .name
-            margin-bottom: 10px
-            color: $color-text
+            margin-bottom 10px
+            color $color-text
           .desc
-            color: $color-text-d
-            text-overflow: ellipsis
-            white-space: nowrap
-            overflow: hidden
+            color $color-text-d
+            text-overflow ellipsis
+            white-space nowrap
+            overflow hidden
     .loading-container
-      position: absolute
-      width: 100%
-      top: 50%
-      transform: translateY(-50%)
+      position absolute
+      width 100%
+      top 50%
+      transform translateY(-50%)
 </style>

@@ -4,7 +4,7 @@
       li.list-group(v-for="group in data" ref="listGroup")
         h2.list-group-title {{group.title}}
         ul
-          li.list-group-item(v-for="item in group.items")
+          li.list-group-item(v-for="item in group.items" @click="selectItem(item)")
             img.avatar(v-lazy="item.avatar")
             span.name {{item.name}}
     .list-shortcut(@touchstart="onShortcutTouchStart" @touchmove.stop.prevent="onShortcutTouchMove")
@@ -62,6 +62,9 @@ export default {
     }
   },
   methods: {
+    selectItem (item) {
+      this.$emit('select', item)
+    },
     // 点击时
     onShortcutTouchStart (e) {
       let anchorIndex = getData(e.target, 'index')

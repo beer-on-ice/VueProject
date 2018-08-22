@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
-import router from './router'
-import store from './store'
+import createRouter from './routes/router'
+import createStore from './store/store'
 import './registerServiceWorker'
 
 // 为了能够立即响应用户的点击事件
@@ -14,6 +14,9 @@ fastclick.attach(document.body)
 Vue.use(VueLazyLoad, {
   loading: require('assets/images/loading.gif')
 })
+
+const store = createStore()
+const router = createRouter()
 
 Vue.config.productionTip = false
 

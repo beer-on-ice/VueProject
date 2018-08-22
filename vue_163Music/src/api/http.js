@@ -17,7 +17,19 @@ export const api = {
    *  limit: 取出数量, 默认为 50
    *  offset： 用于分页
    */
-  singerList: '/api/top/artists'
+  singerList: '/api/top/artists',
+  /**
+   * 歌手信息
+   */
+  singerDetail: '/api/artists',
+  /**
+   * 歌曲播放url
+   */
+  songUrl: '/api/music/url',
+  /**
+   * 歌词
+   */
+  songLyric: '/api/lyric'
 }
 
 export const vueAxios = {
