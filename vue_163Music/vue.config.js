@@ -1,6 +1,9 @@
 const path = require('path')
 const isDev = process.env.NODE_ENV !== 'production'
-function resolve (dir) { return path.resolve(__dirname, dir) }
+
+function resolve (dir) {
+  return path.resolve(__dirname, dir)
+}
 module.exports = {
   assetsDir: 'assets', // 静态资源目录 (js, css, img, fonts)
   outputDir: 'dist', // 构建输出目录
@@ -24,6 +27,7 @@ module.exports = {
       .end()
   },
   devServer: {
+    // host: '192.168.0.61',
     proxy: {
       '/api': {
         target: 'http://192.168.0.61:3000/',

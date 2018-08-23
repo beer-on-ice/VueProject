@@ -41,7 +41,10 @@ export const vueAxios = {
       timeout: 5000,
       headers: {
         'X-Requested-With': 'XMLHttpRequest',
-        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        xhrFields: {
+          withCredentials: true
+        }
       }
     })
   },
@@ -52,7 +55,10 @@ export const vueAxios = {
       params, // get 请求时带的参数
       timeout: 5000,
       headers: {
-        'X-Requested-With': 'XMLHttpRequest'
+        'X-Requested-With': 'XMLHttpRequest',
+        xhrFields: {
+          withCredentials: true
+        }
       }
     })
   }
