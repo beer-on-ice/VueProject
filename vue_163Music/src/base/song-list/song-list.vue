@@ -1,7 +1,7 @@
 <template lang="pug">
   .song-list
     ul
-      li.item(v-for="song in songs")
+      li.item(v-for="(song,index) in songs" @click="selectItem(song,index)")
         .content
           .name {{song.name}}
           p.desc {{getDesc(song)}}
@@ -18,6 +18,9 @@ export default {
   methods: {
     getDesc (song) {
       return `${song.singer} · ${song.alname}`
+    },
+    selectItem (item, index) {
+      this.$emit('select', item, index)
     }
   }
 }
