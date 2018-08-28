@@ -9,12 +9,21 @@
           i.icon-back
         h1.title(v-html="currentSong.name")
         h2.subtitle(v-html="currentSong.singer")
-      .middle
-        .middle-l
+      .middle(@touchstart.prevent="middleTouchStart" @touchmove.prevent="middleTouchMove" @touchend="middleTouchEnd")
+        .middle-l(ref="middleL")
           .cd-wrapper(ref='cdWrapper')
             .cd(:class="cdCls")
               img.image(:src="currentSong.cover")
+          .playing-lyric-wrapper
+            .playing-lyric {{playingLyric}}
+        Scroll.middle-r(ref="lyricList" :data='currentLyric &&currentLyric.lines')
+          .lyric-wrapper
+            div(v-if="currentLyric")
+              p.text(:class="{'current': currentLineNum === index}" ref="lyricLine" v-for="(line,index) in currentLyric.lines") {{line.txt}}
       .bottom
+        .dot-wrapper
+          span.dot(:class="{'active':currentShow==='cd'}")
+          span.dot(:class="{'active':currentShow==='lyric'}")
         .progress-wrapper
           span.time.time-l {{_format(currentTime,false)}}
           .progress-bar-wrapper
@@ -53,18 +62,27 @@ import animations from 'create-keyframe-animation'
 import {prefixStyle} from 'assets/js/dom'
 import {shuffle} from 'assets/js/util'
 import ProgressBar from 'base/progress-bar/progress-bar'
-import _ from 'lodash'
 import ProgressCircle from 'base/progress-circle/progress-circle'
+import Lyric from 'assets/js/lyric.js'
+import Scroll from 'base/scroll/scroll'
 const transform = prefixStyle('transform')
+const transitionDuration = prefixStyle('transition-duration')
 
 export default {
   data () {
     return {
-      currentSongUrl: '',
-      songReady: false,
+      currentSongUrl: null,
+      currentLyric: null,
+      currentLineNum: 0,
+      currentShow: 'cd',
       currentTime: 0,
-      radius: 32
+      songReady: false,
+      radius: 32,
+      playingLyric: ''
     }
+  },
+  created () {
+    this.touch = {}
   },
   computed: {
     ...mapGetters([
@@ -103,6 +121,17 @@ export default {
       setPlayMode: 'SET_PLAY_MODE',
       setplaylist: 'SET_PLAYLIST'
     }),
+    // 歌词动起来
+    handleLyric ({lineNum, txt}) {
+      this.currentLineNum = lineNum
+      if (lineNum > 5) {
+        let lineEl = this.$refs.lyricLine[lineNum - 5]
+        this.$refs.lyricList.scrollToElement(lineEl, 1000)
+      } else {
+        this.$refs.lyricList.scrollToElement(0, 0, 1000)
+      }
+      this.playingLyric = txt
+    },
     // 更换播放模式
     changeMode () {
       // 取余
@@ -111,8 +140,7 @@ export default {
       let list = null
 
       if (mode === playMode.random) {
-        let data = _.cloneDeep(this.sequenceList)
-        list = shuffle(data)
+        list = shuffle(this.sequenceList)
       } else if (mode === playMode.loop) {
         list = [this.currentSong]
       } else {
@@ -123,12 +151,15 @@ export default {
     },
     // 进度条拖拽
     onProgressDragChange (percent) {
-      this.$refs.audio.currentTime = this.currentSong.duration / 1000 * percent
+      const currentTime = this.currentSong.duration / 1000 * percent
+      this.$refs.audio.currentTime = currentTime
       if (!this.playing) this.togglePlaying()
+      if (this.currentLyric) this.currentLyric.seek(currentTime * 1000)
     },
     // 切换播放状态
     togglePlaying () {
       this.setPlayingState(!this.playing)
+      if (this.currentLyric) this.currentLyric.togglePlay()
     },
     updateTime (e) {
       this.currentTime = e.target.currentTime
@@ -176,6 +207,7 @@ export default {
     loop () {
       this.$refs.audio.currentTime = 0
       this.$refs.audio.play()
+      if (this.currentLyric) this.currentLyric.seek(0)
     },
     // 返回
     back () {
@@ -184,6 +216,59 @@ export default {
     // 打开播放模块
     open () {
       this.setFullScreen(true)
+    },
+    // 中间部分滑动
+    middleTouchStart (e) {
+      this.touch.initiated = true
+      this.touch.startX = e.touches[0].pageX
+      this.touch.startY = e.touches[0].pageY
+    },
+    middleTouchMove (e) {
+      if (!this.touch.initiated) return
+      const deltaX = e.touches[0].pageX - this.touch.startX
+      const deltaY = e.touches[0].pageY - this.touch.startY
+      if (Math.abs(deltaY) > Math.abs(deltaX)) return
+      // 如果是cd,left值为0，否则就是负一屏宽度
+      const left = this.currentShow === 'cd' ? 0 : -window.innerWidth
+      // 当还在cd时，左划最多移动负一屏的位置，向右划最多恢复为0
+      const offsetWidth = Math.min(
+        0,
+        Math.max(-window.innerWidth, left + deltaX)
+      )
+      this.touch.percent = Math.abs(offsetWidth / window.innerWidth)
+      this.$refs.lyricList.$el.style.transform = `translate3d(${offsetWidth}px,0,0)`
+      this.$refs.middleL.style.opacity = 1 - this.touch.percent
+      this.$refs.lyricList.$el.style.transitionDuration = 0
+      this.$refs.middleL.style.transitionDuration = 0
+    },
+    middleTouchEnd () {
+      let offsetWidth
+      let opacity
+
+      if (this.currentShow === 'cd') {
+        if (this.touch.percent > 0.3) {
+          offsetWidth = -window.innerWidth
+          opacity = 0
+          this.currentShow = 'lyric'
+        } else {
+          offsetWidth = 0
+          opacity = 1
+        }
+      } else {
+        if (this.touch.percent < 0.7) {
+          offsetWidth = 0
+          opacity = 1
+          this.currentShow = 'cd'
+        } else {
+          offsetWidth = -window.innerWidth
+          opacity = 0
+        }
+      }
+      this.$refs.lyricList.$el.style.transform = `translate3d(${offsetWidth}px,0,0)`
+      this.$refs.lyricList.$el.style.transitionDuration = `300ms`
+      this.$refs.middleL.style.opacity = opacity
+      this.$refs.middleL.style.transitionDuration = `300ms`
+      this.touch.initiated = false
     },
     // 专辑动画
     enter (el, done) {
@@ -267,7 +352,11 @@ export default {
     async currentSong (newSong, oldSong) {
       if (!newSong.id) return
       if (newSong.id === oldSong.id) return
+      if (this.currentLyric) this.currentLyric.stop()
       this.currentSongUrl = await this.currentSong.getSongUrl()
+      this.currentLyric = await this.currentSong.getSongLyric()
+      this.currentLyric = await new Lyric(this.currentLyric, this.handleLyric)
+      if (this.playing) this.currentLyric.play()
     },
     currentSongUrl () {
       let _this = this
@@ -281,14 +370,12 @@ export default {
       this.timer = setTimeout(() => {
         newVal ? this.$refs.audio.play() : this.$refs.audio.pause()
       }, 1000)
-    },
-    sequenceList (val) {
-      console.log(val)
     }
   },
   components: {
     ProgressBar,
-    ProgressCircle
+    ProgressCircle,
+    Scroll
   }
 }
 </script>

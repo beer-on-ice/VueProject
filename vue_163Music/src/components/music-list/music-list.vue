@@ -5,7 +5,7 @@
     h1.title(v-html="title")
     .bg-image(:style="bgStyle" ref="bgImage")
       .play-wrapper
-        .play(v-show="songs.length>0" ref="playBtn")
+        .play(v-show="songs.length>0" ref="playBtn" @click="random")
           i.icon-play
           .text 随机播放全部
       .filter(ref="filter")
@@ -66,8 +66,14 @@ export default {
   },
   methods: {
     ...mapActions([
-      'selectPlay'
+      'selectPlay',
+      'randomPlay'
     ]),
+    random () {
+      this.randomPlay({
+        list: this.songs
+      })
+    },
     scroll (pos) {
       this.scrollY = pos.y
     },

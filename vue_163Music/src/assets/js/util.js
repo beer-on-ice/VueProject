@@ -1,13 +1,16 @@
+import _ from 'lodash'
+
 function getRandomInt (min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min)
 }
 
 export function shuffle (arr) {
-  for (let i = 0; i < arr.length; i++) {
+  let _arr = _.cloneDeep(arr) // 不改变原数组
+  for (let i = 0; i < _arr.length; i++) {
     let j = getRandomInt(0, i)
-    let t = arr[i]
-    arr[i] = arr[j]
-    arr[j] = t
+    let t = _arr[i]
+    _arr[i] = _arr[j]
+    _arr[j] = t
   }
-  return arr
+  return _arr
 }
