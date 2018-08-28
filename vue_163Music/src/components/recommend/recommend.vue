@@ -1,5 +1,5 @@
 <template lang="pug">
-  .recommend
+  .recommend(ref="recommend")
     scroll.recommend-content(:data="discLists" ref="scroll")
       div
         // 此处v-if：接口获取完了，才开始slider.vue的mounted
@@ -24,7 +24,9 @@ import Scroll from 'base/scroll/scroll'
 import Slider from 'base/slider/slider'
 import {vueAxios, api} from 'api/http'
 import {ERR_OK} from 'utils/config'
+import {playlistMixin} from 'assets/js/mixin'
 export default{
+  mixins: [playlistMixin],
   data () {
     return {
       banners: [],
@@ -55,6 +57,11 @@ export default{
       } catch (e) {
         console.log(e)
       }
+    },
+    handlePlaylist (playlist) {
+      const bottom = playlist.length > 0 ? '60px' : ''
+      this.$refs.recommend.style.bottom = bottom
+      this.$refs.scroll.refresh()
     },
     // 防止banner未加载时，高度未撑开
     loadImage () {
