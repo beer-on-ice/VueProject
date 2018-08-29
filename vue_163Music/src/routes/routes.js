@@ -5,7 +5,12 @@ export default [{
 {
   path: '/recommend',
   component: () =>
-      import('components/recommend/recommend')
+      import('components/recommend/recommend'),
+  children: [{
+    path: ':id',
+    component: () =>
+        import('components/disc/disc')
+  }]
 },
 {
   path: '/singer',

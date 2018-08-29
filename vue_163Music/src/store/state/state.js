@@ -8,5 +8,6 @@ export default {
   playlist: [],
   sequenceList: [],
   mode: playMode.sequence,
-  currentIndex: -1 // 当前播放
+  currentIndex: -1, // 当前播放
+  disc: {}
 }

@@ -11,12 +11,13 @@
         .recommend-list
           h1.list-title 热门歌单推荐
           ul
-            li.item(v-for="item in discLists")
+            li.item(v-for="item in discLists" @click="selectItem(item)")
               .icon
                 img(width="60" height="60" v-lazy="item.coverImgUrl")
               .text
                 .name(v-html="item.name")
                 p.desc(v-html="item.description")
+    router-view
 </template>
 
 <script type="text/ecmascript-6">
@@ -25,6 +26,7 @@ import Slider from 'base/slider/slider'
 import {vueAxios, api} from 'api/http'
 import {ERR_OK} from 'utils/config'
 import {playlistMixin} from 'assets/js/mixin'
+import {mapMutations} from 'vuex'
 export default{
   mixins: [playlistMixin],
   data () {
@@ -38,6 +40,9 @@ export default{
     this._getPlaylist()
   },
   methods: {
+    ...mapMutations({
+      setDisc: 'SET_DISC'
+    }),
     // 获取首页banner
     async _getBanner () {
       try {
@@ -54,6 +59,18 @@ export default{
         let res = await vueAxios.get(api.discList, {limit: 50})
         if (res.status !== ERR_OK) return
         this.discLists = res.data.playlists
+      } catch (e) {
+        console.log(e)
+      }
+    },
+    async selectItem (item) {
+      try {
+        let res = await vueAxios.get(api.songSheet, {id: item.id})
+        if (res.status !== ERR_OK) return
+        item.sheet = res.data.privileges
+
+        this.setDisc(item)
+        this.$router.push({path: `/recommend/${item.id}`})
       } catch (e) {
         console.log(e)
       }

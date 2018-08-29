@@ -29,7 +29,21 @@ export const api = {
   /**
    * 歌词
    */
-  songLyric: '/api/lyric'
+  songLyric: '/api/lyric',
+  /**
+   * 歌单歌曲列表
+   */
+  songSheet: '/api/playlist/detail',
+  /**
+   * 歌曲详情
+   * ids
+   */
+  songDetail: '/api/song/detail',
+  /**
+   * 排行
+   * idx
+   */
+  rank: '/api/top/list'
 }
 
 export const vueAxios = {
@@ -53,7 +67,7 @@ export const vueAxios = {
       method: 'get',
       url,
       params, // get 请求时带的参数
-      timeout: 5000,
+      timeout: 50000,
       headers: {
         'X-Requested-With': 'XMLHttpRequest',
         xhrFields: {

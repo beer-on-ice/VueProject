@@ -350,6 +350,7 @@ export default {
   },
   watch: {
     async currentSong (newSong, oldSong) {
+      console.log(newSong)
       if (!newSong.id) return
       if (newSong.id === oldSong.id) return
       if (this.currentLyric) this.currentLyric.stop()
