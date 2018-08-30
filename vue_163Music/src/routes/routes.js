@@ -25,7 +25,12 @@ export default [{
 {
   path: '/rank',
   component: () =>
-      import('components/rank/rank')
+      import('components/rank/rank'),
+  children: [{
+    path: ':id',
+    component: () =>
+        import('components/top-list/top-list')
+  }]
 },
 {
   path: '/search',

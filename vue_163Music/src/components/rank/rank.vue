@@ -2,7 +2,7 @@
   .rank(ref="rank")
     scroll.toplist(:data="rankList" ref="rankList")
       ul
-        li.item(v-for='item in rankList')
+        li.item(v-for='item in rankList' @click="selectItem(item)")
           .icon
             img(width="100" height="100" v-lazy='item.coverImgUrl')
           ul.songlist
@@ -20,11 +20,13 @@ import {ERR_OK} from 'utils/config'
 import Scroll from 'base/scroll/scroll'
 import Loading from 'base/loading/loading'
 import {playlistMixin} from 'assets/js/mixin'
+import {mapMutations} from 'vuex'
+import Vue from 'vue'
 export default {
   mixins: [playlistMixin],
   data () {
     return {
-      rankIdx: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+      rankIdx: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19],
       rankList: []
     }
   },
@@ -32,6 +34,15 @@ export default {
     this._getRank()
   },
   methods: {
+    ...mapMutations({
+      setTopList: 'SET_TOPLIST'
+    }),
+    selectItem (item) {
+      this.$router.push({
+        path: `/rank/${item.id}`
+      })
+      this.setTopList(item)
+    },
     handlePlaylist (playlist) {
       const bottom = playlist.length ? '60px' : ''
       this.$refs.rank.style.bottom = bottom
@@ -40,6 +51,7 @@ export default {
     getInfo (song) {
       const info = song.data.songs[0]
       let x = ''
+
       for (let item of info.ar) {
         x += `/${item.name}`
       }
@@ -47,32 +59,43 @@ export default {
     },
     async _getRank () {
       let rankUrls = []
-      for (let id of this.rankIdx) {
-        rankUrls.push(`${api.rank}?idx=${id}`)
+      for (let rankId of this.rankIdx) {
+        rankUrls.push({
+          url: api.rank,
+          id: {idx: rankId}
+        })
       }
       let requests = rankUrls.map(this._requestUrl)
       Promise.all(requests)
         .then((res) => {
           for (let item of res) {
-            this._getSongs(item)
+            item.data.playlist.playlist = []
+            item.data.playlist.privileges = item.data.privileges
+            this.rankList.push(item.data.playlist)
           }
+          return this.rankList
+        })
+        .then((res) => {
+          res.forEach((rank, index) => {
+            this._getSongs(rank).then(resp => {
+              Vue.set(this.rankList[index], 'songList', resp)
+            })
+          })
         })
     },
-    async _getSongs (item) {
+    async _getSongs (rank) {
       let songUrls = []
-      let songList = item.data.privileges.slice(0, 3)
-      for (let song of songList) {
-        songUrls.push(`${api.songDetail}?ids=${song.id}`)
+      let songList = rank.privileges.slice(0, 3)
+      for (let item of songList) {
+        songUrls.push({
+          url: api.songDetail,
+          id: {ids: item.id}
+        })
       }
       let songRequests = songUrls.map(this._requestUrl)
-      Promise.all(songRequests).then((song) => {
-        item.data.playlist.songList = song
-        this.rankList.push(item.data.playlist)
-      })
+      return Promise.all(songRequests)
     },
-    _requestUrl (url) {
-      return vueAxios.get(url)
-    }
+    _requestUrl (param) { return vueAxios.get(param.url, param.id) }
   },
   components: {
     Scroll,

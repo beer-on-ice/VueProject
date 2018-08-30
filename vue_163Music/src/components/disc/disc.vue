@@ -38,18 +38,20 @@ export default {
       }
       let urls = []
       for (let song of this.disc.sheet) {
-        urls.push(`${api.songDetail}?ids=${song.id}`)
+        urls.push({
+          url: api.songDetail,
+          id: song.id
+        })
       }
       let requests = urls.map(this._requestUrl)
+
       Promise.all(requests)
         .then((res) => {
-          res.map(item => {
-            this.songs.push(createSong(item.data.songs[0]))
-          })
+          res.map(item => { this.songs.push(createSong(item.data.songs[0])) })
         })
     },
-    _requestUrl (url) {
-      return vueAxios.get(url)
+    _requestUrl (param) {
+      return vueAxios.get(param.url, {ids: param.id})
     }
   },
   components: {

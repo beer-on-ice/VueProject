@@ -12,7 +12,7 @@
     .bg-layer(ref="bgLayer")
     scroll.list(:data="songs" ref="list" :probe-type="probeType" :listen-scroll="listenScroll" @scroll="scroll")
       .song-list-wrapper
-        song-list(:songs="songs" @select="selectItem")
+        song-list(:songs="songs" @select="selectItem" :rank="rank")
       .loading-container(v-show="!songs.length")
         loading
 </template>
@@ -48,6 +48,10 @@ export default {
     title: {
       type: String,
       default: ''
+    },
+    rank: {
+      type: Boolean,
+      default: false
     }
   },
   created () {

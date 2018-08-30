@@ -25,5 +25,8 @@ export default {
   },
   disc (state) {
     return state.disc
+  },
+  topList (state) {
+    return state.topList
   }
 }

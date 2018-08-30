@@ -9,5 +9,6 @@ export default {
   sequenceList: [],
   mode: playMode.sequence,
   currentIndex: -1, // 当前播放
-  disc: {}
+  disc: {},
+  topList: {}
 }
