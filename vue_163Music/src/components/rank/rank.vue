@@ -8,7 +8,7 @@
           ul.songlist
             li.song(v-for='(song,index) in item.songList')
               span {{index+1}}
-              span {{getInfo(song)}}
+              span {{getSingerName(song)}}
       .loading-container(v-show="!rankList.length")
         loading
     router-view
@@ -21,6 +21,7 @@ import Scroll from 'base/scroll/scroll'
 import Loading from 'base/loading/loading'
 import {playlistMixin} from 'assets/js/mixin'
 import {mapMutations} from 'vuex'
+import {filterSinger} from 'assets/js/song'
 import Vue from 'vue'
 export default {
   mixins: [playlistMixin],
@@ -37,26 +38,22 @@ export default {
     ...mapMutations({
       setTopList: 'SET_TOPLIST'
     }),
+    // 选择排行榜
     selectItem (item) {
       this.$router.push({
         path: `/rank/${item.id}`
       })
       this.setTopList(item)
     },
+    getSingerName (item) {
+      return `${item.data.songs[0].name} - ${filterSinger(item.data.songs[0].ar)}`
+    },
     handlePlaylist (playlist) {
       const bottom = playlist.length ? '60px' : ''
       this.$refs.rank.style.bottom = bottom
       this.$refs.rankList.refresh()
     },
-    getInfo (song) {
-      const info = song.data.songs[0]
-      let x = ''
-
-      for (let item of info.ar) {
-        x += `/${item.name}`
-      }
-      return `${info.name} - ${x.substr(1)}`
-    },
+    // 获取排行榜
     async _getRank () {
       let rankUrls = []
       for (let rankId of this.rankIdx) {
@@ -83,6 +80,7 @@ export default {
           })
         })
     },
+    // 获取排行榜里歌曲信息
     async _getSongs (rank) {
       let songUrls = []
       let songList = rank.privileges.slice(0, 3)

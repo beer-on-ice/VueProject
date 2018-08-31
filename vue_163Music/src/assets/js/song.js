@@ -62,6 +62,7 @@ export default class Song {
 }
 
 export function createSong (musicData) {
+  // console.log(musicData)
   return new Song({
     id: musicData.id,
     alid: musicData.al.id,

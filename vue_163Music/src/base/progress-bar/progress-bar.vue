@@ -21,17 +21,20 @@ export default {
     this.touch = {}
   },
   methods: {
+    // 进度条点击跳转
     progressClick (e) {
       const rect = this.$refs.progressBar.getBoundingClientRect()
       const offsetWidth = e.pageX - rect.left
       this._offset(offsetWidth)
       this._triggerPercent()
     },
+    // 进度条拖拽开始
     progressTouchStart (e) {
       this.touch.initiated = true
       this.touch.startX = e.touches[0].pageX
       this.touch.left = this.$refs.progress.clientWidth // 进步条已经走了多少
     },
+    // 进度条拖拽
     progressTouchMove (e) {
       if (!this.touch.initiated) return
       const deltaX = e.touches[0].pageX - this.touch.startX
@@ -39,15 +42,18 @@ export default {
       const offsetWidth = Math.min(this.$refs.progressBar.clientWidth, Math.max(0, this.touch.left + deltaX))
       this._offset(offsetWidth)
     },
+    // 进度条拖拽结束
     progressTouchEnd (e) {
       this.touch.initiated = false
       this._triggerPercent()
     },
+    // 通信-进度条进度
     _triggerPercent () {
       const barWidth = this.$refs.progressBar.clientWidth - ProgressBtnWidth
       const percent = this.$refs.progress.clientWidth / barWidth
       this.$emit('percentChange', percent)
     },
+    // 改变位置
     _offset (offsetWidth) {
       this.$refs.progress.style.width = `${offsetWidth}px`
       this.$refs.progressBtn.style[transform] = `translate3d(${offsetWidth}px,0,0)`

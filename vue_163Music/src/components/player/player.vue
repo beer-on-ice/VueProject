@@ -106,6 +106,7 @@ export default {
     disableCls () {
       return this.songReady ? '' : 'disable'
     },
+    // 进度条百分比
     percent () {
       return this.currentTime / (this.currentSong.duration / 1000)
     },
@@ -141,8 +142,6 @@ export default {
 
       if (mode === playMode.random) {
         list = shuffle(this.sequenceList)
-      } else if (mode === playMode.loop) {
-        list = [this.currentSong]
       } else {
         list = this.sequenceList
       }
@@ -197,6 +196,7 @@ export default {
       if (!this.playing) this.togglePlaying()
       this.songReady = false
     },
+    // 结束
     end () {
       if (this.mode === playMode.loop) {
         this.loop()
@@ -204,6 +204,7 @@ export default {
         this.next()
       }
     },
+    // 循环
     loop () {
       this.$refs.audio.currentTime = 0
       this.$refs.audio.play()
@@ -332,6 +333,7 @@ export default {
       const second = this._pad(interval % 60)
       return `${minute}:${second}`
     },
+    // 补零
     _pad (num, n = 2) {
       let len = num.toString().length
       while (len < n) {

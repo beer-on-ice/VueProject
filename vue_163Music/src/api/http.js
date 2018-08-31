@@ -43,7 +43,23 @@ export const api = {
    * 排行
    * idx
    */
-  rank: '/api/top/list'
+  rank: '/api/top/list',
+  /**
+   * 搜索
+   * 必选参数：keywords
+   * 可选参数： limit/offset/type
+   */
+  search: '/api/search',
+  /**
+   * 搜索建议
+   * 必选参数： keywords
+   * 可选参数： limit / offset / type
+   */
+  searchSuggest: '/api/search/suggest',
+  /**
+   * 热搜
+   */
+  hotSearch: '/api/search/hot'
 }
 
 export const vueAxios = {

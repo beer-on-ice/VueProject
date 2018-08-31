@@ -31,6 +31,7 @@ export default {
     }
   },
   methods: {
+    // 获取专辑歌曲信息
     async getSongInfo () {
       if (!this.disc.id) {
         this.$router.push('/recommend')

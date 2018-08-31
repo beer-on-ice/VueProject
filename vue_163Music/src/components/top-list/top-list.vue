@@ -21,6 +21,7 @@ export default {
     this._getSongList()
   },
   methods: {
+    // 排行榜歌曲详情
     async _getSongList () {
       if (!this.topList.id) {
         this.$router.push('/rank')
