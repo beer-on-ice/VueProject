@@ -1,3 +1,8 @@
+import {
+  saveHistory,
+  deleteSearch,
+  clearSearch
+} from 'assets/js/cache'
 import * as types from '../mutations/mutations-types'
 import {
   playMode
@@ -38,7 +43,68 @@ export default {
     commit(types.SET_CURRENT_INDEX, 0)
     commit(types.SET_FULL_SCREEN, true)
     commit(types.SET_PLAYING_STATE, true)
+  },
+  insertSong ({
+    commit,
+    state
+  }, song) {
+    // .slice返回副本，不会触发在外部修改state问题
+    let playlist = state.playlist.slice()
+    let sequenceList = state.sequenceList.slice()
+    let currentIndex = state.currentIndex
+    // 记录当前歌曲
+    let currentSong = playlist[currentIndex]
+    // 查找当前列表中是否有待插入的歌曲
+    let fpIndex = findIndex(playlist, song)
+    // 要插入的位置(索引+1)
+    currentIndex++
+    // 插入歌曲到索引位置
+    playlist.splice(currentIndex, 0, song)
+    // 如果已经由此音乐
+    if (fpIndex > -1) {
+      // 插入位置在 列表已存在的 之后
+      if (currentIndex > fpIndex) {
+        playlist.splice(fpIndex, 1)
+        currentIndex--
+      } else {
+        playlist.splice(fpIndex + 1, 1)
+      }
+    }
+    // 顺序列表
+    let currentSIndex = findIndex(sequenceList, song) + 1
+    let fsIndex = findIndex(sequenceList, song)
+    sequenceList.splice(currentSIndex, 0, song)
+    if (fsIndex > -1) {
+      // 插入位置在 列表已存在的 之后
+      if (currentSIndex > fsIndex) {
+        sequenceList.splice(fsIndex, 1)
+        currentSIndex--
+      } else {
+        playlist.splice(fsIndex + 1, 1)
+      }
+    }
+    commit(types.SET_PLAYLIST, playlist)
+    commit(types.SET_SEQUENCE_LIST, sequenceList)
+    commit(types.SET_CURRENT_INDEX, currentIndex)
+    commit(types.SET_FULL_SCREEN, true)
+    commit(types.SET_PLAYING_STATE, true)
+  },
+  saveSearchHistory ({
+    commit
+  }, query) {
+    commit(types.SET_SEARCH_HISTORY, saveHistory(query))
+  },
+  deleteSearchHistory ({
+    commit
+  }, query) {
+    commit(types.SET_SEARCH_HISTORY, deleteSearch(query))
+  },
+  clearSearchHistory ({
+    commit
+  }) {
+    commit(types.SET_SEARCH_HISTORY, clearSearch())
   }
+
 }
 
 function findIndex (list, song) {

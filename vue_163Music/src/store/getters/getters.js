@@ -28,5 +28,8 @@ export default {
   },
   topList (state) {
     return state.topList
+  },
+  searchHistory (state) {
+    return state.searchHistory
   }
 }

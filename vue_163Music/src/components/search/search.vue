@@ -9,14 +9,25 @@
           ul
             li.item(v-for="item in hotKeys" @click="addQuery(item.first)")
               span {{item.first}}
+        .search-history(v-show="searchHistory.length")
+          h1.title
+            span.text 搜索历史
+            span.clear(@click="clearSearchHistory")
+              i.icon-clear
+          search-list(:searches="searchHistory" @select="addQuery" @delete="deleteQuery")
     .search-result(v-show='query' ref='searchResult')
-      suggest(:query="query")
+      suggest(
+        :query="query"
+        @listScroll="blurInput"
+        @select="saveSearch"
+      )
 </template>
 
 <script>
 import SearchBox from 'base/search-box/search-box'
 import Suggest from 'components/suggest/suggest'
-
+import {mapActions, mapGetters} from 'vuex'
+import SearchList from 'base/search-list/search-list'
 import {vueAxios, api} from 'api/http'
 import {ERR_OK} from 'utils/config'
 export default {
@@ -26,10 +37,20 @@ export default {
       query: ''
     }
   },
+  computed: {
+    ...mapGetters([
+      'searchHistory'
+    ])
+  },
   created () {
     this._getHotSearch()
   },
   methods: {
+    ...mapActions([
+      'saveSearchHistory',
+      'deleteSearchHistory',
+      'clearSearchHistory'
+    ]),
     // 获取热门搜索
     async _getHotSearch () {
       try {
@@ -40,6 +61,14 @@ export default {
         console.log(e)
       }
     },
+    // 保存搜索历史
+    saveSearch () {
+      this.saveSearchHistory(this.query)
+    },
+    // 删除指定搜索历史
+    deleteQuery (item) {
+      this.deleteSearchHistory(item)
+    },
     // 关键字添加搜索
     addQuery (key) {
       this.$refs.searchBox.setQuery(key)
@@ -47,11 +76,15 @@ export default {
     // 关键字改变
     queryChange (key) {
       this.query = key
+    },
+    blurInput () {
+      this.$refs.searchBox.blur()
     }
   },
   components: {
     SearchBox,
-    Suggest
+    Suggest,
+    SearchList
   }
 }
 </script>

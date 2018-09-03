@@ -1,7 +1,13 @@
 <template lang="pug">
-scroll.suggest(:data="result" :pullup="pullup" @scrollToEnd="searchMore" ref="suggest")
+scroll.suggest(
+  :data="result"
+  :pullup="pullup"
+  @scrollToEnd="searchMore"
+  ref="suggest"
+  :beforeScroll="beforeScroll"
+  @beforeScroll="listScroll")
   ul.suggest-list
-    li.suggest-item(v-for="item in result")
+    li.suggest-item(v-for="item in result" @click="selectItem(item)")
       .icon
         i(:class="getIconCls(item)")
       .name
@@ -18,6 +24,7 @@ import {createSong} from 'assets/js/song'
 import Scroll from 'base/scroll/scroll'
 import Loading from 'base/loading/loading'
 import NoResult from 'base/no-result/no-result'
+import {mapMutations, mapActions} from 'vuex'
 const TYPE_SINGER = 'singer'
 const TYPE_SONG = 'song'
 export default {
@@ -27,6 +34,7 @@ export default {
       limit: 30,
       result: [],
       pullup: true, // 是否能上拉刷新
+      beforeScroll: true,
       hasMore: true, // 是否有更多
       searchSinger: true // 是否能再次搜索歌手
     }
@@ -42,6 +50,28 @@ export default {
     } // 是否展示从而搜索歌手
   },
   methods: {
+    ...mapMutations({
+      setSinger: 'SET_SINGER'
+    }),
+    ...mapActions([
+      'insertSong'
+    ]),
+    selectItem (item) {
+      if (item.type === TYPE_SINGER) {
+        const singer = {
+          id: item.id,
+          name: item.name,
+          avatar: item.picUrl
+        }
+        this.$router.push({
+          path: `/search/${singer.id}`
+        })
+        this.setSinger(singer)
+      } else {
+        this.insertSong(item)
+      }
+      this.$emit('select')
+    },
     // 搜索歌手
     async _searchSinger () {
       try {
@@ -70,7 +100,11 @@ export default {
             item.type = TYPE_SONG
             let beingSong = {
               id: item.id,
-              al: {id: item.album.id, name: item.album.name, picUrl: item.album.picUrl},
+              al: {
+                id: item.album.id,
+                name: item.album.name,
+                picUrl: item.rUrl
+              },
               ar: item.artists,
               name: item.name,
               dt: item.duration
@@ -110,6 +144,9 @@ export default {
         console.log(e)
       }
     },
+    listScroll () {
+      this.$emit('listScroll')
+    },
     // 检查能否还有未加载的
     _checkMore (data) {
       data = data.result
@@ -133,7 +170,8 @@ export default {
     }
   },
   watch: {
-    query () {
+    query (newVal) {
+      if (newVal === '') return
       // 如果搜索时展示歌手
       if (this.showSinger) {
         this._searchSinger()

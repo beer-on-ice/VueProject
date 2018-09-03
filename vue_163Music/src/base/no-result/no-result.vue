@@ -21,6 +21,7 @@ export default {
 @import '~assets/stylus/mixin'
 .no-result
   text-align center
+  opacity 0.2
   .no-result-icon
     width 86px
     height 90px

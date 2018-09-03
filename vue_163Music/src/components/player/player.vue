@@ -13,7 +13,7 @@
         .middle-l(ref="middleL")
           .cd-wrapper(ref='cdWrapper')
             .cd(:class="cdCls")
-              img.image(:src="currentSong.cover")
+              img.image(:src="currentSong.cover||currentCover")
           .playing-lyric-wrapper
             .playing-lyric {{playingLyric}}
         Scroll.middle-r(ref="lyricList" :data='currentLyric &&currentLyric.lines')
@@ -43,7 +43,7 @@
   transition(name="mini")
     .mini-player(v-show="!fullScreen" @click="open")
       .icon
-        img(width="40" height="40" :src="currentSong.cover" :class="cdCls")
+        img(width="40" height="40" :src="currentSong.cover||currentCover" :class="cdCls")
       .text
         h2.name(v-html="currentSong.name")
         p.desc(v-html="currentSong.singer")
@@ -73,6 +73,7 @@ export default {
     return {
       currentSongUrl: null,
       currentLyric: null,
+      currentCover: null,
       currentLineNum: 0,
       currentShow: 'cd',
       currentTime: 0,
@@ -352,11 +353,11 @@ export default {
   },
   watch: {
     async currentSong (newSong, oldSong) {
-      console.log(newSong)
       if (!newSong.id) return
       if (newSong.id === oldSong.id) return
       if (this.currentLyric) this.currentLyric.stop()
       this.currentSongUrl = await this.currentSong.getSongUrl()
+      this.currentCover = await this.currentSong.getSongCover()
       this.currentLyric = await this.currentSong.getSongLyric()
       this.currentLyric = await new Lyric(this.currentLyric, this.handleLyric)
       if (this.playing) this.currentLyric.play()

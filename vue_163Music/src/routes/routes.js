@@ -35,6 +35,11 @@ export default [{
 {
   path: '/search',
   component: () =>
-      import('components/search/search')
+      import('components/search/search'),
+  children: [{
+    path: ':id',
+    component: () =>
+        import('components/singer-detail/singer-detail')
+  }]
 }
 ]

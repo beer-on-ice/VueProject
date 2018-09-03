@@ -6,6 +6,7 @@
 </template>
 
 <script>
+import {debounce} from 'assets/js/util'
 export default {
   data () {
     return {
@@ -19,9 +20,9 @@ export default {
     }
   },
   created () {
-    this.$watch('query', (newQuery) => {
+    this.$watch('query', debounce((newQuery) => {
       this.$emit('query', newQuery)
-    })
+    }, 400))
   },
   methods: {
     clear () {
