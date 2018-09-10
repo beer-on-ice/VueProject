@@ -2,35 +2,42 @@
   .search
     .search-box-wrapper
       search-box(ref="searchBox" @query="queryChange")
-    .shortcut-wrapper( v-show='!query')
-      .shortcut
-        .hot-key
-          h1.title 热门搜索
-          ul
-            li.item(v-for="item in hotKeys" @click="addQuery(item.first)")
-              span {{item.first}}
-        .search-history(v-show="searchHistory.length")
-          h1.title
-            span.text 搜索历史
-            span.clear(@click="clearSearchHistory")
-              i.icon-clear
-          search-list(:searches="searchHistory" @select="addQuery" @delete="deleteQuery")
+    .shortcut-wrapper( v-show='!query' ref='shortcutWrapper')
+      scroll.shortcut(:data="shortcut" ref="shortcut")
+        div
+          .hot-key
+            h1.title 热门搜索
+            ul
+              li.item(v-for="item in hotKeys" @click="addQuery(item.first)")
+                span {{item.first}}
+          .search-history(v-show="searchHistory.length")
+            h1.title
+              span.text 搜索历史
+              span.clear(@click="showConfirm")
+                i.icon-clear
+            search-list(:searches="searchHistory" @select="addQuery" @delete="deleteQuery")
     .search-result(v-show='query' ref='searchResult')
       suggest(
         :query="query"
         @listScroll="blurInput"
         @select="saveSearch"
+        ref="suggest"
       )
+    confirm(ref="confirm" text="是否清空搜索记录？" confirmBtnText="清空" @confirm="clearSearchHistory")
 </template>
 
 <script>
 import SearchBox from 'base/search-box/search-box'
+import Confirm from 'base/confirm/confirm'
+import Scroll from 'base/scroll/scroll'
 import Suggest from 'components/suggest/suggest'
 import {mapActions, mapGetters} from 'vuex'
 import SearchList from 'base/search-list/search-list'
 import {vueAxios, api} from 'api/http'
 import {ERR_OK} from 'utils/config'
+import {playlistMixin} from 'assets/js/mixin'
 export default {
+  mixins: [playlistMixin],
   data () {
     return {
       hotKeys: [],
@@ -40,7 +47,11 @@ export default {
   computed: {
     ...mapGetters([
       'searchHistory'
-    ])
+    ]),
+    // 有两个数组，都需要刷新
+    shortcut () {
+      return this.hotKeys.concat(this.searchHistory)
+    }
   },
   created () {
     this._getHotSearch()
@@ -51,6 +62,13 @@ export default {
       'deleteSearchHistory',
       'clearSearchHistory'
     ]),
+    handlePlaylist (playlist) {
+      const bottom = playlist.length > 0 ? '60px' : 0
+      this.$refs.shortcutWrapper.style.bottom = bottom
+      this.$refs.shortcut.refresh()
+      this.$refs.searchResult.style.bottom = bottom
+      this.$refs.suggest.refresh()
+    },
     // 获取热门搜索
     async _getHotSearch () {
       try {
@@ -60,6 +78,9 @@ export default {
       } catch (e) {
         console.log(e)
       }
+    },
+    showConfirm () {
+      this.$refs.confirm.show()
     },
     // 保存搜索历史
     saveSearch () {
@@ -81,10 +102,21 @@ export default {
       this.$refs.searchBox.blur()
     }
   },
+  watch: {
+    query (newQuery) {
+      if (!newQuery) {
+        setTimeout(() => {
+          this.$refs.shortcut.refresh()
+        }, 20)
+      }
+    }
+  },
   components: {
     SearchBox,
     Suggest,
-    SearchList
+    SearchList,
+    Confirm,
+    Scroll
   }
 }
 </script>

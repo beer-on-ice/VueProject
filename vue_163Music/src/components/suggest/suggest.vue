@@ -56,6 +56,9 @@ export default {
     ...mapActions([
       'insertSong'
     ]),
+    refresh () {
+      this.$refs.suggest.refresh()
+    },
     selectItem (item) {
       if (item.type === TYPE_SINGER) {
         const singer = {
