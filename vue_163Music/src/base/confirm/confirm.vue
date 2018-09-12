@@ -1,6 +1,6 @@
 <template lang="pug">
 transition(name="confirm-fade")
-  .confirm(v-show='showFlag')
+  .confirm(v-show='showFlag' @click.stop)
     .confirm-wrapper
       .confirm-content
         p.text {{text}}
