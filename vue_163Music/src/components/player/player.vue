@@ -39,7 +39,7 @@
           .icon.i-right(:class="disableCls")
             i.icon-next(@click="next")
           .icon.i-right
-            i.icon.icon-not-favorite
+            i.icon(:class="getFavoriteIcon(currentSong)" @click="toggleFavorite(currentSong)")
   transition(name="mini")
     .mini-player(v-show="!fullScreen" @click="open")
       .icon

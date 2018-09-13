@@ -3,7 +3,8 @@ import {
 } from 'assets/js/config'
 import {
   loadSearch,
-  loadPlay
+  loadPlay,
+  loadFavorite
 } from 'assets/js/cache'
 export default {
   singer: {},
@@ -16,5 +17,6 @@ export default {
   disc: {},
   topList: {},
   searchHistory: loadSearch(),
-  playHistory: loadPlay()
+  playHistory: loadPlay(),
+  favoriteList: loadFavorite()
 }

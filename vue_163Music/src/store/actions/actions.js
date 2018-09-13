@@ -2,23 +2,15 @@ import {
   saveHistory,
   deleteSearch,
   clearSearch,
-  savePlay
+  savePlay,
+  saveFavorite,
+  deleteFavorite
 } from 'assets/js/cache'
 import * as types from '../mutations/mutations-types'
-import {
-  playMode
-} from 'assets/js/config'
-import {
-  shuffle
-} from 'assets/js/util'
+import { playMode } from 'assets/js/config'
+import { shuffle } from 'assets/js/util'
 export default {
-  selectPlay ({
-    commit,
-    state
-  }, {
-    list,
-    index
-  }) {
+  selectPlay ({ commit, state }, { list, index }) {
     commit(types.SET_SEQUENCE_LIST, list)
     // 如果是随机，直接点击歌曲播放时，把点击的歌曲索引对应到随机的数据里的位置
     if (state.mode === playMode.random) {
@@ -32,11 +24,7 @@ export default {
     commit(types.SET_FULL_SCREEN, true)
     commit(types.SET_PLAYING_STATE, true)
   },
-  randomPlay ({
-    commit
-  }, {
-    list
-  }) {
+  randomPlay ({ commit }, { list }) {
     commit(types.SET_PLAY_MODE, playMode.random)
     commit(types.SET_SEQUENCE_LIST, list)
     let randomList = shuffle(list)
@@ -45,10 +33,7 @@ export default {
     commit(types.SET_FULL_SCREEN, true)
     commit(types.SET_PLAYING_STATE, true)
   },
-  insertSong ({
-    commit,
-    state
-  }, song) {
+  insertSong ({ commit, state }, song) {
     // .slice返回副本，不会触发在外部修改state问题
     let playlist = state.playlist.slice()
     let sequenceList = state.sequenceList.slice()
@@ -90,25 +75,16 @@ export default {
     commit(types.SET_FULL_SCREEN, true)
     commit(types.SET_PLAYING_STATE, true)
   },
-  saveSearchHistory ({
-    commit
-  }, query) {
+  saveSearchHistory ({ commit }, query) {
     commit(types.SET_SEARCH_HISTORY, saveHistory(query))
   },
-  deleteSearchHistory ({
-    commit
-  }, query) {
+  deleteSearchHistory ({ commit }, query) {
     commit(types.SET_SEARCH_HISTORY, deleteSearch(query))
   },
-  clearSearchHistory ({
-    commit
-  }) {
+  clearSearchHistory ({ commit }) {
     commit(types.SET_SEARCH_HISTORY, clearSearch())
   },
-  deleteSong ({
-    commit,
-    state
-  }, song) {
+  deleteSong ({ commit, state }, song) {
     let playlist = state.playlist.slice()
     let sequenceList = state.sequenceList.slice()
     let currentIndex = state.currentIndex
@@ -124,22 +100,24 @@ export default {
     commit(types.SET_CURRENT_INDEX, currentIndex)
     commit(types.SET_PLAYING_STATE, !!playlist.length)
   },
-  clearSongList ({
-    commit
-  }) {
+  clearSongList ({ commit }) {
     commit(types.SET_PLAYLIST, [])
     commit(types.SET_CURRENT_INDEX, -1)
     commit(types.SET_PLAYING_STATE, false)
   },
-  savePlayHistory ({
-    commit
-  }, song) {
+  savePlayHistory ({ commit }, song) {
     commit(types.SET_PLAY_HISTORY, savePlay(song))
+  },
+  saveFavoriteList ({ commit }, song) {
+    commit(types.SET_FAVORITE_LIST, saveFavorite(song))
+  },
+  deleteFavoriteList ({ commit }, song) {
+    commit(types.SET_FAVORITE_LIST, deleteFavorite(song))
   }
 }
 
 function findIndex (list, song) {
-  return list.findIndex((item) => {
+  return list.findIndex(item => {
     return item.id === song.id
   })
 }

@@ -3,6 +3,11 @@ export default [{
   redirect: '/recommend'
 },
 {
+  path: '/user',
+  component: () =>
+      import('components/user-center/user-center')
+},
+{
   path: '/recommend',
   component: () =>
       import('components/recommend/recommend'),

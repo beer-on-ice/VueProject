@@ -34,5 +34,8 @@ export default {
   },
   playHistory (state) {
     return state.playHistory
+  },
+  favoriteList (state) {
+    return state.favoriteList
   }
 }
