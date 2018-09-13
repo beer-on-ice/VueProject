@@ -2,7 +2,8 @@ import {
   playMode
 } from 'assets/js/config'
 import {
-  loadSearch
+  loadSearch,
+  loadPlay
 } from 'assets/js/cache'
 export default {
   singer: {},
@@ -14,5 +15,6 @@ export default {
   currentIndex: -1, // 当前播放
   disc: {},
   topList: {},
-  searchHistory: loadSearch()
+  searchHistory: loadSearch(),
+  playHistory: loadPlay()
 }

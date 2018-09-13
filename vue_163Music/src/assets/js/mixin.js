@@ -1,6 +1,7 @@
 import {
   mapGetters,
-  mapMutations
+  mapMutations,
+  mapActions
 } from 'vuex'
 
 import {
@@ -77,6 +78,42 @@ export const playerMixin = {
         return item.id === this.currentSong.id
       })
       this.setCurrentIndex(index)
+    }
+  }
+}
+
+export const searchMixin = {
+  data () {
+    return {
+      query: '',
+      refreshDelay: 100
+    }
+  },
+  computed: {
+    ...mapGetters([
+      'searchHistory'
+    ])
+  },
+  methods: {
+    ...mapActions([
+      'saveSearchHistory',
+      'deleteSearchHistory'
+    ]),
+    // 失焦缩回输入框
+    blurInput () {
+      this.$refs.searchBox.blur()
+    },
+    // 保存搜索历史
+    saveSearch () {
+      this.saveSearchHistory(this.query)
+    },
+    // 关键字改变
+    queryChange (key) {
+      this.query = key
+    },
+    // 关键字添加搜索
+    addQuery (key) {
+      this.$refs.searchBox.setQuery(key)
     }
   }
 }

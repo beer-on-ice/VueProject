@@ -1,7 +1,8 @@
 import {
   saveHistory,
   deleteSearch,
-  clearSearch
+  clearSearch,
+  savePlay
 } from 'assets/js/cache'
 import * as types from '../mutations/mutations-types'
 import {
@@ -71,7 +72,7 @@ export default {
       }
     }
     // 顺序列表
-    let currentSIndex = findIndex(sequenceList, song) + 1
+    let currentSIndex = findIndex(sequenceList, currentSong) + 1
     let fsIndex = findIndex(sequenceList, song)
     sequenceList.splice(currentSIndex, 0, song)
     if (fsIndex > -1) {
@@ -129,6 +130,11 @@ export default {
     commit(types.SET_PLAYLIST, [])
     commit(types.SET_CURRENT_INDEX, -1)
     commit(types.SET_PLAYING_STATE, false)
+  },
+  savePlayHistory ({
+    commit
+  }, song) {
+    commit(types.SET_PLAY_HISTORY, savePlay(song))
   }
 }
 

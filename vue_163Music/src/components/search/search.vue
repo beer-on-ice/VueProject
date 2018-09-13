@@ -3,7 +3,7 @@
     .search-box-wrapper
       search-box(ref="searchBox" @query="queryChange")
     .shortcut-wrapper( v-show='!query' ref='shortcutWrapper')
-      scroll.shortcut(:data="shortcut" ref="shortcut")
+      scroll.shortcut(:data="shortcut" ref="shortcut" :refreshDelay="refreshDelay")
         div
           .hot-key
             h1.title 热门搜索
@@ -31,23 +31,19 @@ import SearchBox from 'base/search-box/search-box'
 import Confirm from 'base/confirm/confirm'
 import Scroll from 'base/scroll/scroll'
 import Suggest from 'components/suggest/suggest'
-import {mapActions, mapGetters} from 'vuex'
+import {mapActions} from 'vuex'
 import SearchList from 'base/search-list/search-list'
 import {vueAxios, api} from 'api/http'
 import {ERR_OK} from 'utils/config'
-import {playlistMixin} from 'assets/js/mixin'
+import {playlistMixin, searchMixin} from 'assets/js/mixin'
 export default {
-  mixins: [playlistMixin],
+  mixins: [ playlistMixin, searchMixin ],
   data () {
     return {
-      hotKeys: [],
-      query: ''
+      hotKeys: []
     }
   },
   computed: {
-    ...mapGetters([
-      'searchHistory'
-    ]),
     // 有两个数组，都需要刷新
     shortcut () {
       return this.hotKeys.concat(this.searchHistory)
@@ -58,8 +54,6 @@ export default {
   },
   methods: {
     ...mapActions([
-      'saveSearchHistory',
-      'deleteSearchHistory',
       'clearSearchHistory'
     ]),
     handlePlaylist (playlist) {
@@ -82,24 +76,9 @@ export default {
     showConfirm () {
       this.$refs.confirm.show()
     },
-    // 保存搜索历史
-    saveSearch () {
-      this.saveSearchHistory(this.query)
-    },
     // 删除指定搜索历史
     deleteQuery (item) {
       this.deleteSearchHistory(item)
-    },
-    // 关键字添加搜索
-    addQuery (key) {
-      this.$refs.searchBox.setQuery(key)
-    },
-    // 关键字改变
-    queryChange (key) {
-      this.query = key
-    },
-    blurInput () {
-      this.$refs.searchBox.blur()
     }
   },
   watch: {

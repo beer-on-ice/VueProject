@@ -57,7 +57,7 @@
 </template>
 
 <script>
-import {mapGetters, mapMutations} from 'vuex'
+import {mapGetters, mapMutations, mapActions} from 'vuex'
 import {playMode} from 'assets/js/config'
 import animations from 'create-keyframe-animation'
 import {prefixStyle} from 'assets/js/dom'
@@ -116,6 +116,9 @@ export default {
     ...mapMutations({
       setFullScreen: 'SET_FULL_SCREEN'
     }),
+    ...mapActions([
+      'savePlayHistory'
+    ]),
     showPlaylist () {
       this.$refs.playlist.show()
     },
@@ -130,7 +133,6 @@ export default {
       }
       this.playingLyric = txt
     },
-
     // 进度条拖拽
     onProgressDragChange (percent) {
       const currentTime = this.currentSong.duration / 1000 * percent
@@ -149,6 +151,8 @@ export default {
     // 歌曲准备完毕
     ready () {
       this.songReady = true
+      // 存入播放列表
+      this.savePlayHistory(this.currentSong)
     },
     error () {
       this.songReady = true
@@ -325,7 +329,6 @@ export default {
       }
       return num
     }
-
   },
   watch: {
     async currentSong (newSong, oldSong) {

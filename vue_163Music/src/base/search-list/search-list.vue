@@ -1,7 +1,7 @@
 <template lang="pug">
 .search-list(v-show="searches.length")
-  ul
-    li.search-item(v-for="item in searches" @click="selectItem(item)")
+  transition-group(name="list" tag="ul")
+    li.search-item(v-for="item in searches" @click="selectItem(item)" :key="item")
       span.text {{item}}
       span.icon(@click.stop="deleteOne(item)")
         i.icon-delete

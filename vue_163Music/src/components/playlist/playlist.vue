@@ -8,7 +8,7 @@ transition(name="list-fade")
           span.text {{modeText}}
           span.clear(@click="showConfirm")
             i.icon-clear
-      scroll.list-content(:data="sequenceList" ref="listContent")
+      scroll.list-content(:data="sequenceList" ref="listContent" :refreshDelay="refreshDelay")
         transition-group(name="list" tag="ul")
           li.item(v-for="(item,index) in sequenceList" @click="selectItem(item,index)" ref="listItem" :key="item.id")
             i.current(:class="getCurrentIcon(item)")
@@ -18,25 +18,28 @@ transition(name="list-fade")
             span.delete(@click.stop="deleteOne(item)")
               i.icon-delete
       .list-operate
-        .add
+        .add(@click="addSong")
           i.icon-add
           span.text 添加歌曲到队列
       .list-close
         span(@click="hide") 关闭
     confirm(text="是否清空播放列表" confirmBtnText="清空" @confirm="confirmClear" ref="confirm")
+    add-song(ref="addSong")
 </template>
 
 <script>
 import {mapGetters, mapMutations, mapActions} from 'vuex'
 import {playerMixin} from 'assets/js/mixin'
 import {playMode} from 'assets/js/config'
+import AddSong from 'components/add-song/add-song'
 import Confirm from 'base/confirm/confirm'
 import Scroll from 'base/scroll/scroll'
 export default{
   mixins: [playerMixin],
   data () {
     return {
-      showFlag: false
+      showFlag: false,
+      refreshDelay: 100
     }
   },
   computed: {
@@ -56,6 +59,9 @@ export default{
     deleteOne (item) {
       this.deleteSong(item)
       if (!this.playlist.length) this.hide()
+    },
+    addSong () {
+      this.$refs.addSong.show()
     },
     getCurrentIcon (item) {
       if (this.currentSong.id === item.id) {
@@ -98,7 +104,8 @@ export default{
   },
   components: {
     Scroll,
-    Confirm
+    Confirm,
+    AddSong
   }
 }
 </script>

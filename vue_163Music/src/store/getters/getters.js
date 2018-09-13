@@ -31,5 +31,8 @@ export default {
   },
   searchHistory (state) {
     return state.searchHistory
+  },
+  playHistory (state) {
+    return state.playHistory
   }
 }

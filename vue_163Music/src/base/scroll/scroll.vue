@@ -32,6 +32,10 @@ export default {
     beforeScroll: {
       type: Boolean,
       default: false
+    },
+    refreshDelay: { // 解决因transition动画时间带来的高度计算错误
+      type: Number,
+      default: 20
     }
   },
   mounted () {
@@ -86,7 +90,7 @@ export default {
   },
   watch: {
     data () {
-      setTimeout(() => { this.refresh() }, 20)
+      setTimeout(() => { this.refresh() }, this.refreshDelay)
     }
   }
 }
