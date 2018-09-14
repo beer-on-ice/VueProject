@@ -53,7 +53,7 @@
       .control(@click.stop="showPlaylist")
         i.icon-playlist
   playlist(ref="playlist")
-  audio(:src="currentSongUrl" ref="audio" @canplay="ready" @error="error" @timeupdate="updateTime" @ended="end")
+  audio(:src="currentSongUrl" ref="audio" @play="ready" @error="error" @timeupdate="updateTime" @ended="end")
 </template>
 
 <script>
@@ -334,11 +334,18 @@ export default {
     async currentSong (newSong, oldSong) {
       if (!newSong.id) return
       if (newSong.id === oldSong.id) return
-      if (this.currentLyric) this.currentLyric.stop()
+      if (this.currentLyric) {
+        this.currentLyric.stop()
+        this.currentTime = 0
+        this.playingLyric = ''
+        this.currentLineNum = 0
+      }
       this.currentSongUrl = await this.currentSong.getSongUrl()
+      let lyric = await this.currentSong.getSongLyric()
+      // 防止歌词乱跳（因为异步，所以可能生成多个new Lyric）
+      if (this.currentSong.lyric !== lyric) return
+      this.currentLyric = await new Lyric(lyric, this.handleLyric)
       this.currentCover = await this.currentSong.getSongCover()
-      this.currentLyric = await this.currentSong.getSongLyric()
-      this.currentLyric = await new Lyric(this.currentLyric, this.handleLyric)
       if (this.playing) this.currentLyric.play()
     },
     currentSongUrl () {
@@ -520,7 +527,7 @@ export default {
           flex 1
           color $color-theme-self
           &.disable
-            color $color-self-h
+            color $color-self-dis
           i
             font-size 30px
         .i-left

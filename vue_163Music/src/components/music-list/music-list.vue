@@ -76,9 +76,7 @@ export default {
       'randomPlay'
     ]),
     random () {
-      this.randomPlay({
-        list: this.songs
-      })
+      this.randomPlay(this.songs)
     },
     scroll (pos) {
       this.scrollY = pos.y

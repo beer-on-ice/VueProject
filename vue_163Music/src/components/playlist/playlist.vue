@@ -13,8 +13,8 @@ transition(name="list-fade")
           li.item(v-for="(item,index) in sequenceList" @click="selectItem(item,index)" ref="listItem" :key="item.id")
             i.current(:class="getCurrentIcon(item)")
             span.text {{item.name}}
-            span.like
-              i.icon-not-favorite
+            span.like(@click.stop="toggleFavorite(item)")
+              i(:class="getFavoriteIcon(item)")
             span.delete(@click.stop="deleteOne(item)")
               i.icon-delete
       .list-operate
