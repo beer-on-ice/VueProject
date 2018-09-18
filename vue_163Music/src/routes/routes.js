@@ -4,47 +4,56 @@ export default [{
 },
 {
   path: '/user',
-  component: () =>
-      import('components/user-center/user-center')
+  component: resolve => {
+      import('components/user-center/user-center').then(module => resolve(module))
+  }
 },
 {
   path: '/recommend',
-  component: () =>
-      import('components/recommend/recommend'),
+  component: resolve => {
+      import('components/recommend/recommend').then(module => resolve(module))
+  },
   children: [{
     path: ':id',
-    component: () =>
-        import('components/disc/disc')
+    component: resolve => {
+        import('components/disc/disc').then(module => resolve(module))
+    }
   }]
 },
 {
   path: '/singer',
-  component: () =>
-      import('components/singer/singer'),
+  component: resolve => {
+      import('components/singer/singer').then(module => resolve(module))
+  },
   children: [{
     path: ':id',
-    component: () =>
-        import('components/singer-detail/singer-detail')
+    component: resolve => {
+        import('components/singer-detail/singer-detail').then(module => resolve(module))
+    }
   }]
 },
 {
   path: '/rank',
-  component: () =>
-      import('components/rank/rank'),
+  component: resolve => {
+      import('components/rank/rank').then(module => resolve(module))
+  },
   children: [{
     path: ':id',
-    component: () =>
-        import('components/top-list/top-list')
+    component: resolve => {
+        import('components/top-list/top-list').then(module => resolve(module))
+    }
   }]
 },
 {
   path: '/search',
-  component: () =>
-      import('components/search/search'),
+  component: resolve => {
+      import('components/search/search').then(module => resolve(module))
+  },
   children: [{
     path: ':id',
-    component: () =>
-        import('components/singer-detail/singer-detail')
+    component: resolve => {
+        import('components/singer-detail/singer-detail').then(module => resolve(module))
+    }
   }]
 }
 ]
