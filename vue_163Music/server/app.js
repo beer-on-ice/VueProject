@@ -11,7 +11,7 @@ app.use(async (ctx, next) => {
   ctx.respond = false
   if (ctx.url.startsWith('/api')) {
     return proxy({
-      target: 'http://192.168.0.61:3000', // 服务器地址
+      target: 'http://192.168.0.61:3001', // 服务器地址
       changeOrigin: true,
       secure: false,
       ws: true,
@@ -30,6 +30,6 @@ app.use(async (ctx) => {
 app.use(router.routes())
 app.use(router.allowedMethods())
 
-app.listen(8088, () => {
-  console.log('server start at port: 8088')
+app.listen(3000, () => {
+  console.log('server start at port: 3000')
 })
