@@ -90,7 +90,7 @@ export default {
         this.active = 0
         this.lastList = []
         this.pagesCount--
-        apiPrevPage(this.pages[this.pagesCount]).then(res => {
+        apiPrevPage(this.pages[this.pagesCount]).then(res => {          
           this.getdatelist(res)
         })
       }

@@ -1,7 +1,7 @@
 <template>
   <div class="topBar">
     <div class="searchBar">
-      <input v-model="val" :value="val" placeholder="请输入" type="text" @keyup.enter="_submit">
+      <input v-model="val" placeholder="请输入" type="text" @keyup.enter="_submit">
       <span v-if="tap" class="search" @click="_go">搜索</span>
       <span v-else class="search" @click="_search">搜索</span>
     </div>

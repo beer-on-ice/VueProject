@@ -2,7 +2,7 @@
   <div>
     <div class="slide clearfix">
       <transition-group tag="div" class="carouselWrap" ref="carouselWrap" name='image' @click="_change">
-        <div class="carousel" :class="{active:index==active}" v-show='index==active' v-for="(item,index) in newList" :key="index">
+        <div class="carousel" :class="{active:index==active}" v-show='index==active' v-for="(item,index) in newList" :key="item">
           <div class="cover" @click='_play(item.data)'>
             <h3 class="title" v-html="titleDate1"></h3>
             <img :src='item.data.cover.feed'>
@@ -12,12 +12,12 @@
         </div>
       </transition-group>
       <div class="indicator">
-        <div class="mask" v-for="(item,index) in newList" :key="index">
+        <div class="mask" v-for="(item,index) in newList" :key="item">
           <img class="blur" v-show="index == active" :src="item.data.cover.blurred">
           <div v-if="index == active" class="upside"></div>
         </div>
         <div class="txtList" :class="{five:newList.length==5}">
-          <div v-for="(item,index) in newList" @click="_change(index)" :key="index">
+          <div v-for="(item,index) in newList" @click="_change(index)" :key="item">
             <p :class="{active:index == active}" class="text ellipsis">{{item.data.title}} </p>
             <span class="ellipsis">{{item.data.slogan}}</span>
           </div>
@@ -27,7 +27,7 @@
     <transition-group tag="div" name="list">
       <div class="list" v-if="lastList.length" key="indexlist">
         <h3 class="title" v-html="titleDate2"></h3>
-        <el-card class="card" :class="{six:lastList.length==6}" :body-style="{ padding: '0px'}" v-for="(item,index) in lastList" :key="index">
+        <el-card class="card" :class="{six:lastList.length==6}" :body-style="{ padding: '0px'}" v-for="(item,index) in lastList" :key="item">
           <div @click='_play(item.data)' @mouseenter="_mouseEnter(item,index)" @mouseleave="_mouseOut">
             <div :class="{six:lastList.length==6}" class="image">
               <video v-if="index===num" :class="{six:lastList.length==6}" class="video" autoplay muted="muted" :src="src"></video>
