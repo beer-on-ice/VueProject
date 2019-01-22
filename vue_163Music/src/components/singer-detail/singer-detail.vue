@@ -30,6 +30,7 @@ export default {
     }
   },
   methods: {
+    // 获取歌手详情
     async _getSingerDetail () {
       if (!this.singer.id) {
         this.$router.push('/singer')
@@ -43,6 +44,7 @@ export default {
         console.log(e)
       }
     },
+    // 生成对应歌曲的类
     _normalizeSongs (list) {
       let ret = []
       list.forEach(item => {

@@ -65,6 +65,9 @@ export default {
     selectItem (item) {
       this.$emit('select', item)
     },
+    refresh () {
+      this.$refs.listview.refresh()
+    },
     // 点击时
     onShortcutTouchStart (e) {
       let anchorIndex = getData(e.target, 'index')

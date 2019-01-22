@@ -59,9 +59,27 @@ export default class Song {
       })
     })
   }
+  getSongCover () {
+    if (this.cover) {
+      return Promise.resolve(this.cover)
+    }
+    return new Promise((resolve, reject) => {
+      vueAxios.get(api.songDetail, {
+        ids: this.id
+      }).then(res => {
+        if (res.status === ERR_OK) {
+          this.covers = res.data.songs[0].al.picUrl
+          resolve(this.covers)
+        } else { // eslint-disable-next-line
+          reject('no lyric')
+        }
+      })
+    })
+  }
 }
 
 export function createSong (musicData) {
+  // console.log(musicData)
   return new Song({
     id: musicData.id,
     alid: musicData.al.id,

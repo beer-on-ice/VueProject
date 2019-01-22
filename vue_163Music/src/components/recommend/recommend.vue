@@ -1,5 +1,5 @@
 <template lang="pug">
-  .recommend
+  .recommend(ref="recommend")
     scroll.recommend-content(:data="discLists" ref="scroll")
       div
         // 此处v-if：接口获取完了，才开始slider.vue的mounted
@@ -11,12 +11,13 @@
         .recommend-list
           h1.list-title 热门歌单推荐
           ul
-            li.item(v-for="item in discLists")
+            li.item(v-for="item in discLists" @click="selectItem(item)")
               .icon
                 img(width="60" height="60" v-lazy="item.coverImgUrl")
               .text
                 .name(v-html="item.name")
                 p.desc(v-html="item.description")
+    router-view
 </template>
 
 <script type="text/ecmascript-6">
@@ -24,7 +25,10 @@ import Scroll from 'base/scroll/scroll'
 import Slider from 'base/slider/slider'
 import {vueAxios, api} from 'api/http'
 import {ERR_OK} from 'utils/config'
+import {playlistMixin} from 'assets/js/mixin'
+import {mapMutations} from 'vuex'
 export default{
+  mixins: [playlistMixin],
   data () {
     return {
       banners: [],
@@ -36,6 +40,9 @@ export default{
     this._getPlaylist()
   },
   methods: {
+    ...mapMutations({
+      setDisc: 'SET_DISC'
+    }),
     // 获取首页banner
     async _getBanner () {
       try {
@@ -55,6 +62,23 @@ export default{
       } catch (e) {
         console.log(e)
       }
+    },
+    async selectItem (item) {
+      try {
+        let res = await vueAxios.get(api.songSheet, {id: item.id})
+        if (res.status !== ERR_OK) return
+        item.sheet = res.data.privileges
+
+        this.setDisc(item)
+        this.$router.push({path: `/recommend/${item.id}`})
+      } catch (e) {
+        console.log(e)
+      }
+    },
+    handlePlaylist (playlist) {
+      const bottom = playlist.length > 0 ? '60px' : ''
+      this.$refs.recommend.style.bottom = bottom
+      this.$refs.scroll.refresh()
     },
     // 防止banner未加载时，高度未撑开
     loadImage () {

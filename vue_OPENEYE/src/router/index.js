@@ -7,7 +7,6 @@ import author from '@/components/author'
 import follow from '@/components/follow'
 import collect from '@/components/collect'
 import search from '@/components/search'
-import app from '../App.vue'
 Vue.use(Router)
 
 export default new Router({

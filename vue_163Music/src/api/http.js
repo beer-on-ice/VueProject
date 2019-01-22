@@ -29,7 +29,37 @@ export const api = {
   /**
    * 歌词
    */
-  songLyric: '/api/lyric'
+  songLyric: '/api/lyric',
+  /**
+   * 歌单歌曲列表
+   */
+  songSheet: '/api/playlist/detail',
+  /**
+   * 歌曲详情
+   * ids
+   */
+  songDetail: '/api/song/detail',
+  /**
+   * 排行
+   * idx
+   */
+  rank: '/api/top/list',
+  /**
+   * 搜索
+   * 必选参数：keywords
+   * 可选参数： limit/offset/type
+   */
+  search: '/api/search',
+  /**
+   * 搜索建议
+   * 必选参数： keywords
+   * 可选参数： limit / offset / type
+   */
+  searchSuggest: '/api/search/suggest',
+  /**
+   * 热搜
+   */
+  hotSearch: '/api/search/hot'
 }
 
 export const vueAxios = {
@@ -41,7 +71,10 @@ export const vueAxios = {
       timeout: 5000,
       headers: {
         'X-Requested-With': 'XMLHttpRequest',
-        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        xhrFields: {
+          withCredentials: true
+        }
       }
     })
   },
@@ -50,9 +83,12 @@ export const vueAxios = {
       method: 'get',
       url,
       params, // get 请求时带的参数
-      timeout: 5000,
+      timeout: 50000,
       headers: {
-        'X-Requested-With': 'XMLHttpRequest'
+        'X-Requested-With': 'XMLHttpRequest',
+        xhrFields: {
+          withCredentials: true
+        }
       }
     })
   }

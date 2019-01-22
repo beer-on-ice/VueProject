@@ -1,6 +1,6 @@
 <template lang='pug'>
   .singer(ref="singer")
-    list-view(:data="singers" @select="selectSinger")
+    list-view(:data="singers" @select="selectSinger" ref="listview")
     router-view
 </template>
 
@@ -10,8 +10,10 @@ import {ERR_OK} from 'utils/config'
 import getFirstChar from 'assets/js/char'
 import ListView from 'components/list-view/list-view'
 import {mapMutations} from 'vuex'
+import {playlistMixin} from 'assets/js/mixin'
 
 export default {
+  mixins: [playlistMixin],
   data () {
     return {
       hotSingers: [],
@@ -26,6 +28,11 @@ export default {
     ...mapMutations({
       setSinger: 'SET_SINGER'
     }),
+    handlePlaylist (playlist) {
+      const bottom = playlist.length > 0 ? '60px' : ''
+      this.$refs.singer.style.bottom = bottom
+      this.$refs.listview.refresh()
+    },
     // 点击某个歌手
     selectSinger (singer) {
       this.$router.push(`/singer/${singer.id}`)

@@ -23,6 +23,19 @@ export default {
     listenScroll: {
       type: Boolean,
       default: false
+    },
+    // 上拉刷新
+    pullup: {
+      type: Boolean,
+      default: false
+    },
+    beforeScroll: {
+      type: Boolean,
+      default: false
+    },
+    refreshDelay: { // 解决因transition动画时间带来的高度计算错误
+      type: Number,
+      default: 20
     }
   },
   mounted () {
@@ -42,6 +55,19 @@ export default {
         // 监听scroll事件，并向父组件派发
         this.scroll.on('scroll', pos => {
           _this.$emit('scroll', pos)
+        })
+      }
+      if (this.pullup) {
+        this.scroll.on('scrollEnd', () => {
+          // console.log(this.scroll.y, this.scroll.maxScrollY)
+          if (this.scroll.y <= this.scroll.maxScrollY + 50) {
+            this.$emit('scrollToEnd')
+          }
+        })
+      }
+      if (this.beforeScroll) {
+        this.scroll.on('beforeScrollStart', () => {
+          this.$emit('beforeScroll')
         })
       }
     },
@@ -64,7 +90,7 @@ export default {
   },
   watch: {
     data () {
-      setTimeout(() => { this.refresh() }, 20)
+      setTimeout(() => { this.refresh() }, this.refreshDelay)
     }
   }
 }

@@ -9,12 +9,11 @@ Vue.use(Vuex)
 
 const isDev = process.env.NODE_ENV === 'development'
 export default () => {
-  const store = new Vuex.Store({
+  return new Vuex.Store({
     strict: isDev, // 是否能直接修改state值，而不通过mutations
     state: defaultState,
     mutations,
     getters,
     actions
   })
-  return store
 }
