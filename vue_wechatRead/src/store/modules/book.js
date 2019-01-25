@@ -1,24 +1,23 @@
 const book = {
   namespaced: true,
   state: {
-    book: '没有名字'
+    fileName: ''
   },
   mutations: {
-    CHANGEBOOK (state, val) {
-      state.book = val
+    SET_FILENAME (state, fileName) {
+      state.fileName = fileName
     }
   },
   actions: {
-    CHANGEBOOKSYNC ({
-      commit,
-      state
-    }, val) {
-      commit('CHANGEBOOK', val)
+    setFileName ({
+      commit
+    }, fileName) {
+      commit('SET_FILENAME', fileName)
     }
   },
   getters: {
-    book (state) {
-      return state.book
+    fileName (state) {
+      return state.fileName
     }
   }
 }
