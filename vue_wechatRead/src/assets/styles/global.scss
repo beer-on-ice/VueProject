@@ -1,0 +1,16 @@
+@import './reset.scss';
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  user-select: none;
+  overflow: hidden;
+  font-family: 'PingFangSC-Light', 'PingFang SC', 'STHeitiSC-Light', 'Helvetica-Light', 'Arial', 'sans-serif';
+}
+
+$ratio: 414 / 10;
+
+@function px2rem($px) {
+  @return $px/$ratio+rem;
+}

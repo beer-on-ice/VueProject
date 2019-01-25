@@ -2,31 +2,43 @@
   .home
     #read
       span.icon-bookmark
+      span.text ABCDEFG
 </template>
 
 <script>
-import Epub from 'epubjs'
-global.epub = Epub
-
+import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'home',
   mounted () {
-    // this.book = new Epub('/游戏.epub')
-    // console.log(this.book)
-    // this.book.renderTo('read', {
-    //   width: window.innerWidth,
-    //   height: window.innerHeight
-    // }).display()
+    console.log(this['book/book'])
+    this.$store.dispatch('change', 1)
+    this.change(10)
+    console.log(this.$store.state.value)
+    this.changebook('流浪地球')
+    console.log(this.$store.state.book.book)
   },
-  components: {}
+  computed: {
+    ...mapGetters([
+      'book/book'
+    ])
+  },
+  methods: {
+    ...mapActions({
+      change: 'change',
+      changebook: 'book/CHANGEBOOKSYNC'
+    })
+  }
 }
 </script>
 
-<style  lang="less" scoped>
-@sizes: 20px;
-@colors: red;
+<style lang="scss" scoped>
+@import "./../assets/styles/global.scss";
 .icon-bookmark {
-  font-size: @sizes;
-  color: @colors;
+  font-size: px2rem(41.4);
+}
+.text {
+  font-size: px2rem(41.4);
+  font-family: "Days One";
+  color: orange;
 }
 </style>

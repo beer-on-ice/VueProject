@@ -1,9 +1,16 @@
 <template lang="pug">
   #app
-    router-link(to="/") home
     router-view
-  </div>
 </template>
 
-<style>
-</style>
+<script>
+export default {}
+document.addEventListener('DOMContentLoaded', () => {
+  const html = document.querySelector('html')
+  let htmlFontSize = window.innerWidth / 10
+  htmlFontSize = htmlFontSize > 50 ? 50 : htmlFontSize
+  html.style.fontSize = htmlFontSize + 'px'
+})
+</script>
+
+<style lang="scss" scoped></style>
