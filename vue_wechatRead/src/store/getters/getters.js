@@ -1,5 +1,3 @@
 export default {
-  value (state) {
-    return state.value
-  }
+  value: state => state.value
 }

@@ -13,13 +13,14 @@ export default {
     console.log(this['book/book'])
     this.$store.dispatch('change', 1)
     this.change(10)
-    console.log(this.$store.state.value)
+    console.log(this.$store.state.value, this.value)
     this.changebook('流浪地球')
     console.log(this.$store.state.book.book)
   },
   computed: {
     ...mapGetters([
-      'book/book'
+      'book/book',
+      'value'
     ])
   },
   methods: {
