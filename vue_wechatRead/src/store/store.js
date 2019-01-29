@@ -10,7 +10,7 @@ import modulesBook from './modules/book'
 
 Vue.use(Vuex)
 
-const isDev = process.env.NODE_ENV === 'development'
+const isDev = process.env.NODE_ENV === 'production'
 export default () => {
   return new Vuex.Store({
     strict: isDev, // 是否能直接修改state值，而不通过mutations

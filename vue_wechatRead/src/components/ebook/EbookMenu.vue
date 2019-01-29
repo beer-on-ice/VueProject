@@ -2,7 +2,7 @@
 div
   .menu-bar
     transition(name="slide-up")
-      .menu-wrapper(v-show="ifTitleAndMenuShow")
+      .menu-wrapper(v-show="ifTitleAndMenuShow" :class="{'hide-box-shadow': !ifTitleAndMenuShow||ifSettingShow>=0}")
         .icon-wrapper
           span.icon-menu(@click="showSetting(3)")
         .icon-wrapper
@@ -11,7 +11,7 @@ div
           span.icon-bright(@click="showSetting(1)")
         .icon-wrapper
           span.icon-A(@click="showSetting(0)")
-  ebook-setting
+    ebook-setting
 </template>
 
 <script>

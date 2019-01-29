@@ -24,11 +24,21 @@ transition(name="slide-up")
 
 <script>
 import { ebookMixin } from '@/utils/mixin'
+import { FONT_SIZE_LIST } from '@/utils/book'
 export default {
   mixins: [ebookMixin],
   data () {
     return {
-      showTag: 0
+      showTag: 0,
+      fontSizeList: FONT_SIZE_LIST
+    }
+  },
+  methods: {
+    setFontSize (fontSize) {
+      this.setDefaultFontSize(fontSize)
+      console.log()
+
+      this.currentBook.rendition.themes.fontSize(`${fontSize}px`)
     }
   }
 
@@ -44,7 +54,7 @@ export default {
     left: 0;
     z-index: 101;
     width: 100%;
-    height: px2rem(60);
+    height: px2rem(90);
     background: white;
     box-shadow: 0 px2rem(-8) px2rem(8) rgba(0, 0, 0, 0.15);
     .setting-font-size {
