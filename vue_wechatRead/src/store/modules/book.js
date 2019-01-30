@@ -3,7 +3,7 @@ const book = {
   state: {
     fileName: '',
     ifTitleAndMenuShow: false,
-    ifSettingShow: -1, // -1不显示 0：字号 1：主题 2：进度 3：目录
+    ifSettingFontShow: -1, // -1不显示 0：字号 1：主题 2：进度 3：目录
     defaultFontSize: 16,
     defaultFontFamily: 'Default',
     fontFamilyVisible: false,
@@ -18,7 +18,7 @@ const book = {
       state.ifTitleAndMenuShow = flag
     },
     SET_SETTINGSHOW (state, flag) {
-      state.ifSettingShow = flag
+      state.ifSettingFontShow = flag
     },
     SET_DEFAULTFONTSIZE (state, fontSize) {
       state.defaultFontSize = fontSize
@@ -81,7 +81,7 @@ const book = {
   getters: {
     fileName: state => state.fileName,
     ifTitleAndMenuShow: state => state.ifTitleAndMenuShow,
-    ifSettingShow: state => state.ifSettingShow,
+    ifSettingFontShow: state => state.ifSettingFontShow,
     defaultFontSize: state => state.defaultFontSize,
     defaultFontFamily: state => state.defaultFontFamily,
     fontFamilyVisible: state => state.fontFamilyVisible,

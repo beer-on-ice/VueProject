@@ -1,8 +1,7 @@
 <template lang="pug">
-div
   .menu-bar
     transition(name="slide-up")
-      .menu-wrapper(v-show="ifTitleAndMenuShow" :class="{'hide-box-shadow': !ifTitleAndMenuShow||ifSettingShow>=0}")
+      .menu-wrapper(v-show="ifTitleAndMenuShow" :class="{'hide-box-shadow': !ifTitleAndMenuShow||ifSettingFontShow>=0}")
         .icon-wrapper
           span.icon-menu(@click="showSetting(3)")
         .icon-wrapper
@@ -11,16 +10,20 @@ div
           span.icon-bright(@click="showSetting(1)")
         .icon-wrapper
           span.icon-A(@click="showSetting(0)")
-    ebook-setting
+    ebook-setting-font
+    ebook-setting-font-pop-up
 </template>
 
 <script>
 import { ebookMixin } from '@/utils/mixin'
-import EbookSetting from './EbookSetting'
+import EbookSettingFont from './EbookSettingFont'
+import EbookSettingFontPopUp from './EbookSettingFontPopUp'
+
 export default {
   mixins: [ebookMixin],
   components: {
-    EbookSetting
+    EbookSettingFont,
+    EbookSettingFontPopUp
   },
   methods: {
     showSetting (key) {
@@ -32,41 +35,28 @@ export default {
 
 <style lang="scss" scoped>
 @import "../../assets/styles/global";
-.menu-bar {
-  .menu-wrapper {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    z-index: 102;
-    display: flex;
-    width: 100%;
-    height: px2rem(48);
-    background: white;
-    box-shadow: 0 px2rem(-8) px2rem(8) rgba(0, 0, 0, 0.15);
-    font-size: px2rem(20);
-    &.hide-box-shadow {
-      box-shadow: none;
-    }
-    .icon-wrapper {
-      flex: 1;
-      @include center;
-      .icon-progress {
-        font-size: px2rem(28);
-      }
-      .icon-bright {
-        font-size: px2rem(24);
-      }
-    }
+.menu-wrapper {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: 102;
+  display: flex;
+  width: 100%;
+  height: px2rem(48);
+  box-shadow: 0 px2rem(-8) px2rem(8) rgba(0, 0, 0, 0.15);
+  font-size: px2rem(20);
+  &.hide-box-shadow {
+    box-shadow: none;
   }
-  .content-mask {
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 101;
-    display: flex;
-    width: 100%;
-    height: 100%;
-    background: rgba(51, 51, 51, 0.8);
+  .icon-wrapper {
+    flex: 1;
+    @include center;
+    .icon-progress {
+      font-size: px2rem(28);
+    }
+    .icon-bright {
+      font-size: px2rem(24);
+    }
   }
 }
 </style>

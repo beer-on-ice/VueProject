@@ -7,7 +7,7 @@ export const ebookMixin = {
     ...mapGetters({
       fileName: 'book/fileName',
       ifTitleAndMenuShow: 'book/ifTitleAndMenuShow',
-      ifSettingShow: 'book/ifSettingShow',
+      ifSettingFontShow: 'book/ifSettingFontShow',
       defaultFontSize: 'book/defaultFontSize',
       defaultFontFamily: 'book/defaultFontFamily',
       fontFamilyVisible: 'book/fontFamilyVisible',

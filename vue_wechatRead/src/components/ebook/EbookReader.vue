@@ -43,6 +43,14 @@ export default {
         event.stopPropagation()
         event.preventDefault()
       })
+      this.rendition.hooks.content.register(contents => {
+        Promise.all([
+          contents.addStylesheet(`${process.env.VUE_APP_RES_URL}/resources/fonts/daysOne.css`),
+          contents.addStylesheet(`${process.env.VUE_APP_RES_URL}/resources/fonts/cabin.css`),
+          contents.addStylesheet(`${process.env.VUE_APP_RES_URL}/resources/fonts/monserrat.css`),
+          contents.addStylesheet(`${process.env.VUE_APP_RES_URL}/resources/fonts/tangerine.css`)
+        ]).then(() => { console.log('字体加载完毕') })
+      })
     },
     prevPage () {
       if (this.rendition) {
@@ -59,11 +67,13 @@ export default {
     toggleTitleAndMenu () {
       if (this.setIfTitleAndMenuShow) {
         this.setIfSettingShow(-1)
+        this.setFontFamilyVisible(false)
       }
       this.setIfTitleAndMenuShow(!this.ifTitleAndMenuShow)
     },
     hideTitleAndMenu () {
       this.setIfTitleAndMenuShow(false)
+      this.setFontFamilyVisible(false)
       this.setIfSettingShow(-1)
     }
   }
