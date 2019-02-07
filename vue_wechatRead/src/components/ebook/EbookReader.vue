@@ -11,11 +11,14 @@ global.ePub = Epub
 export default {
   mixins: [ebookMixin],
   mounted () {
-    this.setFileName(this.$route.params.fileName).then(() => { this.initEpub() })
+    this.setFileName(this.$route.params.fileName).then(() => {
+      this.initEpub()
+    })
   },
   methods: {
     initEpub () {
-      const url = `http://192.168.0.61:8081/resources/${this.fileName}.epub`
+      const url = `http://localhost:8081/resources/${this.fileName}.epub`
+      console.log(url)
       this.book = new Epub(url)
 
       this.setCurrentBook(this.book)
@@ -45,11 +48,21 @@ export default {
       })
       this.rendition.hooks.content.register(contents => {
         Promise.all([
-          contents.addStylesheet(`${process.env.VUE_APP_RES_URL}/resources/fonts/daysOne.css`),
-          contents.addStylesheet(`${process.env.VUE_APP_RES_URL}/resources/fonts/cabin.css`),
-          contents.addStylesheet(`${process.env.VUE_APP_RES_URL}/resources/fonts/monserrat.css`),
-          contents.addStylesheet(`${process.env.VUE_APP_RES_URL}/resources/fonts/tangerine.css`)
-        ]).then(() => { console.log('字体加载完毕') })
+          contents.addStylesheet(
+            `${process.env.VUE_APP_RES_URL}/resources/fonts/daysOne.css`
+          ),
+          contents.addStylesheet(
+            `${process.env.VUE_APP_RES_URL}/resources/fonts/cabin.css`
+          ),
+          contents.addStylesheet(
+            `${process.env.VUE_APP_RES_URL}/resources/fonts/monserrat.css`
+          ),
+          contents.addStylesheet(
+            `${process.env.VUE_APP_RES_URL}/resources/fonts/tangerine.css`
+          )
+        ]).then(() => {
+          console.log('字体加载完毕')
+        })
       })
     },
     prevPage () {
