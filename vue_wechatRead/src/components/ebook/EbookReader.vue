@@ -5,7 +5,7 @@
 <script>
 import { ebookMixin } from '@/utils/mixin'
 import Epub from 'epubjs'
-import { setTimeout } from 'timers'
+import { getFontFamily, saveFontFamily, saveFontSize, getFontSize } from '@/utils/localStorage'
 global.ePub = Epub
 
 export default {
@@ -16,9 +16,26 @@ export default {
     })
   },
   methods: {
+    initFontSize () {
+      let fontSize = getFontSize(this.fileName)
+      if (!fontSize) {
+        saveFontSize(this.fileName, this.defaultFontSize)
+      } else {
+        this.rendition.themes.fontSize(fontSize)
+        this.setDefaultFontSize(fontSize)
+      }
+    },
+    initFontFamily () {
+      let font = getFontFamily(this.fileName)
+      if (!font) {
+        saveFontFamily(this.fileName, this.defaultFamily)
+      } else {
+        this.rendition.themes.font(font)
+        this.setDefaultFontFamily(font)
+      }
+    },
     initEpub () {
       const url = `http://localhost:8081/resources/${this.fileName}.epub`
-      console.log(url)
       this.book = new Epub(url)
 
       this.setCurrentBook(this.book)
@@ -28,7 +45,10 @@ export default {
         height: innerHeight,
         methods: 'default'
       })
-      this.rendition.display()
+      this.rendition.display().then(() => {
+        this.initFontSize()
+        this.initFontFamily()
+      })
       this.rendition.on('touchstart', event => {
         this.touchStartX = event.changedTouches[0].clientX
         this.touchStartTime = event.timeStamp
@@ -55,7 +75,7 @@ export default {
             `${process.env.VUE_APP_RES_URL}/resources/fonts/cabin.css`
           ),
           contents.addStylesheet(
-            `${process.env.VUE_APP_RES_URL}/resources/fonts/monserrat.css`
+            `${process.env.VUE_APP_RES_URL}/resources/fonts/montserrat.css`
           ),
           contents.addStylesheet(
             `${process.env.VUE_APP_RES_URL}/resources/fonts/tangerine.css`
