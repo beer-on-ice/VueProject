@@ -1,5 +1,5 @@
 <template lang="pug">
-  .menu-bar
+  .ebook-menu
     transition(name="slide-up")
       .menu-wrapper(v-show="ifTitleAndMenuShow" :class="{'hide-box-shadow': !ifTitleAndMenuShow||ifSettingFontShow>=0}")
         .icon-wrapper
@@ -12,18 +12,24 @@
           span.icon-A(@click="showSetting(0)")
     ebook-setting-font
     ebook-setting-font-pop-up
+    ebook-setting-theme
+    ebook-setting-progress
 </template>
 
 <script>
 import { ebookMixin } from '@/utils/mixin'
 import EbookSettingFont from './EbookSettingFont'
 import EbookSettingFontPopUp from './EbookSettingFontPopUp'
+import EbookSettingTheme from './EbookSettingTheme'
+import EbookSettingProgress from './EbookSettingProgress'
 
 export default {
   mixins: [ebookMixin],
   components: {
     EbookSettingFont,
-    EbookSettingFontPopUp
+    EbookSettingFontPopUp,
+    EbookSettingTheme,
+    EbookSettingProgress
   },
   methods: {
     showSetting (key) {
@@ -45,6 +51,7 @@ export default {
   height: px2rem(48);
   box-shadow: 0 px2rem(-8) px2rem(8) rgba(0, 0, 0, 0.15);
   font-size: px2rem(20);
+  background: #fff;
   &.hide-box-shadow {
     box-shadow: none;
   }

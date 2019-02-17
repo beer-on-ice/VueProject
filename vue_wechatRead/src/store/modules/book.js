@@ -8,7 +8,10 @@ const book = {
     defaultFontFamily: 'Default',
     fontFamilyVisible: false,
     defaultTheme: 'Default',
-    currentBook: null
+    currentBook: null,
+    progress: 0,
+    section: 0,
+    bookAvailable: false
   },
   mutations: {
     SET_FILENAME (state, fileName) {
@@ -34,6 +37,12 @@ const book = {
     },
     SET_CURRENTBOOK (state, cbook) {
       state.currentBook = cbook
+    },
+    SET_PROGRESS (state, progress) {
+      state.progress = progress
+    },
+    SET_BOOKAVAILABLE (state, flag) {
+      state.bookAvailable = flag
     }
   },
   actions: {
@@ -76,6 +85,16 @@ const book = {
       commit
     }, cbook) {
       commit('SET_CURRENTBOOK', cbook)
+    },
+    setProgress ({
+      commit
+    }, progress) {
+      commit('SET_PROGRESS', progress)
+    },
+    setBookAvailable ({
+      commit
+    }, flag) {
+      commit('SET_BOOKAVAILABLE', flag)
     }
   },
   getters: {
@@ -86,7 +105,9 @@ const book = {
     defaultFontFamily: state => state.defaultFontFamily,
     fontFamilyVisible: state => state.fontFamilyVisible,
     defaultTheme: state => state.defaultTheme,
-    currentBook: state => state.currentBook
+    currentBook: state => state.currentBook,
+    progress: state => state.progress,
+    bookAvailable: state => state.bookAvailable
   }
 }
 
