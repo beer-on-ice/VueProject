@@ -16,6 +16,7 @@ export default {
     })
   },
   methods: {
+    // 初始化文字大小
     initFontSize () {
       let fontSize = getFontSize(this.fileName)
       if (!fontSize) {
@@ -25,6 +26,7 @@ export default {
         this.setDefaultFontSize(fontSize)
       }
     },
+    // 初始化字体
     initFontFamily () {
       let font = getFontFamily(this.fileName)
       if (!font) {
@@ -34,6 +36,7 @@ export default {
         this.setDefaultFontFamily(font)
       }
     },
+    // 初始化主题
     initTheme () {
       let defaultTheme = getTheme(this.fileName)
       if (!defaultTheme) {
@@ -46,14 +49,15 @@ export default {
       })
       this.rendition.themes.select(defaultTheme)
     },
+    // 初始化渲染展示
     initRendition () {
       this.rendition = this.book.renderTo('reader', {
         width: innerWidth,
         height: innerHeight,
         methods: 'default'
       })
+      // 获取存储位置
       const location = getLocation(this.fileName)
-      console.log(location)
       this.display(location, () => {
         this.initFontSize()
         this.initFontFamily()
@@ -80,6 +84,7 @@ export default {
         })
       })
     },
+    // 初始化手势操作
     initGesture () {
       this.rendition.on('touchstart', event => {
         this.touchStartX = event.changedTouches[0].clientX
@@ -99,6 +104,7 @@ export default {
         event.preventDefault()
       })
     },
+    // 初始化电子书
     initEpub () {
       const url = `${process.env.VUE_APP_RES_URL}/resources/${this.fileName}.epub`
       this.book = new Epub(url)
@@ -114,6 +120,7 @@ export default {
         this.refreshLocation()
       })
     },
+    // 上一页
     prevPage () {
       if (this.rendition) {
         this.rendition.prev().then(() => {
@@ -122,6 +129,7 @@ export default {
         this.hideTitleAndMenu()
       }
     },
+    // 下一页
     nextPage () {
       if (this.rendition) {
         this.rendition.next().then(() => {

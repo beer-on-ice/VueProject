@@ -27,12 +27,12 @@ export default {
     }
   },
   methods: {
+    // 存储阅读时间
     startLoopReadTime () {
       let readTime = getReadTime(this.fileName)
       if (!readTime) {
         readTime = 0
       }
-
       this.task = setInterval(() => {
         readTime++
         if (readTime % 30 === 0) {

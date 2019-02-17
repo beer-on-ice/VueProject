@@ -44,6 +44,7 @@ export const ebookMixin = {
       setBookAvailable: 'book/setBookAvailable',
       setSection: 'book/setSection'
     }),
+    // 初始化样式
     initGlobalStyle () {
       removeAllCss()
       switch (this.defaultTheme) {
@@ -60,6 +61,7 @@ export const ebookMixin = {
           addCss(`${process.env.VUE_APP_RES_URL}/resources/theme/theme_night.css`)
       }
     },
+    // 渲染对应位置进度条位置，并存储位置信息
     refreshLocation () {
       const currentLocation = this.currentBook.rendition.currentLocation()
       const startCfi = currentLocation.start.cfi
@@ -68,6 +70,7 @@ export const ebookMixin = {
       this.setSection()
       saveLocation(this.fileName, startCfi)
     },
+    // 渲染对应位置内容
     display (target, cb) {
       if (target) {
         this.currentBook.rendition.display(target).then(() => {

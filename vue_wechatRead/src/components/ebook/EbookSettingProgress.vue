@@ -22,10 +22,10 @@ import { getReadTime } from '@/utils/localStorage'
 export default {
   mixins: [ebookMixin],
   computed: {
+    // 获取章节名称
     getSectionName () {
       if (this.section) {
         const sectionInfo = this.currentBook.section(this.section)
-
         if (sectionInfo && sectionInfo.href) {
           return this.currentBook.navigation.get(sectionInfo.href).label
         }
@@ -34,6 +34,7 @@ export default {
     }
   },
   methods: {
+    // 获取阅读时间
     getReadTimeText () {
       return this.$t('book.haveRead').replace('$1', this.getReadTimeByMinute())
     },
@@ -45,6 +46,7 @@ export default {
         return Math.ceil(readTime / 60)
       }
     },
+    // 上一个章节
     prevSection () {
       if (this.section > 0 && this.bookAvailable) {
         this.setSection(this.section - 1).then(() => {
@@ -52,6 +54,7 @@ export default {
         })
       }
     },
+    // 下一章节
     nextSection () {
       if (this.section < this.currentBook.spine.length - 1 && this.bookAvailable) {
         this.setSection(this.section + 1).then(() => {
@@ -59,6 +62,7 @@ export default {
         })
       }
     },
+    // 显示章节内容
     displaySection () {
       const sectionInfo = this.currentBook.section(this.section)
       if (sectionInfo && sectionInfo.href) {
@@ -75,10 +79,12 @@ export default {
         this.updateProgressBg()
       })
     },
+    // 显示进度条对应内容
     disPlayProgress () {
       const cfi = this.currentBook.locations.cfiFromPercentage(this.progress / 100)
       this.display(cfi)
     },
+    // 更新进度条背景
     updateProgressBg () {
       this.$refs.progress.style.backgroundSize = `${this.progress}% 100%`
     },
