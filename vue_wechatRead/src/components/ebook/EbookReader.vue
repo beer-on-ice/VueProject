@@ -5,7 +5,7 @@
 <script>
 import { ebookMixin } from '@/utils/mixin'
 import Epub from 'epubjs'
-import { getFontFamily, saveFontFamily, saveFontSize, getFontSize, saveTheme, getTheme } from '@/utils/localStorage'
+import { getFontFamily, saveFontFamily, saveFontSize, getFontSize, saveTheme, getTheme, getLocation } from '@/utils/localStorage'
 global.ePub = Epub
 
 export default {
@@ -52,12 +52,15 @@ export default {
         height: innerHeight,
         methods: 'default'
       })
-      this.rendition.display().then(() => {
+      const location = getLocation(this.fileName)
+      console.log(location)
+      this.display(location, () => {
         this.initFontSize()
         this.initFontFamily()
         this.initTheme()
         this.initGlobalStyle()
       })
+
       this.rendition.hooks.content.register(contents => {
         Promise.all([
           contents.addStylesheet(
@@ -103,21 +106,27 @@ export default {
       this.setCurrentBook(this.book)
       this.initRendition()
       this.initGesture()
+      // 分页
       this.book.ready.then(() => {
         return this.book.locations.generate(750 * (window.innerWidth / 375) * (getFontSize(this.fileName) / 16))
       }).then(locations => {
         this.setBookAvailable(true)
+        this.refreshLocation()
       })
     },
     prevPage () {
       if (this.rendition) {
-        this.rendition.prev()
+        this.rendition.prev().then(() => {
+          this.refreshLocation()
+        })
         this.hideTitleAndMenu()
       }
     },
     nextPage () {
       if (this.rendition) {
-        this.rendition.next()
+        this.rendition.next().then(() => {
+          this.refreshLocation()
+        })
         this.hideTitleAndMenu()
       }
     },

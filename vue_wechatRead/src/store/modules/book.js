@@ -43,6 +43,9 @@ const book = {
     },
     SET_BOOKAVAILABLE (state, flag) {
       state.bookAvailable = flag
+    },
+    SET_SECTION (state, section) {
+      state.section = section
     }
   },
   actions: {
@@ -95,6 +98,11 @@ const book = {
       commit
     }, flag) {
       commit('SET_BOOKAVAILABLE', flag)
+    },
+    setSection ({
+      commit
+    }, section) {
+      commit('SET_SECTION', section)
     }
   },
   getters: {
@@ -107,7 +115,8 @@ const book = {
     defaultTheme: state => state.defaultTheme,
     currentBook: state => state.currentBook,
     progress: state => state.progress,
-    bookAvailable: state => state.bookAvailable
+    bookAvailable: state => state.bookAvailable,
+    section: state => state.section
   }
 }
 

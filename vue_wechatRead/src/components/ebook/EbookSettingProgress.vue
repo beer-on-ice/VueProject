@@ -3,7 +3,7 @@ transition(name="slide-up")
   .setting-wrapper(v-show="ifTitleAndMenuShow&&ifSettingFontShow===2")
     .setting-progress
       .read-time-wrapper
-        span.read-time-text
+        span.read-time-text {{getReadTimeText()}}
         span.icon-forward
       .progress-wrapper
         .progress-icon-wrapper(@click="prevSection()")
@@ -12,17 +12,59 @@ transition(name="slide-up")
         .progress-icon-wrapper(@click="nextSection()")
           span.icon-forward
       .text-wrapper
-        span.progress-section-text
+        span.progress-section-text {{getSectionName}}
         span.progress-text ({{bookAvailable ? progress + '%' : $t('book.loading')}})
 </template>
 
 <script>
 import { ebookMixin } from '@/utils/mixin'
+import { getReadTime } from '@/utils/localStorage'
 export default {
   mixins: [ebookMixin],
+  computed: {
+    getSectionName () {
+      if (this.section) {
+        const sectionInfo = this.currentBook.section(this.section)
+
+        if (sectionInfo && sectionInfo.href) {
+          return this.currentBook.navigation.get(sectionInfo.href).label
+        }
+      }
+      return ''
+    }
+  },
   methods: {
-    prevSection () { },
-    nextSection () { },
+    getReadTimeText () {
+      return this.$t('book.haveRead').replace('$1', this.getReadTimeByMinute())
+    },
+    getReadTimeByMinute () {
+      const readTime = getReadTime(this.fileName)
+      if (!readTime) {
+        return 0
+      } else {
+        return Math.ceil(readTime / 60)
+      }
+    },
+    prevSection () {
+      if (this.section > 0 && this.bookAvailable) {
+        this.setSection(this.section - 1).then(() => {
+          this.displaySection()
+        })
+      }
+    },
+    nextSection () {
+      if (this.section < this.currentBook.spine.length - 1 && this.bookAvailable) {
+        this.setSection(this.section + 1).then(() => {
+          this.displaySection()
+        })
+      }
+    },
+    displaySection () {
+      const sectionInfo = this.currentBook.section(this.section)
+      if (sectionInfo && sectionInfo.href) {
+        this.display(sectionInfo.href)
+      }
+    },
     onProgressInput (progress) {
       this.setProgress(progress)
       this.updateProgressBg()
@@ -35,7 +77,7 @@ export default {
     },
     disPlayProgress () {
       const cfi = this.currentBook.locations.cfiFromPercentage(this.progress / 100)
-      this.currentBook.rendition.display(cfi)
+      this.display(cfi)
     },
     updateProgressBg () {
       this.$refs.progress.style.backgroundSize = `${this.progress}% 100%`

@@ -67,6 +67,14 @@ export function saveLocation (fileName, location) {
   return setBookObj(fileName, 'location', location)
 }
 
+export function getReadTime (fileName) {
+  return getBookObj(fileName, 'time')
+}
+
+export function saveReadTime (fileName, theme) {
+  setBookObj(fileName, 'time', theme)
+}
+
 export function getLocale () {
   return getLocalStorage('locale')
 }

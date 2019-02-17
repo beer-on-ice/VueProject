@@ -6,7 +6,10 @@ import {
   themeList,
   addCss,
   removeAllCss
-} from '@/utils/book'
+} from './book'
+import {
+  saveLocation
+} from './localStorage'
 
 export const ebookMixin = {
   computed: {
@@ -20,7 +23,8 @@ export const ebookMixin = {
       defaultTheme: 'book/defaultTheme',
       currentBook: 'book/currentBook',
       progress: 'book/progress',
-      bookAvailable: 'book/bookAvailable'
+      bookAvailable: 'book/bookAvailable',
+      section: 'book/section'
     }),
     themeList () {
       return themeList(this)
@@ -37,7 +41,8 @@ export const ebookMixin = {
       setDefaultTheme: 'book/setDefaultTheme',
       setCurrentBook: 'book/setCurrentBook',
       setProgress: 'book/setProgress',
-      setBookAvailable: 'book/setBookAvailable'
+      setBookAvailable: 'book/setBookAvailable',
+      setSection: 'book/setSection'
     }),
     initGlobalStyle () {
       removeAllCss()
@@ -53,6 +58,27 @@ export const ebookMixin = {
           break
         case 'Night':
           addCss(`${process.env.VUE_APP_RES_URL}/resources/theme/theme_night.css`)
+      }
+    },
+    refreshLocation () {
+      const currentLocation = this.currentBook.rendition.currentLocation()
+      const startCfi = currentLocation.start.cfi
+      const progress = this.currentBook.locations.percentageFromCfi(startCfi)
+      this.setProgress(Math.floor(progress * 100))
+      this.setSection()
+      saveLocation(this.fileName, startCfi)
+    },
+    display (target, cb) {
+      if (target) {
+        this.currentBook.rendition.display(target).then(() => {
+          this.refreshLocation()
+          cb && cb()
+        })
+      } else {
+        this.rendition.display().then(() => {
+          this.refreshLocation()
+          cb && cb()
+        })
       }
     }
   }
