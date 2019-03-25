@@ -1,7 +1,7 @@
 <template lang="pug">
   #pdsWrapper
     .pdsTopWrapper
-      Header
+      Header(:styles="headerStyles")
       .sliderWrapper
         Slide.slideItemWrapper(:list="list" @slideStart="changeTxt")
           template(v-slot:default="slotProps")
@@ -49,7 +49,11 @@ export default {
           }
         }
       ],
-      info: {}
+      info: {},
+      headerStyles: {
+        backgroundColor: '#29305c',
+        color: '#f1f2f6'
+      }
     }
   },
   created () {

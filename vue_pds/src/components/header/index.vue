@@ -1,5 +1,5 @@
 <template lang="pug">
-  .headerWrapper
+  .headerWrapper(:style="styles")
     .backBtnWrapper
       i.iconfont &#xe615;
     .titleWrapper
@@ -9,7 +9,8 @@
 <script>
 export default {
   props: {
-    title: String
+    title: String,
+    styles: Object
   }
 }
 </script>
