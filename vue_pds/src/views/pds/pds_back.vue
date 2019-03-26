@@ -1,5 +1,4 @@
 <template lang="pug">
-  transition(name="slide")
     .backupWrapper
       Header(title="备份你的数字身份" :styles="headerStyles" @handleBack="back")
       .tipWrapper
@@ -16,7 +15,6 @@
 </template>
 
 <script>
-// eslint-disable-next-line
 import Header from 'components/header'
 export default {
   data () {

@@ -1,5 +1,4 @@
 <template lang="pug">
-transition(name="slide")
   .backupFlowWrapper
     Prompt(txt="PDS检测中..." imgUrl="" v-if="false")
     Header(title="备份PDS钱包" :styles="headerStyles" @handleBack="back")

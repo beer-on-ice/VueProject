@@ -16,7 +16,8 @@
       ul
         li(v-for="item in desc.ps") {{item}}
       router-link(tag="button" to="/pds/back") 备份
-    router-view
+    transition(name="slide")
+      router-view
 </template>
 
 <script>
