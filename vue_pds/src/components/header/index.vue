@@ -1,8 +1,8 @@
 <template lang="pug">
-  .headerWrapper(:style="styles")
-    .backBtnWrapper
+  .headerWrapper(:style='styles')
+    .backBtnWrapper(@click="handleBack")
       i.iconfont &#xe615;
-    .titleWrapper
+    .titleWrapper(v-if='title!==""')
       h2 {{title}}
 </template>
 
@@ -11,12 +11,17 @@ export default {
   props: {
     title: String,
     styles: Object
+  },
+  methods: {
+    handleBack () {
+      this.$emit('handleBack')
+    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-@import "../../assets/styles/global";
+@import '~assets/styles/global';
 .headerWrapper {
   width: 100%;
   height: px2rem(42.24);

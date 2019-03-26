@@ -1,8 +1,8 @@
 <template lang="pug">
   .swiper-container
     ul.swiper-wrapper
-      li.swiper-slide(v-for="item in list")
-        slot(:item="item")
+      li.swiper-slide(v-for="(item,index) in list" :key="index")
+        slot(:obj="item")
     .swiper-pagination.dotWrapper
 </template>
 

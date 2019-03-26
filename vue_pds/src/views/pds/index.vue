@@ -1,24 +1,28 @@
 <template lang="pug">
   #pdsWrapper
     .pdsTopWrapper
-      Header(:styles="headerStyles")
+      Header(:styles="headerStyles" title="")
       .sliderWrapper
         Slide.slideItemWrapper(:list="list" @slideStart="changeTxt")
-          template(v-slot:default="slotProps")
+          template(v-slot:default="slideProps")
             .itemWrapper
-              img(src="slotProps.item.src")
-              h3 {{slotProps.item.title}}
-              span.tip ({{slotProps.item.tip}})
-              span.question {{slotProps.item.question}}
+              img(src="slideProps.obj.src")
+              h3 {{slideProps.obj.title}}
+              span.tip ({{slideProps.obj.tip}})
+              span.question(v-if="slideProps.obj.question!==''") {{slideProps.obj.question}}
+                i.iconfont &#xe60c;
     .pdsBottomWrapper
-      p {{info.defition}}
+      p {{desc.defition}}
       ul
-        li(v-for="item in info.ps") {{item}}
-      button 备份
+        li(v-for="item in desc.ps") {{item}}
+      router-link(tag="button" to="/pds/back") 备份
+    router-view
 </template>
 
 <script>
+// eslint-disable-next-line
 import Header from 'components/header'
+// eslint-disable-next-line
 import Slide from 'components/slide'
 export default {
   data () {
@@ -28,7 +32,8 @@ export default {
           src: '',
           title: '普通存储',
           tip: '无需硬件设备',
-          info: {
+          question: '',
+          desc: {
             defition:
               '助记词可用于恢复、导入钱包或重置钱包的密码，将它准确的抄写到纸上，并存放在只有你知道的安全的地方。',
             ps: [
@@ -42,40 +47,40 @@ export default {
           title: 'PDS存储',
           tip: '已有PDS设备',
           question: '什么是pds设备?',
-          info: {
+          desc: {
             defition:
               'PDS作为CIRCA可信的加密助记词设备，可将助记词导入您的设备中，加以存储，PDS可在您恢复、导入钱包或重置钱包密码时与NFC呼应自动解锁助记词，亦可通过NFC唤醒钱包。',
             ps: ['· PDS设备需谨慎保存，一旦遗失概不负责']
           }
         }
       ],
-      info: {},
+      descIndex: 0,
       headerStyles: {
         backgroundColor: '#29305c',
         color: '#f1f2f6'
       }
     }
   },
-  created () {
-    this.info = this.list[0].info
+  computed: {
+    desc () {
+      return this.list[this.descIndex].desc
+    }
   },
   methods: {
     changeTxt (index) {
-      this.info = this.list[index].info
+      this.descIndex = index
     }
   },
   components: {
-    Slide,
-    Header
+    Header,
+    Slide
   }
 }
 </script>
 
-<style lang='scss' scoped>
-@import "../../assets/styles/global";
+<style lang="scss" scoped>
+@import '~assets/styles/global';
 #pdsWrapper {
-  position: relative;
-  height: 100%;
   .pdsTopWrapper {
     background: #29305c;
     height: px2rem(340);
@@ -111,6 +116,9 @@ export default {
           line-height: px2rem(70);
           color: #8b8b8b;
           display: block;
+          i {
+            color: #5867cc;
+          }
         }
       }
     }
@@ -130,7 +138,7 @@ export default {
       font-weight: bold;
     }
     button {
-      position: absolute;
+      position: fixed;
       bottom: px2rem(15);
       width: 90%;
       background-color: #29305c;
