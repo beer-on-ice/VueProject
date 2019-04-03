@@ -2,7 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import Router from './router'
 import Store from './store'
-import I18n from './lang'
+import i18n from './locales'
 
 //  全局样式
 import './assets/styles/global.scss'
@@ -16,8 +16,6 @@ Vue.config.productionTip = false
 
 const router = new Router()
 const store = new Store()
-const i18n = new I18n()
-console.log(i18n)
 
 new Vue({
   router,
