@@ -1,8 +1,8 @@
 import Vue from 'vue'
-import { Container, Header, Aside, Main, Footer } from 'element-ui'
+import { Dropdown, DropdownMenu, DropdownItem, Button, Input } from 'element-ui'
 
-Vue.use(Container)
-Vue.use(Header)
-Vue.use(Aside)
-Vue.use(Main)
-Vue.use(Footer)
+Vue.use(Dropdown)
+Vue.use(DropdownMenu)
+Vue.use(DropdownItem)
+Vue.use(Button)
+Vue.use(Input)
