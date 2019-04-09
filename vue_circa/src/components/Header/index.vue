@@ -1,9 +1,9 @@
 <template lang="pug">
   #header_wrapper
     .options
-      router-link(tag="span" to='/business' :class="{active1: tagType ==='business'}") 企业
-      router-link(tag="span" to='/personal' :class="{active2: tagType ==='personal'}") 个人
-      router-link(tag="span" to='/developer' :class="{active3: tagType ==='developer'}") 开发者
+      router-link(tag="span" to='/business' :class="{active1: tagType ===0}") 企业
+      router-link(tag="span" to='/personal' :class="{active2: tagType ===1}") 个人
+      router-link(tag="span" to='/developer' :class="{active3: tagType ===2}") 开发者
     .uniqueHeadWrapper
       .logoWrapper
         .logo
@@ -18,11 +18,26 @@
 
 <script>
 export default {
-  props: {
-    tagType: String
+  data () {
+    return {
+      tagType: 0
+    }
   },
   mounted () {
-    console.log(this.$route.path)
+    switch (this.$route.path) {
+      case '/business':
+        this.tagType = 0
+        break
+      case '/personal':
+        this.tagType = 1
+        break
+      case '/developer':
+        this.tagType = 2
+        break
+      default:
+        this.tagType = 0
+        break
+    }
   }
 }
 </script>
@@ -49,7 +64,7 @@ export default {
 			color: red;
 		}
 		& .active3 {
-			color: red;
+			color: yellow;
 		}
 	}
 	.uniqueHeadWrapper {

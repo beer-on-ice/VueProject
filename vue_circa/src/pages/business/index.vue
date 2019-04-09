@@ -1,6 +1,6 @@
 <template lang="pug">
 div
-  Header(tagType="business")
+  Header
   .sectionOneWrapper
     .leftWrapper
       .img

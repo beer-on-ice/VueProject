@@ -17,15 +17,15 @@
     .dot
   .navWrapper
     ul
-      li
+      router-link(tag="li" to="/business")
         i.iconfont &#xe683;
-        router-link(tag="span" to="/business") 商业用户
-      li
+        span 商业用户
+      router-link(tag="li" to="/personal")
         i.iconfont &#xe634;
-        router-link(tag="span" to="/business") 个人用户
-      li
+        span 个人用户
+      router-link(tag="li" to="/developer")
         i.iconfont &#xe64e;
-        router-link(tag="span" to="/business") 开发者
+        span 开发者
   .sloganWrapper
     .slogan IN MATH WE TRUST
 </template>
