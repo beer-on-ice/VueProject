@@ -8,6 +8,7 @@ module.exports = {
       .set('assets', resolve('src/assets'))
       .set('components', resolve('src/components'))
       .set('pages', resolve('src/pages'))
+      .set('utils', resolve('src/utils'))
     config.module
       .rule('pug')
       .test(/\.pug$/)

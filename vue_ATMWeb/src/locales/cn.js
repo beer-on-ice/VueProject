@@ -1,6 +1,6 @@
 const messages = {
-  test: {
-    title: '测试'
+  home: {
+    lang: '中文'
   }
 }
 

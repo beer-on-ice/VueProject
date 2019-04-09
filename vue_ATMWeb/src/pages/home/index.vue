@@ -5,10 +5,10 @@
       i.iconfont &#xe8cc;
       el-dropdown.eldownmenu
         span 选择语言：
-          em 中文
+          em {{$t("home.lang")}}
         el-dropdown-menu(slot="dropdown")
-          el-dropdown-item 中文
-          el-dropdown-item 英文
+          el-dropdown-item(@click.native="toggleLang('cn')") 中文
+          el-dropdown-item(@click.native="toggleLang('en')") English
   .logoWrapper
     .logo
     .download
@@ -31,7 +31,15 @@
 </template>
 
 <script>
-export default {}
+import { getLocale, saveLocale } from 'utils/localStorage'
+export default {
+  methods: {
+    toggleLang (lang) {
+      saveLocale(lang)
+      this.$i18n.locale = getLocale()
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>

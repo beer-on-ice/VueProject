@@ -1,6 +1,6 @@
 const messages = {
-  test: {
-    title: 'ceshi'
+  home: {
+    lang: 'EN'
   }
 }
 
