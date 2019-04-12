@@ -1,108 +1,143 @@
 <template lang="pug">
-div
-  .footWrapper
-    .leftWrapper
-      .logo
-      span All rights reserved
-      br
-      span © 2019 CberPay
-    .centerWrapper
-      ul
-        li
-          h4 个人
-          span 钱包应用
-          span 卡式业务
-          span 帮助文档
-        li
-          h4 企业
-          span 线上支付
-          span 快捷支付
-          span ATM机
-        li
-          h4 开发者
-          span 开发文档
-          span ATM地图
-          span 社区
-    .rightWrapper
-      h4 帮助中心
-      .question
-        input(type="text" placeholder='您的问题')
-        i.iconfont &#xe61d;
-      span CberPay是基于Bitcoin Cash构建的加密支付网关，用于协助用户快速加入去中心化网络，并其更安全的使用加密货币。
+.footWrapper
+  el-row
+    el-col(
+      :xs="24"
+      :sm="24"
+      :md="4"
+      :lg="4"
+      :xl="4"
+    )
+      .leftWrapper
+        .logo
+    el-col(
+      :xs="24"
+      :sm="24"
+      :md="{span:17,offset:3}"
+      :lg="{span:17,offset:3}"
+      :xl="{span:17,offset:3}"
+    ).hidden-sm-and-down
+      .rightWrapper
+          ul
+            el-col(
+              :xs="{span:6}"
+              :sm="{span:6}"
+              :md="{span:6}"
+              :lg="{span:6}"
+              :xl="{span:6}"
+            )
+              li
+                h4 Personal
+                span Wallet
+                span Card
+            el-col(
+              :xs="{span:6}"
+              :sm="{span:6}"
+              :md="{span:6}"
+              :lg="{span:6}"
+              :xl="{span:6}"
+            )
+              li
+                h4 Company
+                span About
+                span Careers
+                span Press
+                span Blog
+            el-col(
+              :xs="{span:6}"
+              :sm="{span:6}"
+              :md="{span:6}"
+              :lg="{span:6}"
+              :xl="{span:6}"
+            )
+              li
+                h4 Business
+                span ATM
+                span Question
+            el-col(
+              :xs="{span:6}"
+              :sm="{span:6}"
+              :md="{span:6}"
+              :lg="{span:6}"
+              :xl="{span:6}"
+            )
+              li
+                h4 Social
+                span ATM
+                span Facebook
+                span Twitter
+                span Instagtam
+                span LinkedIn
+    el-col(
+      :xs="24"
+      :sm="24"
+      :md="{span:17,offset:3}"
+      :lg="{span:17,offset:3}"
+      :xl="{span:17,offset:3}"
+    ).hidden-md-and-up
+      .collapseWrapper
+        el-collapse(accordion)
+          el-collapse-item(title="Personal" name="1")
+            div Wallet
+            div Card
+          el-collapse-item(title="Company" name="2")
+            div About
+            div Careers
+            div Press
+            div Blog
+          el-collapse-item(title="Business" name="3")
+            div ATM
+            div Question
+          el-collapse-item(title="Social" name="4")
+            div ATM
+            div Facebook
+            div Twitter
+            div Instagtam
+            div LinkedIn
 </template>
 
 <script>
-export default {}
+export default {
+  data () {
+    return {}
+  }
+}
 </script>
 
 <style lang="scss" scoped>
 .footWrapper {
-	display: flex;
-	display: -webkit-flex;
-	justify-content: space-between;
-	margin-top: 0.1rem;
-	padding: 0.55rem 1.5rem;
-	background-color: #000;
-	font-size: 0.16rem;
+	border-top: 1px solid #000;
+	margin: 15px 55px 0;
+	padding-top: 50px;
 	.leftWrapper {
 		.logo {
-			width: 1.15rem;
-			height: 0.37rem;
-			background: url('./../../assets/images/logo2.png') no-repeat;
+			width: 155px;
+			height: 52px;
+			background: url('./../../assets/images/logo.png') no-repeat;
 			background-size: contain;
-			margin-bottom: 0.1rem;
-		}
-		span {
-			font-size: 0.16rem;
-			color: rgb(88, 86, 86);
-		}
-	}
-	.centerWrapper {
-		ul {
-			display: flex;
-			display: -webkit-flex;
-			li {
-				font-size: 0.18rem;
-				color: #fff;
-				margin: 0 0.5rem;
-				h4 {
-					margin-bottom: 0.3rem;
-				}
-				span {
-					display: block;
-					margin-top: 0.2rem;
-				}
-			}
 		}
 	}
 	.rightWrapper {
-		width: 3rem;
-		h4 {
-			font-size: 0.18rem;
-			color: #fff;
-		}
-		.question {
-			margin-top: 0.3rem;
-			position: relative;
-			input {
-				width: 2.7rem;
-				background: rgb(48, 47, 47);
-				border: none;
-				padding: 0.15rem 0.2rem 0.15rem 0.15rem;
-			}
-			i {
-				position: absolute;
-				top: 0.1rem;
-				right: 0.05rem;
-				font-size: 0.25rem;
-				color: rgb(114, 111, 111);
+		ul {
+			li {
+				h4 {
+					font-size: 28px;
+					margin-bottom: 0.3rem;
+					color: #000;
+				}
+				span {
+					font-size: 18px;
+					display: block;
+					margin-top: 0.2rem;
+					color: #7c7c7c;
+				}
 			}
 		}
-		span {
-			margin-top: 0.3rem;
-			font-size: 0.16rem;
-			color: rgb(71, 71, 71);
-			display: inline-block;
+		/deep/.collapseWrapper {
+			.el-collapse-item__header {
+				font-weight: bold;
+				font-size: 300px;
+			}
 		}
 	}
 }

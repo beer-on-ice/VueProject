@@ -4,6 +4,9 @@ import Router from './router'
 import Store from './store'
 import i18n from './locales'
 
+// 弹性布局自动化
+// import 'lib-flexible'
+
 //  全局样式
 import './assets/styles/global.scss'
 import './assets/iconfont/iconfont.css'
@@ -11,6 +14,7 @@ import './assets/iconfont/iconfont.css'
 
 // 引入elementUI
 import './plugins/element.js'
+import 'element-ui/lib/theme-chalk/display.css'
 
 Vue.config.productionTip = false
 

@@ -7,7 +7,7 @@
 export default {}
 document.addEventListener('DOMContentLoaded', () => {
   const html = document.querySelector('html')
-  let htmlFontSize = window.innerWidth / 14.4
+  let htmlFontSize = 1440 / 10
   html.style.fontSize = htmlFontSize + 'px'
 })
 </script>

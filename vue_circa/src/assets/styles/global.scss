@@ -1,5 +1,6 @@
 @import './reset.scss';
 @import './overwrite.scss';
+@import './transition.scss';
 
 html,
 body {
@@ -13,4 +14,45 @@ body {
   display: block;
   clear: both;
   content: '';
+}
+
+.flex-s {
+  display: flex;
+  display: -webkit-flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.flex-e {
+  display: flex;
+  display: -webkit-flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.flex-a {
+  display: flex;
+  display: -webkit-flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.flex-b {
+  display: flex;
+  display: -webkit-flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.flex-cc {
+  display: flex;
+  display: -webkit-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-c {
+  display: flex;
+  display: -webkit-flex;
+  align-items: center;
 }

@@ -1,42 +1,42 @@
 <template lang="pug">
 .ContactWrapper
-  Header
-  h2 What can we help with today?
-  .mainWrapper
-    el-row
-      el-col(
-        :xs="24"
-        :sm="24"
-        :md="{span: 10,offset:2}"
-        :lg="{span: 10,offset:2}"
-        :xl="{span: 10,offset:2}"
-      )
-        .leftWrapper
-          .imgs
-      el-col(
-        :xs="24"
-        :sm="24"
-        :md="{span: 11}"
-        :lg="{span: 11}"
-        :xl="{span: 11}"
-      )
-        .rightWrapper
-          div
-            p Mail
-            el-input(v-model="mail")
-          div
-            p Contact Sales
-            el-input(v-model="phone" )
-          div
-            p Wechat
-            el-input(v-model="wechat" )
-        .codeWrapper
-          .left
-            span Scan QR Code
-            span Follow Circa
-            span Wechat
-          .right
-            .code
+  el-header
+    Header
+  el-main
+    h2 What can we help with today?
+    .mainWrapper
+      el-row
+        el-col(
+          :xs="24"
+          :sm="24"
+          :md="{span: 10,offset:2}"
+          :lg="{span: 10,offset:2}"
+          :xl="{span: 10,offset:2}"
+        )
+          .leftWrapper
+            .logo
+        el-col(
+          :xs="24"
+          :sm="24"
+          :md="{span: 10}"
+          :lg="{span: 10}"
+          :xl="{span: 10}"
+        )
+          .rightWrapper
+            el-form(ref="form" :model="form" label-width="80px" label-position="top")
+              el-form-item(label="Mail")
+                el-input(v-model="mail")
+              el-form-item(label="Contact Sales")
+                el-input(v-model="phone")
+              el-form-item(label="Wechat")
+                el-input(v-model="wechat")
+          .codeWrapper
+            .left
+              span Scan QR Code
+              span Follow Circa
+              span Wechat
+            .right
+              .code
 </template>
 
 <script>
@@ -57,35 +57,20 @@ export default {
 
 <style lang="scss" >
 .ContactWrapper {
-	margin-top: 70px;
+	max-width: 1440px;
 	h2 {
 		font-size: 40px;
+		font-weight: bold;
 		line-height: 50px;
 		padding: 0 30px;
 	}
 	.mainWrapper {
 		margin-top: 80px;
-		div {
-			line-height: 0;
-		}
-		.imgs {
+		.logo {
 			width: 331px;
 			height: 331px;
 			background: url('./../../assets/images/business/pic_help.png') no-repeat;
 			background-size: contain;
-		}
-		.rightWrapper {
-			div {
-				margin-top: 10px;
-				p {
-					font-size: 20px;
-					font-weight: bold;
-					line-height: 30px;
-				}
-				.el-input__inner {
-					height: 60px;
-				}
-			}
 		}
 		.codeWrapper {
 			float: right;

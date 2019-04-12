@@ -1,193 +1,353 @@
 <template lang="pug">
-div
-  Header
+.businessWrapper
   .sectionOneWrapper
-    .leftWrapper
-      .img
-    .rightWrapper
-      h3 接入全球最安全的价值网络让您的商业疆域更加的广袤
-      ul
-        li
-          i.iconfont &#xe6d5;
-          span 让全球各地的客户更便捷支付
-        li
-          i.iconfont &#xe7d6;
-          span 极速确认账单，并且安全可靠
-        li
-          i.iconfont &#xe6f1;
-          span 商户自定义交易手续费
-      el-button(type="primary") 了解更多
-      span.way 获得CberPay Wallet或CberPay Card
+    el-row
+      el-col(
+        :xs="24"
+        :sm="24"
+        :md="{span: 11}"
+        :lg="{span: 11}"
+        :xl="{span: 11}"
+      )
+        .leftWrapper
+          .topWrapper
+            h3 Accept
+            h3 cryptocurrency
+            h3 payments
+          .bottomWrapper
+            p Expand your payment options by accepting instant BTC and BCH payments without risk or price fluctuations.
+            el-button(@click="contact" round) Contact Sales
+            el-button(round) Get Started
+      el-col(
+        :xs="24"
+        :sm="24"
+        :md="{span: 12}"
+        :lg="{span: 12}"
+        :xl="{span: 12}"
+      ).hidden-sm-and-down
+        .rightWrapper
+          .logo
   .sectionTwoWrapper
-    .leftWrapper
-      h3 7X24保护在线交易安全已被全球数千家企业<em>信赖</em>
-    .rightWrapper
-      .img
-  .sectionThirdWrapper
-    h3 让加密资产为您的商业流程助力
-    .img
-  .contactWrapper
-    .leftWrapper
-      span 联系我们：
-      .inputWrapper
-        input(v-model='input' placeholder='您的邮箱地址')
-        button 提交
-    .rightWrapper
-      span.apple
-      span.android
-  Footer.footerConp
+    img(src="./img/bg_home.png")
+    .titleWrapper
+      h3 ACCEPT BITCOIN PAYMENTS ANYWHERE
+      p Learn More
+        i.iconfont &#xe60c;
+    ul.navWrapper.flex-cc
+      el-row
+        el-col(
+          :xs="8"
+          :sm="8"
+          :md="{span: 8}"
+          :lg="{span: 8}"
+          :xl="{span: 8}"
+        )
+          li.person
+            div
+            h4 IN PERSON
+            span Accept Bitcoin on your smartphone or tablet at your retail store or restaurant.
+        el-col(
+          :xs="8"
+          :sm="8"
+          :md="{span: 8}"
+          :lg="{span: 8}"
+          :xl="{span: 8}"
+        )
+            li.website
+              div
+              h4 ON YOUR WEBSITE
+              span Accept Bitcoin payments and donations from your online customers.
+        el-col(
+          :xs="8"
+          :sm="8"
+          :md="{span: 8}"
+          :lg="{span: 8}"
+          :xl="{span: 8}"
+        )
+          li.mail
+            div
+            h4 BY EMALL
+            span Send invoices to vendors as quickly and easily as sending an email.
+  .sectionThreeWrapper
+    h3 ACCEPT BITCOIN, GET PAID IN
+    em BTC
+    p Receive funds directly to your bank account with zero price volatility or risk. See how it works
+  .sectionFourWrapper
+    ul
+      el-row
+        li.trusted
+          el-col(
+            :xs="24"
+            :sm="24"
+            :md="{span: 15,offset:1}"
+            :lg="{span: 15,offset:1}"
+            :xl="{span: 15,offset:1}"
+          )
+            .left
+              h3 Trusted & Transparent
+              p Uphold is fully reserved. Unlike banks, we don’t loan out your money. We publish our holdings and obligations in real time.
+              el-button Learn more
+                i.iconfont &#xe60c;
+          el-col(
+            :xs="24"
+            :sm="24"
+            :md="{span: 8,pull:2}"
+            :lg="{span: 8,pull:2}"
+            :xl="{span: 8,pull:2}"
+          ).hidden-sm-and-down
+            .right
+              .imgs
+      el-row
+        li.secure
+          el-col(
+            :xs="24"
+            :sm="24"
+            :md="{span: 8,push:2}"
+            :lg="{span: 8,push:2}"
+            :xl="{span: 8,push:2}"
+          ).hidden-sm-and-down
+            .right
+              .imgs
+          el-col(
+            :xs="24"
+            :sm="24"
+            :md="{span: 15,offset:1}"
+            :lg="{span: 15,offset:1}"
+            :xl="{span: 15,offset:1}"
+          )
+            .left
+              h3 Trusted & Transparent
+              p Uphold is fully reserved. Unlike banks, we don’t loan out your money. We publish our holdings and obligations in real time.
+              el-button Learn more
+                i.iconfont &#xe60c;
+      el-row
+        li.world
+          el-col(
+            :xs="24"
+            :sm="24"
+            :md="{span: 15,offset:1}"
+            :lg="{span: 15,offset:1}"
+            :xl="{span: 15,offset:1}"
+          )
+            .left
+              h3 World Class. Worldwide.
+              p Send money to your friends and family in more than 150 countries. We allow you to email Bitcoin - and other currencies - to people almost everywhere.
+              el-button Learn more
+                i.iconfont &#xe60c;
+          el-col(
+            :xs="24"
+            :sm="24"
+            :md="{span: 8,pull:2}"
+            :lg="{span: 8,pull:2}"
+            :xl="{span: 8,pull:2}"
+          ).hidden-sm-and-down
+            .right
+              .imgs
 </template>
 
 <script>
-import Header from 'components/Header'
-import Footer from 'components/Footer'
 export default {
-  data () {
-    return {
-      input: ''
+  methods: {
+    contact () {
+      this.$router.push('/contact')
     }
-  },
-  components: {
-    Header,
-    Footer
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.sectionOneWrapper {
-	display: -webkit-flex;
-	display: flex;
-	justify-content: space-between;
-	padding: 0 1rem;
-	margin-top: 1rem;
-	.leftWrapper {
-		margin-right: 0.9rem;
-		.img {
-			width: 5.55rem;
-			height: 4.5rem;
-			background: url('./../../assets/images/pc.png') no-repeat;
+.businessWrapper {
+	.sectionOneWrapper {
+		.leftWrapper {
+			margin-top: 50px;
+			.topWrapper {
+				h3 {
+					font-size: 70px;
+					line-height: 100px;
+					color: #062d64;
+				}
+			}
+			.bottomWrapper {
+				p {
+					font-size: 24px;
+					line-height: 43px;
+					color: #6f6f6f;
+				}
+				.el-button {
+					margin: 20px 30px 0 0;
+					background: #062d64;
+					color: #fff;
+				}
+			}
+		}
+		.rightWrapper {
+			width: 793px;
+			height: 653px;
+			background: url('./../../assets/images/business/map.png') no-repeat;
 			background-size: contain;
 		}
 	}
-	.rightWrapper {
-		margin-top: 0.5rem;
-		h3 {
-			font-size: 0.48rem;
-			line-height: 0.6rem;
+	.sectionTwoWrapper {
+		position: relative;
+		width: 100%;
+		height: 959px;
+		img {
+			width: 100%;
+			height: 100%;
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			z-index: -1;
 		}
-		ul {
-			margin-top: 0.6rem;
-		}
-		li {
-			display: flex;
-			justify-content: flex-center;
-			align-items: center;
-			font-size: 0.2rem;
-			line-height: 0.5rem;
-			i {
-				font-size: 0.24rem;
-				line-height: 0.5rem;
-				color: #1f68c1;
-				margin-right: 0.1rem;
-			}
-		}
-		span.way {
-			font-size: 0.16rem;
-			margin-left: 0.3rem;
-			color: #1f68c1;
-			text-decoration: underline;
-		}
-	}
-}
-.sectionTwoWrapper {
-	display: -webkit-flex;
-	display: flex;
-	justify-content: space-between;
-	padding: 0 0 0 1rem;
-	margin-top: 1.5rem;
-	.leftWrapper {
-		margin-top: 0.5rem;
-		margin-right: 3.7rem;
-		h3 {
-			font-size: 0.48rem;
-			line-height: 0.6rem;
-			em {
-				color: #1f68c1;
-			}
-		}
-	}
-	.rightWrapper {
-		.img {
-			width: 4.4rem;
-			height: 3.22rem;
-			background: url('./../../assets/images/pc2.png') no-repeat;
-			background-clip: content-box;
-		}
-	}
-}
-.sectionThirdWrapper {
-	text-align: center;
-	margin-top: 1.8rem;
-	h3 {
-		font-size: 0.48rem;
-		line-height: 0.6rem;
-	}
-	.img {
-		width: 5.55rem;
-		height: 4.5rem;
-		background: url('./../../assets/images/map.png') no-repeat;
-		background-size: contain;
-		margin: 3.4rem auto 0;
-	}
-}
-.contactWrapper {
-	background: #000;
-	margin-top: 0.5rem;
-	height: 1.2rem;
-	display: -webkit-flex;
-	display: flex;
-	justify-content: space-around;
-	.leftWrapper {
-		display: -webkit-flex;
-		display: flex;
-		align-items: center;
-		font-size: 0.2rem;
-		span {
+		.titleWrapper {
+			text-align: center;
+			padding-top: 50px;
 			color: #fff;
-		}
-		.inputWrapper {
-			input {
-				width: 3.8rem;
-				padding: 0.12rem;
-				background: #333232;
-				border: none;
-				color: rgb(165, 162, 162);
-				vertical-align: middle;
+			h3 {
+				font-size: 50px;
+				line-height: 60px;
 			}
-			button {
-				padding: 0.1rem 0.3rem;
-				border: none;
-				background: rgb(24, 83, 138);
-				vertical-align: middle;
-				color: #fff;
+			p {
+				font-size: 20px;
+				line-height: 1;
+				i {
+					font-size: 18px;
+					font-weight: bold;
+					margin-left: 10px;
+				}
+			}
+		}
+		.navWrapper {
+			margin-top: 200px;
+			padding: 0 40px;
+			li {
+				text-align: center;
+				color: #dddddd;
+				h4 {
+					font-size: 36px;
+					line-height: 1.5;
+				}
+				span {
+					font-size: 18px;
+					line-height: 1.5;
+					display: block;
+				}
+				div {
+					width: 80px;
+					height: 90px;
+					margin: 0 auto;
+				}
+			}
+			.person {
+				div {
+					background: url('./../../assets/images/business/person.png') no-repeat;
+					background-size: contain;
+				}
+			}
+			.website {
+				padding-top: 100px;
+				div {
+					background: url('./../../assets/images/business/website.png')
+						no-repeat;
+					background-size: contain;
+				}
+			}
+			.mail {
+				div {
+					background: url('./../../assets/images/business/mail.png') no-repeat;
+					background-size: contain;
+				}
 			}
 		}
 	}
-	.rightWrapper {
-		display: -webkit-flex;
-		display: flex;
-		align-items: center;
-		span {
-			width: 1.2rem;
-			height: 0.5rem;
-			background: #1f68c1;
-			margin: 0 0.2rem;
-			display: inline-block;
+	.sectionThreeWrapper {
+		text-align: center;
+		padding: 0 180px;
+		margin-top: 100px;
+		h3 {
+			font-size: 48px;
+			line-height: 100px;
+			color: #062d64;
+			font-weight: bold;
+		}
+		em {
+			display: block;
+			font-size: 60px;
+			line-height: 100px;
+			color: #f5a623;
+			font-weight: bold;
+		}
+		p {
+			margin-top: 100px;
+			font-size: 41px;
+			line-height: 60px;
+			color: #7c7c7c;
 		}
 	}
-	.footerConp {
-		margin-top: 0.15rem;
+	.sectionFourWrapper {
+		ul {
+			li {
+				margin-top: 100px;
+				.right {
+					margin-top: 150px;
+					.imgs {
+						width: 573px;
+						height: 377px;
+					}
+				}
+				.left {
+					h3 {
+						font-size: 54px;
+						line-height: 100px;
+						font-weight: bold;
+					}
+					p {
+						font-size: 34px;
+						line-height: 1.5;
+						color: #7c7c7c;
+					}
+					.el-button {
+						margin-top: 20px;
+						background: #c4e5f1;
+						color: #4366a1;
+						font-size: 34px;
+						line-height: 1;
+						border-radius: 50px;
+						border: none;
+						padding: 20px 50px;
+						i {
+							font-size: 34px;
+							line-height: 1;
+							margin-left: 20px;
+						}
+					}
+				}
+			}
+			.trusted {
+				.imgs {
+					background: url('./../../assets/images/business/trusted.png')
+						no-repeat;
+					background-size: contain;
+				}
+			}
+			.world {
+				.imgs {
+					background: url('./../../assets/images/business/world.png') no-repeat;
+					background-size: contain;
+				}
+			}
+			.secure {
+				.right {
+					margin-top: 150px;
+				}
+				.imgs {
+					background: url('./../../assets/images/business/secure.png') no-repeat;
+					background-size: contain;
+				}
+			}
+		}
 	}
 }
 </style>
