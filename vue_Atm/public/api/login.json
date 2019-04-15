@@ -1,0 +1,9 @@
+{
+  "status": "success",
+  "code": 200,
+  "data": {
+    "username": "admin",
+    "password": "888",
+    "role": "admin"
+  }
+}
