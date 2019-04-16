@@ -149,8 +149,7 @@ export default {
 		}
 	}
 	.backWrapper {
-		padding: 0 80px;
-		margin-top: 20px;
+		margin-top: 50px;
 		.el-button {
 			font-size: 38px;
 			padding: 20px 80px;

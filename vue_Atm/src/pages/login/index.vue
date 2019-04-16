@@ -92,8 +92,8 @@ export default {
 			height: 70px;
 			background-color: #fff;
 			position: absolute;
-			bottom: 80px;
-			right: 75px;
+			top: 780px;
+			right: 100px;
 		}
 	}
 }
