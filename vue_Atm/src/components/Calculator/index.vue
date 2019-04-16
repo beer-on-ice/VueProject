@@ -1,15 +1,7 @@
 <template lang="pug">
 .calculatorWrapper
   ul
-    li 1
-    li 2
-    li 3
-    li 4
-    li 5
-    li 6
-    li 7
-    li 8
-    li 9
+    li(v-for="item in list" :key="item" @click="handleClick(item)") {{item}}
   .btnWrapper
     el-button(type="danger") 取消
     el-button(type="warning") 更正
@@ -17,7 +9,18 @@
 </template>
 
 <script>
-export default {}
+export default {
+  data () {
+    return {
+      list: [7, 8, 9, 4, 5, 6, 1, 2, 3]
+    }
+  },
+  methods: {
+    handleClick (el) {
+      this.$emit('calClick', el)
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>

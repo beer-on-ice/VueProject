@@ -2,9 +2,7 @@
 .withdrawWrapper
   .operateWrapper.flex-b
     .leftWrapper
-      el-button 100
-      el-button 500
-      el-button 1000
+      el-button(v-for="item in leftList" :key="item" @click="handleClick(item)") {{item}}
     .centerWrapper
       .top
         h2 请输入取款金额:
@@ -14,17 +12,15 @@
           p.all 全部取现
       .center
         .inputWrapper
-          el-input(placeholder="请输入金额" v-model="inputVal")
+          el-input(placeholder="请输入金额" type="number" v-model="inputVal" disabled)
             template(slot="prepend") CNY
           i.iconfont &#xe63b;
         p.flex-e ≈ 3.111111
           em BCH
       .bottom
-        Calcular
+        Calcular(@calClick="calClick")
     .rightWrapper
-      el-button 3000
-      el-button 5000
-      el-button 10000
+      el-button(v-for="item in rightList" :key="item" @click="handleClick(item)") {{item}}
   .backWrapper.flex-e
     el-button(round @click="handleBack") Back
 </template>
@@ -35,12 +31,20 @@ import Calcular from 'components/Calculator'
 export default {
   data () {
     return {
-      inputVal: ''
+      inputVal: '',
+      leftList: [100, 500, 1000],
+      rightList: [3000, 5000, 10000]
     }
   },
   methods: {
     handleBack () {
       this.$router.push('/guide/nav')
+    },
+    handleClick (el) {
+      this.inputVal = String(el)
+    },
+    calClick (el) {
+      this.inputVal += String(el)
     }
   },
   components: {
