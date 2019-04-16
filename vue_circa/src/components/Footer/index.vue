@@ -133,7 +133,7 @@ export default {
 				}
 			}
 		}
-		/deep/.collapseWrapper {
+		.collapseWrapper {
 			.el-collapse-item__header {
 				font-weight: bold;
 				font-size: 300px;

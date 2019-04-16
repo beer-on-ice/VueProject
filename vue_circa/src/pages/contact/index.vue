@@ -69,7 +69,7 @@ export default {
 		.logo {
 			width: 331px;
 			height: 331px;
-			background: url('./../../assets/images/business/pic_help.png') no-repeat;
+			background: url('./img/pic_help.png') no-repeat;
 			background-size: contain;
 		}
 		.codeWrapper {

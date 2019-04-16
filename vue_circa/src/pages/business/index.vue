@@ -12,12 +12,29 @@
         .leftWrapper
           .topWrapper
             h3 Accept
-            h3 cryptocurrency
-            h3 payments
+              | <br/>
+              | cryptocurrency
+              | <br/>
+              | payments
           .bottomWrapper
             p Expand your payment options by accepting instant BTC and BCH payments without risk or price fluctuations.
-            el-button(@click="contact" round) Contact Sales
-            el-button(round) Get Started
+            el-row
+              el-col(
+                :xs="24"
+                :sm="24"
+                :md="10"
+                :lg="10"
+                :xl="10"
+              )
+                el-button(round) Get Started
+              el-col(
+                :xs="24"
+                :sm="24"
+                :md="10"
+                :lg="10"
+                :xl="10"
+              )
+                el-button(@click="contact" round) Contact Sales
       el-col(
         :xs="24"
         :sm="24"
@@ -86,13 +103,13 @@
             .left
               h3 Trusted & Transparent
               p Uphold is fully reserved. Unlike banks, we don’t loan out your money. We publish our holdings and obligations in real time.
-              el-button Learn more
+              el-button(round) Learn more
                 i.iconfont &#xe60c;
           el-col(
             :xs="24"
             :sm="24"
-            :md="{span: 8,pull:2}"
-            :lg="{span: 8,pull:2}"
+            :md="{span: 8,pull:3}"
+            :lg="{span: 8,pull:3}"
             :xl="{span: 8,pull:2}"
           ).hidden-sm-and-down
             .right
@@ -102,24 +119,24 @@
           el-col(
             :xs="24"
             :sm="24"
-            :md="{span: 8,push:2}"
-            :lg="{span: 8,push:2}"
-            :xl="{span: 8,push:2}"
-          ).hidden-sm-and-down
-            .right
-              .imgs
+            :md="{span: 13,offset:2}"
+            :lg="{span: 15}"
+            :xl="{span: 15}"
+          )
+            .left.clearfix
+              h3 Trusted & Transparent
+              p Uphold is fully reserved. Unlike banks, we don’t loan out your money. We publish our holdings and obligations in real time.
+              el-button(round) Learn more
+                i.iconfont &#xe60c;
           el-col(
             :xs="24"
             :sm="24"
-            :md="{span: 15,offset:1}"
-            :lg="{span: 15,offset:1}"
-            :xl="{span: 15,offset:1}"
-          )
-            .left
-              h3 Trusted & Transparent
-              p Uphold is fully reserved. Unlike banks, we don’t loan out your money. We publish our holdings and obligations in real time.
-              el-button Learn more
-                i.iconfont &#xe60c;
+            :md="{span: 8,offset:1}"
+            :lg="{span: 8,offset:1}"
+            :xl="{span: 8,offset:1}"
+          ).hidden-sm-and-down
+            .right
+              .imgs
       el-row
         li.world
           el-col(
@@ -132,13 +149,13 @@
             .left
               h3 World Class. Worldwide.
               p Send money to your friends and family in more than 150 countries. We allow you to email Bitcoin - and other currencies - to people almost everywhere.
-              el-button Learn more
+              el-button(round) Learn more
                 i.iconfont &#xe60c;
           el-col(
             :xs="24"
             :sm="24"
-            :md="{span: 8,pull:2}"
-            :lg="{span: 8,pull:2}"
+            :md="{span: 8,pull:3}"
+            :lg="{span: 8,pull:3}"
             :xl="{span: 8,pull:2}"
           ).hidden-sm-and-down
             .right
@@ -174,7 +191,8 @@ export default {
 					color: #6f6f6f;
 				}
 				.el-button {
-					margin: 20px 30px 0 0;
+					margin-top: 30px;
+					padding: 20px 50px;
 					background: #062d64;
 					color: #fff;
 				}
@@ -183,7 +201,7 @@ export default {
 		.rightWrapper {
 			width: 793px;
 			height: 653px;
-			background: url('./../../assets/images/business/map.png') no-repeat;
+			background: url('./img/map.png') no-repeat;
 			background-size: contain;
 		}
 	}
@@ -242,21 +260,20 @@ export default {
 			}
 			.person {
 				div {
-					background: url('./../../assets/images/business/person.png') no-repeat;
+					background: url('./img/person.png') no-repeat;
 					background-size: contain;
 				}
 			}
 			.website {
 				padding-top: 100px;
 				div {
-					background: url('./../../assets/images/business/website.png')
-						no-repeat;
+					background: url('./img/website.png') no-repeat;
 					background-size: contain;
 				}
 			}
 			.mail {
 				div {
-					background: url('./../../assets/images/business/mail.png') no-repeat;
+					background: url('./img/mail.png') no-repeat;
 					background-size: contain;
 				}
 			}
@@ -309,13 +326,10 @@ export default {
 						color: #7c7c7c;
 					}
 					.el-button {
-						margin-top: 20px;
+						margin-top: 80px;
 						background: #c4e5f1;
 						color: #4366a1;
 						font-size: 34px;
-						line-height: 1;
-						border-radius: 50px;
-						border: none;
 						padding: 20px 50px;
 						i {
 							font-size: 34px;
@@ -327,23 +341,34 @@ export default {
 			}
 			.trusted {
 				.imgs {
-					background: url('./../../assets/images/business/trusted.png')
-						no-repeat;
+					background: url('./img/trusted.png') no-repeat;
 					background-size: contain;
 				}
 			}
 			.world {
 				.imgs {
-					background: url('./../../assets/images/business/world.png') no-repeat;
+					background: url('./img/world.png') no-repeat;
 					background-size: contain;
 				}
 			}
 			.secure {
+				display: flex;
+				flex-direction: row-reverse;
+				.left {
+					float: right;
+					padding-right: 30px;
+					h3 {
+						text-align: right;
+					}
+					.el-button {
+						float: right;
+					}
+				}
 				.right {
 					margin-top: 150px;
 				}
 				.imgs {
-					background: url('./../../assets/images/business/secure.png') no-repeat;
+					background: url('./img/secure.png') no-repeat;
 					background-size: contain;
 				}
 			}

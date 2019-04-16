@@ -1,6 +1,10 @@
 const path = require('path')
 const isDev = process.env.NODE_ENV === 'development'
 
+function resolve (dir) {
+  return path.resolve(__dirname, dir)
+}
+
 module.exports = {
   publicPath: isDev ? '/' : './',
   css: {
@@ -31,8 +35,4 @@ module.exports = {
   devServer: {
     disableHostCheck: true
   }
-}
-
-function resolve (dir) {
-  return path.resolve(__dirname, dir)
 }

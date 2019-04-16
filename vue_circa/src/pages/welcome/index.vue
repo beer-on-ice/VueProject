@@ -59,7 +59,7 @@ export default {
 	}
 	.logoWrapper {
 		.logo {
-			background: url('./../../assets/images/logo.png');
+			background: url('./img/logo.png');
 			width: 651px;
 			height: 196px;
 			background-size: contain;

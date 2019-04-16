@@ -57,7 +57,7 @@
         :lg="{span: 1,offset:1}"
         :xl="{span: 1,offset:1}"
       ).hidden-md-and-down
-        router-link(tag="el-menu-item" to="/login").flex-cc Log In
+        el-menu-item.flex-cc(:disabled="isDisable" @click="goLogin") Log In
       el-col(
         :xs="{span: 1}"
         :sm="{span: 1}"
@@ -74,7 +74,7 @@
         :xl="{span: 2}"
       ).hidden-md-and-down
         el-menu-item.flex-cc
-          el-button(type="primary" @click="showRegister") Sign Up
+          el-button(:disabled="isDisable" type="primary" @click="goRegister") Sign Up
       el-col(
         :xs="{span: 2,offset:15}"
         :sm="{span: 2,offset:15}"
@@ -109,9 +109,9 @@
               i.iconfont &#xe6f1;
               | 博客
         div.single 求助
-        router-link(tag="div" to="/login").single 登录
+        router-link.single(tag="div" to="/login" v-if="!isDisable") 登录
       .regWrapper
-        el-button(type="primary" @click="showRegister") 注册
+        el-button(type="primary" @click="goRegister" v-if="!isDisable") 注册
 </template>
 
 <script>
@@ -125,8 +125,16 @@ export default {
       activeIndex2: '1'
     }
   },
+  computed: {
+    isDisable () {
+      return this.$route.path === '/about/personal'
+    }
+  },
   methods: {
-    showRegister () {
+    goLogin () {
+      this.$router.push('/login')
+    },
+    goRegister () {
       this.$router.push('/register')
     },
     handleSelect (key, keyPath) {
