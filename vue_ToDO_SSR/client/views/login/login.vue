@@ -1,12 +1,15 @@
   <template>
-  <div>
-    <div>this is login page</div>
-    <router-view></router-view>
-  </div>
+	<div>
+		<div>this is login page</div>
+		<router-view></router-view>
+	</div>
 </template>
 
 <script>
 export default {
+  metaInfo: {
+    title: '大天才ssr-LoginPage'
+  },
   props: ['id'],
   beforeRouteEnter (to, from, next) {
     console.log('todo before enter', this)

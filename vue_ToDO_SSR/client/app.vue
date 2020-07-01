@@ -1,26 +1,29 @@
 <template>
-    <div id="app">
-        <div id="cover"></div>
-        <Header></Header>
-        <p>{{fullName}}-{{counter}}</p>
-        <p>A:{{textA}} --- AP:{{textPlus}} --- C:{{textC}}</p>
-        <router-link to="/app">to app</router-link>
-        <router-link to="/login/123">to login123</router-link>
-        <router-link to="/login/456">to login456</router-link>
-        <router-link to="/login/123/exact">to login-child</router-link>
-        <transition name="fade">
-          <router-view/>
-        </transition>
-        <Footer></Footer>
-    </div>
+	<div id="app">
+		<div id="cover"></div>
+		<Header></Header>
+		<p>{{fullName}}-{{counter}}</p>
+		<!-- <p>A:{{textA}} --- AP:{{textPlus}} --- C:{{textC}}</p> -->
+		<router-link to="/app">to app</router-link>
+		<router-link to="/login/123">to login123</router-link>
+		<router-link to="/login/456">to login456</router-link>
+		<router-link to="/login/123/exact">to login-child</router-link>
+		<transition name="fade">
+			<router-view />
+		</transition>
+		<Footer></Footer>
+	</div>
 </template>
 
 <script>
 import Header from './components/header.vue'
 import Footer from './components/footer.vue'
-import {mapState, mapGetters, mapActions, mapMutations} from 'vuex'
+import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
 export default {
   name: 'app',
+  metaInfo: {
+    title: '大天才ssr学习'
+  },
   data () {
     return {}
   },
@@ -63,13 +66,13 @@ export default {
     //   counter: 'count'
     // }),
     ...mapState({
-      counter: state => state.count,
-      textA: state => state.a.text,
-      textC: state => state.c.text
+      counter: state => state.count
+      // textA: state => state.a.text,
+      // textC: state => state.c.text
     }),
     ...mapGetters({
-      'fullName': 'fullName',
-      'textPlus': 'a/textPlus'
+      fullName: 'fullName',
+      textPlus: 'a/textPlus'
     })
   },
   methods: {
@@ -85,20 +88,18 @@ export default {
 
 <style lang="stylus" scoped>
 #app
-    position absolute
-    left 0
-    right 0
-    top 0
-    bottom 0
-
+	position absolute
+	left 0
+	right 0
+	top 0
+	bottom 0
 #cover
-    position absolute
-    left 0
-    top 0
-    right 0
-    bottom 0
-    background-color #999
-    opacity .9
-    z-index -1
-
+	position absolute
+	left 0
+	top 0
+	right 0
+	bottom 0
+	background-color #999
+	opacity 0.9
+	z-index -1
 </style>

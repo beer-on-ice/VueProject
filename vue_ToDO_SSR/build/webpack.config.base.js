@@ -4,14 +4,17 @@ const isDev = process.env.NODE_ENV === 'development'
 
 const config = {
   target: 'web',
-  entry: path.join(__dirname, '../client/main.js'), // 输入：项目主文件（入口文件）
-  output: { // 输出
+  entry: path.join(__dirname, '../client/client-entry.js'), // 输入：项目主文件（入口文件）
+  output: {
+    // 输出
     filename: 'bundle.[hash:8].js', // 输出的文件名
-    path: path.join(__dirname, '../dist'), // 输出路径
-    publicPath: '/public/'
+    path: path.join(__dirname, '../public'), // 输出路径
+    publicPath: 'http://127.0.0.1:8081/public/'
   },
-  module: { // 配置加载资源
-    rules: [ // 规则
+  module: {
+    // 配置加载资源
+    rules: [
+      // 规则
       {
         test: /\.(vue|js|jsx)$/,
         loader: 'eslint-loader',
@@ -29,13 +32,15 @@ const config = {
       },
       {
         test: /\.(gif|jpg|jpeg|png|svg)$/,
-        use: [{
-          loader: 'url-loader',
-          options: {
-            limit: 1024, // 文件小于1024字节，转换成base64编码，写入文件里面
-            name: 'resources/[path][name].[hash:8].[ext]'
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              limit: 1024, // 文件小于1024字节，转换成base64编码，写入文件里面
+              name: 'resources/[path][name].[hash:8].[ext]'
+            }
           }
-        }]
+        ]
       },
       {
         test: /\.vue$/,
@@ -45,6 +50,5 @@ const config = {
     ]
   }
 }
-
 
 module.exports = config

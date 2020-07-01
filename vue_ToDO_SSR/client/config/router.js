@@ -16,6 +16,6 @@ export default () => {
     },
     // parseQuery (query) { },
     // stringifyQuery (obj) { },
-    fallback: true // 不支持的浏览器fallback到hash模式
+    fallback: true // 不支持的浏览器 fallback到 hash模式
   })
 }

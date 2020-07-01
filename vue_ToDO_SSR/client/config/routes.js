@@ -7,13 +7,13 @@ export default [
     redirect: '/app'
   },
   {
-    path: '/app',
-    component: () => import('../views/todo/todo.vue'),
     name: 'app',
+    path: '/app',
     meta: {
       title: 'this is app',
       description: 'asdasdasd'
-    }
+    },
+    component: () => import('../views/todo/todo.vue')
   },
   {
     path: '/login/:id',
